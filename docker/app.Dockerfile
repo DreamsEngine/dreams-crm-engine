@@ -18,7 +18,7 @@ ARG API_URL
 ARG APP_URL
 ENV API_URL=$API_URL APP_URL=$APP_URL NODE_ENV=production
 
-RUN cd apps/app && ../../node_modules/.bin/next build
+RUN cd apps/app && node node_modules/next/dist/bin/next build
 
 EXPOSE 3000
-CMD ["sh", "-c", "cd apps/app && ../../node_modules/.bin/next start -p 3000"]
+CMD ["sh", "-c", "cd apps/app && node node_modules/next/dist/bin/next start -p 3000"]

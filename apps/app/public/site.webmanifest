@@ -1,6 +1,6 @@
 {
-	"name": "Comp AI CRM",
-	"short_name": "Comp AI CRM",
+	"name": "Dreams CRM",
+	"short_name": "Dreams CRM",
 	"icons": [
 		{
 			"src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
 			"purpose": "maskable"
 		}
 	],
-	"theme_color": "#ffffff",
+	"theme_color": "#4747f2",
 	"background_color": "#ffffff",
 	"display": "standalone"
 }

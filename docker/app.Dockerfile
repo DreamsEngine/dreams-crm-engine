@@ -1,6 +1,10 @@
 FROM oven/bun:1.3 AS build
 WORKDIR /repo
 
+# prisma.config.ts resolves DATABASE_URL at load time, so `prisma generate`
+# (postinstall) needs a value during the build. Compose overrides it at runtime.
+ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
+
 COPY . .
 RUN bun install --frozen-lockfile
 

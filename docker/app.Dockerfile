@@ -1,4 +1,8 @@
-FROM oven/bun:1.3 AS build
+# Next.js builds and runs on Node here: Bun 1.3 segfaults (SIGILL) running
+# `next build` on x64 linux. Bun is copied in only as the package installer.
+FROM node:22-slim AS build
+COPY --from=oven/bun:1.3 /usr/local/bin/bun /usr/local/bin/bun
+COPY --from=oven/bun:1.3 /usr/local/bin/bunx /usr/local/bin/bunx
 WORKDIR /repo
 
 # prisma.config.ts resolves DATABASE_URL at load time, so `prisma generate`
@@ -14,7 +18,7 @@ ARG API_URL
 ARG APP_URL
 ENV API_URL=$API_URL APP_URL=$APP_URL NODE_ENV=production
 
-RUN bun run --filter=app build
+RUN cd apps/app && ../../node_modules/.bin/next build
 
 EXPOSE 3000
-CMD ["bun", "run", "--filter=app", "start"]
+CMD ["sh", "-c", "cd apps/app && ../../node_modules/.bin/next start -p 3000"]

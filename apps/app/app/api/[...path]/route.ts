@@ -10,6 +10,7 @@ async function handler(request: Request): Promise<Response> {
 
 	const headers = new Headers(request.headers);
 	for (const header of [
+		"accept-encoding",
 		"host",
 		"x-forwarded-host",
 		"x-forwarded-proto",

@@ -3,9 +3,10 @@ import "@crm/env/load";
 type AllowList = {
 	domains: readonly string[];
 	addresses: readonly string[];
+	all: boolean;
 };
 
-const EMPTY: AllowList = { domains: [], addresses: [] };
+const EMPTY: AllowList = { domains: [], addresses: [], all: false };
 
 let cachedSource: string | undefined;
 let cached: AllowList = EMPTY;
@@ -16,15 +17,20 @@ function allowList(): AllowList {
 
 	const domains: string[] = [];
 	const addresses: string[] = [];
+	let all = false;
 
 	for (const raw of source.split(",")) {
 		const entry = raw.trim().toLowerCase().replace(/^@/, "");
 		if (!entry) continue;
+		if (entry === "*") {
+			all = true;
+			continue;
+		}
 		(entry.includes("@") ? addresses : domains).push(entry);
 	}
 
 	cachedSource = source;
-	cached = { domains, addresses };
+	cached = { domains, addresses, all };
 	return cached;
 }
 
@@ -37,8 +43,8 @@ export function primaryWorkspaceDomain(): string | undefined {
 }
 
 export function hasSignInAllowList(): boolean {
-	const { domains, addresses } = allowList();
-	return domains.length > 0 || addresses.length > 0;
+	const { domains, addresses, all } = allowList();
+	return all || domains.length > 0 || addresses.length > 0;
 }
 
 export function isWorkspaceEmail(email: string | null | undefined): boolean {
@@ -51,7 +57,9 @@ export function isWorkspaceEmail(email: string | null | undefined): boolean {
 	const [local, host] = parts;
 	if (!local || !host) return false;
 
-	const { domains, addresses } = allowList();
+	const { domains, addresses, all } = allowList();
+
+	if (all) return true;
 
 	if (addresses.includes(value)) return true;
 

@@ -38,13 +38,13 @@ if (env.google) {
 	const google: NonNullable<typeof socialProviders.google> = {
 		...env.google,
 
-		scope: [...SYNC_SCOPES],
+		scope: env.demoOpenSignIn ? [] : [...SYNC_SCOPES],
 
 		accessType: "offline",
 	};
 
 	const hostedDomain = primaryWorkspaceDomain();
-	if (hostedDomain) google.hd = hostedDomain;
+	if (hostedDomain && !env.demoOpenSignIn) google.hd = hostedDomain;
 
 	socialProviders.google = google;
 }

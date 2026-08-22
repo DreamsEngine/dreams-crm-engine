@@ -30,6 +30,13 @@
 			"stage": "Etapa",
 			"closing": "Cierre"
 		},
+		"closingOptions": {
+			"overdue": "Vencido",
+			"this-month": "Se cierra este mes",
+			"next-month": "Se cierra el próximo mes",
+			"later": "Más adelante",
+			"none": "Sin fecha de cierre"
+		},
 		"tabs": {
 			"all": "Todos los negocios",
 			"open": "Abiertos",

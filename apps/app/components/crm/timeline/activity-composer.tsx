@@ -17,8 +17,8 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@crm/ui/components/toggle-group";
 import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { activityLabel } from "@/lib/activity-presentation";
 import { useCrmCache } from "@/lib/trpc/cache";
@@ -29,11 +29,6 @@ import type { TimelineAnchor } from "./timeline";
 const TYPES = ["NOTE", "CALL", "EMAIL", "MEETING", "TASK"] as const;
 
 type ComposableType = (typeof TYPES)[number];
-
-const dueFormat = new Intl.DateTimeFormat("en-US", {
-	month: "short",
-	day: "numeric",
-});
 
 function placeholders(
 	t: (key: string) => string,
@@ -49,6 +44,11 @@ function placeholders(
 
 export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
 	const t = useTranslations("record");
+	const locale = useLocale();
+	const dueFormat = useMemo(
+		() => new Intl.DateTimeFormat(locale, { month: "short", day: "numeric" }),
+		[locale],
+	);
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const PLACEHOLDER = placeholders(t);

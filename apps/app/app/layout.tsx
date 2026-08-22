@@ -5,7 +5,7 @@ import { cn } from "@crm/ui/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { LocalDateTimeHydrator } from "@/components/local-date-time";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -42,7 +42,10 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const locale = await getLocale();
+	const [locale, t] = await Promise.all([
+		getLocale(),
+		getTranslations("common"),
+	]);
 
 	return (
 		<html
@@ -61,7 +64,13 @@ export default async function RootLayout({
 						</TRPCReactProvider>
 					</NuqsAdapter>
 				</NextIntlClientProvider>
-				<LocalDateTimeHydrator />
+				<LocalDateTimeHydrator
+					relativeTime={{
+						justNow: t("relativeTime.justNow"),
+						ago: t.raw("relativeTime.ago"),
+						in: t.raw("relativeTime.in"),
+					}}
+				/>
 			</body>
 		</html>
 	);

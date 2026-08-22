@@ -28,6 +28,7 @@ export function CompaniesBulkActions({
 	onDone: () => void;
 }) {
 	const t = useTranslations("companies");
+	const tRecord = useTranslations("record");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const users = useQuery(trpc.users.list.queryOptions());
@@ -39,7 +40,11 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkAssignOwner.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.company();
-				reportBulk(result, (count) => t("bulkActions.reassigned", { count }));
+				reportBulk(
+					result,
+					(count) => t("bulkActions.reassigned", { count }),
+					tRecord,
+				);
 				onDone();
 			},
 			onError,
@@ -50,7 +55,11 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkEnrich.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.company();
-				reportBulk(result, (count) => t("bulkActions.enriching", { count }));
+				reportBulk(
+					result,
+					(count) => t("bulkActions.enriching", { count }),
+					tRecord,
+				);
 				onDone();
 			},
 			onError,
@@ -61,7 +70,11 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkDelete.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "company", ids: variables.ids });
-				reportBulk(result, (count) => t("bulkActions.deleted", { count }));
+				reportBulk(
+					result,
+					(count) => t("bulkActions.deleted", { count }),
+					tRecord,
+				);
 				setConfirming(false);
 				onDone();
 			},

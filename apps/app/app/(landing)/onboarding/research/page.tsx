@@ -4,9 +4,10 @@ import { AuthHeading, AuthShell } from "@/components/auth-shell";
 import { requireMailboxAccess } from "@/lib/session";
 import { ResearchForm } from "./research-form";
 
-export const metadata: Metadata = {
-	title: "Research key",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("onboarding");
+	return { title: t("researchPage.metaTitle") };
+}
 
 export const instant = false;
 

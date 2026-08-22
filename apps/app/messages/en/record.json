@@ -181,7 +181,9 @@
 	"bulkActions": {
 		"actions": "Actions",
 		"assignOwner": "Assign owner",
-		"nobodyElse": "Nobody else works here yet."
+		"nobodyElse": "Nobody else works here yet.",
+		"nothingChanged": "Nothing changed.",
+		"leftAlone": "{count, plural, one {# was} other {# were}} left alone"
 	},
 	"quickSwitcher": {
 		"companies": "Companies",

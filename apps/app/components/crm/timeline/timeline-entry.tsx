@@ -11,7 +11,6 @@ import { z } from "zod";
 import { RecordLink } from "@/components/crm/record-sheet/record-link";
 import { LocalDateTime, LocalRelativeTime } from "@/components/local-date-time";
 import { activityLabel } from "@/lib/activity-presentation";
-import { dealStageLabel } from "@/lib/deal-stage";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
@@ -47,6 +46,7 @@ export function TimelineEntry({
 	anchor: TimelineAnchor;
 }) {
 	const t = useTranslations("record");
+	const tDeals = useTranslations("deals");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -77,7 +77,7 @@ export function TimelineEntry({
 		: entry.createdBy.name;
 
 	const headline = change
-		? `${dealStageLabel(change.from)} → ${dealStageLabel(change.to)}`
+		? `${tDeals(`stages.${change.from}`)} → ${tDeals(`stages.${change.to}`)}`
 		: entry.subject;
 
 	const here = anchorId(anchor);

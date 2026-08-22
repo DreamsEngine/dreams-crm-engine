@@ -28,7 +28,6 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { StatusIndicator } from "@crm/ui/components/status-indicator";
 import { TableCell } from "@crm/ui/components/table";
-import { formatCount } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
@@ -338,7 +337,9 @@ export function CurrencySettings() {
 							? t("currencies.inUse.allConvertible")
 							: t("currencies.inUse.someUnconvertible", {
 									count: unconverted.count,
-									deals: formatCount(unconverted.count, "deal"),
+									deals: t("currencies.inUse.dealsCount", {
+										count: unconverted.count,
+									}),
 								})}
 						{refreshedAt ? (
 							<>

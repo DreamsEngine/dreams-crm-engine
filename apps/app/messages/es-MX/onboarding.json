@@ -1,5 +1,6 @@
 {
 	"page": {
+		"metaTitle": "Configurar",
 		"title": "Cuéntenos sobre su empresa",
 		"description": "Dos datos, una sola vez. El nombre es el que usa el CRM para referirse a usted; el sitio web es la forma en que el agente aprende qué vende."
 	},
@@ -13,6 +14,7 @@
 		"continue": "Continuar"
 	},
 	"researchPage": {
+		"metaTitle": "Clave de investigación",
 		"title": "Lleve sus datos del CRM al siguiente nivel",
 		"description": "Potencie su agente de investigación con Context para investigar cada empresa agregada a su CRM."
 	},

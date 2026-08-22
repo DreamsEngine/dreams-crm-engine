@@ -11,6 +11,12 @@
 	},
 	"signIn": {
 		"title": "Bienvenido de nuevo",
-		"description": "Inicie sesión con su cuenta para continuar."
+		"description": "Inicie sesión con su cuenta para continuar.",
+		"metaTitle": "Iniciar sesión"
+	},
+	"relativeTime": {
+		"justNow": "ahora mismo",
+		"ago": "hace {time}",
+		"in": "en {time}"
 	}
 }

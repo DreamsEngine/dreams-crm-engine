@@ -173,7 +173,12 @@ export function DealsTable() {
 			label: t("table.facets.closing"),
 			options: CLOSING_OPTIONS.flatMap((option) =>
 				(facetCounts?.closing?.[option.value] ?? 0) > 0
-					? [{ value: option.value, label: option.label }]
+					? [
+							{
+								value: option.value,
+								label: t(`table.closingOptions.${option.value}`),
+							},
+						]
 					: [],
 			),
 		},

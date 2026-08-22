@@ -7,6 +7,7 @@
 		"openingChat": "Abriendo chat…"
 	},
 	"teamAgentsIndex": {
+		"metaTitle": "Agentes",
 		"noDescription": "Sin descripción",
 		"runCount": "{count} ejecuciones",
 		"emptyTitle": "Aún no hay agentes de equipo",
@@ -20,6 +21,7 @@
 		"viewActivity": "Actividad"
 	},
 	"agentBuilderHome": {
+		"metaTitle": "Chat",
 		"greeting": "¿En qué puedo ayudarle, {name}?",
 		"defaultName": "estimado usuario",
 		"subtitle": "Pregunte sobre su CRM, etiquete un registro o integración, o describa un agente para automatizar una tarea.",
@@ -231,10 +233,28 @@
 		"actorMobile": "Actor ·",
 		"requestMobile": "Solicitud ·",
 		"noChanges": "Ningún cambio coincide con este filtro.",
+		"failureReasons": {
+			"ACTION_NOT_PERFORMED": "El agente terminó sin hacer lo que debía. Abra la ejecución para ver qué paso se saltó.",
+			"NO_EXECUTOR": "Este agente pide algo que el CRM todavía no puede hacer. Necesita reconstruirse.",
+			"DEPENDENCY_UNAVAILABLE": "Falta una conexión que este agente necesita. Reconéctela y vuelva a ejecutar.",
+			"NOT_AUTHORISED": "La conexión rechazó esto. Es posible que su acceso haya sido revocado o restringido.",
+			"PROVIDER_ERROR": "El servicio externo rechazó esto. Por lo general vale la pena intentarlo de nuevo.",
+			"NEVER_SETTLED": "El agente se detuvo sin reportar un resultado. No quedó nada a medias.",
+			"TURN_FAILED": "El modelo falló a mitad de esta ejecución.",
+			"DELIVERY_FAILED": "La ejecución nunca llegó al agente.",
+			"DELIVERY_EXHAUSTED": "Esto nunca llegó al agente después de tres intentos. No se ejecutó nada.",
+			"ACTION_REJECTED": "El agente intentó la acción y el CRM la rechazó. No se escribió nada.",
+			"AGENT_UNAVAILABLE": "El agente estaba pausado o archivado cuando empezó esta ejecución.",
+			"AGENT_DELETED": "El agente se eliminó antes de que esta ejecución terminara.",
+			"CANCELLED_BY_USER": "Alguien detuvo esta ejecución.",
+			"RUN_TIMED_OUT": "Esta ejecución tardó demasiado y se detuvo para que pudieran iniciar las siguientes."
+		},
+		"failureReasonUnknown": "Esta ejecución falló sin indicar por qué.",
 		"inProgress": "En curso",
 		"durationSeconds": "{seconds}s"
 	},
 	"teamAgentDetail": {
+		"metaTitle": "Agente del equipo",
 		"runQueuedToast": "Ejecución del agente en cola.",
 		"runQueuedAgainToast": "Ejecución puesta en cola de nuevo.",
 		"runStoppedToast": "Ejecución detenida.",
@@ -388,5 +408,22 @@
 		"onSchedule": "Con programación",
 		"looksAtFallback": "Registros del CRM dentro del alcance aprobado",
 		"actionFallback": "Realizar la acción solicitada por el equipo"
+	},
+	"toolLabel": {
+		"writingFile": "Escribiendo {name}",
+		"wroteFile": "Escribió {name}",
+		"savingDraft": "Guardando borrador",
+		"savingDraftNamed": "Guardando borrador · {name}",
+		"savedDraft": "Borrador guardado",
+		"savedDraftNamed": "Borrador guardado · {name}",
+		"namingChat": "Nombrando este chat",
+		"namingChatNamed": "Nombrando este chat · {name}",
+		"namedChat": "Chat nombrado",
+		"namedChatNamed": "Chat nombrado · {name}",
+		"artifactNames": {
+			"instructions": "las instrucciones",
+			"manifest": "el manifiesto",
+			"readme": "el readme"
+		}
 	}
 }

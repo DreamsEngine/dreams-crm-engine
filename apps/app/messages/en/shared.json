@@ -48,6 +48,8 @@
 		"loadingPage": "Loading page…"
 	},
 	"landing": {
+		"metaTitle": "The CRM for agents",
+		"metaDescription": "The first agentic CRM experience — durable research agents that read your inbox, keep every record current and book their own follow-ups.",
 		"nav": {
 			"homepage": "Homepage"
 		},

@@ -38,17 +38,19 @@ export type BulkResult = {
 export function reportBulk(
 	result: BulkResult,
 	done: (count: number) => string,
+	t: ReturnType<typeof useTranslations>,
 ): void {
 	if (result.succeeded === 0) {
-		toast.error(result.message ?? "Nothing changed.");
+		toast.error(result.message ?? t("bulkActions.nothingChanged"));
 		return;
 	}
 
 	if (result.failed > 0) {
+		const leftAlone = t("bulkActions.leftAlone", { count: result.failed });
 		toast.error(
-			`${done(result.succeeded)} ${result.failed} ${
-				result.failed === 1 ? "was" : "were"
-			} left alone${result.message ? ` — ${result.message}` : "."}`,
+			result.message
+				? `${done(result.succeeded)} ${leftAlone} — ${result.message}`
+				: `${done(result.succeeded)} ${leftAlone}.`,
 		);
 		return;
 	}

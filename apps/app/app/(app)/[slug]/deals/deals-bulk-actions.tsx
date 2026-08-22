@@ -44,6 +44,7 @@ export function DealsBulkActions({
 	onDone: () => void;
 }) {
 	const t = useTranslations("deals");
+	const tRecord = useTranslations("record");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const users = useQuery(trpc.users.list.queryOptions());
@@ -58,7 +59,11 @@ export function DealsBulkActions({
 		trpc.deals.bulkAssignOwner.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal();
-				reportBulk(result, (count) => t("bulkActions.reassigned", { count }));
+				reportBulk(
+					result,
+					(count) => t("bulkActions.reassigned", { count }),
+					tRecord,
+				);
 				onDone();
 			},
 			onError,
@@ -69,7 +74,11 @@ export function DealsBulkActions({
 		trpc.deals.bulkSetStage.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal();
-				reportBulk(result, (count) => t("bulkActions.moved", { count }));
+				reportBulk(
+					result,
+					(count) => t("bulkActions.moved", { count }),
+					tRecord,
+				);
 				setClosing(null);
 				setReason("");
 				onDone();
@@ -82,7 +91,11 @@ export function DealsBulkActions({
 		trpc.deals.bulkDelete.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "deal", ids: variables.ids });
-				reportBulk(result, (count) => t("bulkActions.deleted", { count }));
+				reportBulk(
+					result,
+					(count) => t("bulkActions.deleted", { count }),
+					tRecord,
+				);
 				setConfirming(false);
 				onDone();
 			},

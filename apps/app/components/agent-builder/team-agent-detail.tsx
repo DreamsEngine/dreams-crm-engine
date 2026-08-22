@@ -27,10 +27,10 @@ import {
 import { Icon } from "@crm/ui/components/icon";
 import { SaveBarViewport } from "@crm/ui/components/save-bar";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type ReactNode, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { type ReactNode, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
 	PageShell,
@@ -52,23 +52,6 @@ type AgentDetail = RouterOutputs["agents"]["byId"];
 type ReviewVersion = AgentDetail["reviewVersion"];
 type Runs = RouterOutputs["agents"]["history"];
 type Activity = RouterOutputs["agents"]["activity"];
-const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
-	month: "short",
-	day: "numeric",
-	hour: "numeric",
-	minute: "2-digit",
-	second: "2-digit",
-	timeZone: "UTC",
-	timeZoneName: "short",
-});
-const _TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
-	hour: "2-digit",
-	minute: "2-digit",
-	second: "2-digit",
-	hour12: false,
-	timeZone: "UTC",
-});
-
 export function TeamAgentDetail({
 	agentId,
 	initialAgent,
@@ -81,6 +64,20 @@ export function TeamAgentDetail({
 	initialActivity: Activity;
 }) {
 	const t = useTranslations("agent");
+	const locale = useLocale();
+	const dateFormat = useMemo(
+		() =>
+			new Intl.DateTimeFormat(locale, {
+				month: "short",
+				day: "numeric",
+				hour: "numeric",
+				minute: "2-digit",
+				second: "2-digit",
+				timeZone: "UTC",
+				timeZoneName: "short",
+			}),
+		[locale],
+	);
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	const workspaceUrl = useWorkspaceUrl();
@@ -241,7 +238,7 @@ export function TeamAgentDetail({
 							{isDraft
 								? t("teamAgentDetail.privateDraft")
 								: nextRun
-									? formatDate(nextRun)
+									? dateFormat.format(new Date(nextRun))
 									: triggerSummary}
 						</span>
 						<div className="mt-1 flex flex-wrap gap-2">
@@ -588,8 +585,4 @@ function _DetailRow({ label, value }: { label: string; value: ReactNode }) {
 
 function textOf(value: string | undefined, fallback: string): string {
 	return value?.trim() ? value : fallback;
-}
-
-function formatDate(value: string): string {
-	return DATE_FORMATTER.format(new Date(value));
 }

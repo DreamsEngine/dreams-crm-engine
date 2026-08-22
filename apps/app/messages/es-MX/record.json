@@ -181,7 +181,9 @@
 	"bulkActions": {
 		"actions": "Acciones",
 		"assignOwner": "Asignar responsable",
-		"nobodyElse": "Todavía no hay nadie más aquí."
+		"nobodyElse": "Todavía no hay nadie más aquí.",
+		"nothingChanged": "No cambió nada.",
+		"leftAlone": "{count, plural, one {# quedó} other {# quedaron}} sin cambios"
 	},
 	"quickSwitcher": {
 		"companies": "Empresas",

@@ -11,6 +11,12 @@
 	},
 	"signIn": {
 		"title": "Welcome back",
-		"description": "Sign in with your account to continue."
+		"description": "Sign in with your account to continue.",
+		"metaTitle": "Sign in"
+	},
+	"relativeTime": {
+		"justNow": "just now",
+		"ago": "{time} ago",
+		"in": "in {time}"
 	}
 }

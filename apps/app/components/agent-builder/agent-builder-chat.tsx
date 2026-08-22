@@ -39,8 +39,8 @@ import type { AgentManifestSummary } from "@crm/validation/agent-manifest";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Client, type MessageStreamEvent } from "eve/client";
 import type { EveMessage, EveMessageInputRequest } from "eve/react";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Fragment, type ReactNode, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -632,6 +632,7 @@ function AgentToolStep({
 }: {
 	item: Extract<TranscriptItem, { kind: "did" }>;
 }) {
+	const t = useTranslations("agent");
 	return (
 		<div className="flex min-w-0 flex-col gap-1">
 			<div className="flex min-w-0 items-start gap-2 text-sm">
@@ -642,7 +643,7 @@ function AgentToolStep({
 				) : (
 					<Icon icon={Checkmark} className="size-3.5 text-ring" />
 				)}
-				<span className="min-w-0 wrap-break-word">{toolLabel(item)}</span>
+				<span className="min-w-0 wrap-break-word">{toolLabel(item, t)}</span>
 			</div>
 			{item.errorText ? (
 				<p className="pl-[22px] wrap-break-word text-destructive text-xs leading-5">

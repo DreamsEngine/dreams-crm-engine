@@ -100,6 +100,7 @@
 			"noneConnected": "Nada está conectado todavía."
 		},
 		"google": {
+			"metaTitle": "Google Workspace",
 			"unavailableDescription": "Defina GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en el archivo .env raíz y reinicie.",
 			"notConfigured": "No configurado",
 			"notConnected": "No conectado",
@@ -141,6 +142,7 @@
 			"manageInGoogle": "Administrar en su cuenta de Google"
 		},
 		"microsoft": {
+			"metaTitle": "Microsoft 365",
 			"unavailableDescription": "Defina MICROSOFT_CLIENT_ID y MICROSOFT_CLIENT_SECRET en el archivo .env raíz y reinicie.",
 			"notConfigured": "No configurado",
 			"notConnected": "No conectado",
@@ -333,6 +335,7 @@
 			"title": "Monedas en uso",
 			"allConvertible": "Todo negocio con un monto se puede convertir a la moneda de reporte.",
 			"someUnconvertible": "{count, plural, one {{deals} no se puede convertir, así que queda fuera de todos los totales.} other {{deals} no se pueden convertir, así que quedan fuera de todos los totales.}}",
+			"dealsCount": "{count, plural, one {# negocio} other {# negocios}}",
 			"ratesLastFetched": "Tasas obtenidas por última vez <time></time>.",
 			"noDeals": "Todavía ningún negocio tiene un monto.",
 			"reportingCurrencyNote": "moneda de reporte",

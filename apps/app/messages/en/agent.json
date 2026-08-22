@@ -7,6 +7,7 @@
 		"openingChat": "Opening chat…"
 	},
 	"teamAgentsIndex": {
+		"metaTitle": "Agents",
 		"noDescription": "No description",
 		"runCount": "{count} runs",
 		"emptyTitle": "No team agents yet",
@@ -20,6 +21,7 @@
 		"viewActivity": "Activity"
 	},
 	"agentBuilderHome": {
+		"metaTitle": "Chat",
 		"greeting": "What can I help with, {name}?",
 		"defaultName": "there",
 		"subtitle": "Ask about your CRM, tag a record or integration, or describe an agent to build to automate a task.",
@@ -231,10 +233,28 @@
 		"actorMobile": "Actor ·",
 		"requestMobile": "Request ·",
 		"noChanges": "No changes match this filter.",
+		"failureReasons": {
+			"ACTION_NOT_PERFORMED": "The agent finished without doing what it was built to do. Open the run to see which step it skipped.",
+			"NO_EXECUTOR": "This agent asks for something the CRM cannot do yet. It needs rebuilding.",
+			"DEPENDENCY_UNAVAILABLE": "A connection this agent needs is missing. Reconnect it, then run again.",
+			"NOT_AUTHORISED": "The connection refused this. Its access may have been revoked or narrowed.",
+			"PROVIDER_ERROR": "The outside service rejected this. It is usually worth trying again.",
+			"NEVER_SETTLED": "The agent stopped without reporting a result. Nothing was left half-done.",
+			"TURN_FAILED": "The model failed part-way through this run.",
+			"DELIVERY_FAILED": "The run never reached the agent.",
+			"DELIVERY_EXHAUSTED": "This never reached the agent after three attempts. Nothing ran.",
+			"ACTION_REJECTED": "The agent tried the action and the CRM refused it. Nothing was written.",
+			"AGENT_UNAVAILABLE": "The agent was paused or archived when this run started.",
+			"AGENT_DELETED": "The agent was deleted before this run finished.",
+			"CANCELLED_BY_USER": "Someone stopped this run.",
+			"RUN_TIMED_OUT": "This run took too long and was stopped so later runs could start."
+		},
+		"failureReasonUnknown": "This run failed without saying why.",
 		"inProgress": "In progress",
 		"durationSeconds": "{seconds}s"
 	},
 	"teamAgentDetail": {
+		"metaTitle": "Team agent",
 		"runQueuedToast": "Agent run queued.",
 		"runQueuedAgainToast": "Run queued again.",
 		"runStoppedToast": "Run stopped.",
@@ -388,5 +408,22 @@
 		"onSchedule": "On schedule",
 		"looksAtFallback": "CRM records in the approved scope",
 		"actionFallback": "Perform the requested team action"
+	},
+	"toolLabel": {
+		"writingFile": "Writing {name}",
+		"wroteFile": "Wrote {name}",
+		"savingDraft": "Saving draft",
+		"savingDraftNamed": "Saving draft · {name}",
+		"savedDraft": "Saved draft",
+		"savedDraftNamed": "Saved draft · {name}",
+		"namingChat": "Naming this chat",
+		"namingChatNamed": "Naming this chat · {name}",
+		"namedChat": "Named this chat",
+		"namedChatNamed": "Named this chat · {name}",
+		"artifactNames": {
+			"instructions": "instructions",
+			"manifest": "the manifest",
+			"readme": "the readme"
+		}
 	}
 }

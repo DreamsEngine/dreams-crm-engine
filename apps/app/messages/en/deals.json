@@ -30,6 +30,13 @@
 			"stage": "Stage",
 			"closing": "Closing"
 		},
+		"closingOptions": {
+			"overdue": "Overdue",
+			"this-month": "Closing this month",
+			"next-month": "Closing next month",
+			"later": "Later",
+			"none": "No close date"
+		},
 		"tabs": {
 			"all": "All deals",
 			"open": "Open",

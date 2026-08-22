@@ -48,6 +48,8 @@
 		"loadingPage": "Cargando la página…"
 	},
 	"landing": {
+		"metaTitle": "El CRM para agentes",
+		"metaDescription": "La primera experiencia de CRM agéntico: agentes de investigación permanentes que leen su correo, mantienen cada registro al día y agendan sus propios seguimientos.",
 		"nav": {
 			"homepage": "Inicio"
 		},

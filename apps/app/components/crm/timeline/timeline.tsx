@@ -12,8 +12,9 @@ import { Spinner } from "@crm/ui/components/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@crm/ui/components/toggle-group";
 import { cn } from "@crm/ui/lib/utils";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
+import { useMemo } from "react";
 import { DetailSheetEmpty, SECTION_TITLE } from "@/components/detail-sheet";
 import { useTRPC } from "@/lib/trpc/client";
 import { useHydrated } from "@/lib/use-hydrated";
@@ -88,14 +89,12 @@ const EMPTY_ICONS = {
 	done: Checkmark,
 } satisfies Record<TimelineTab, CarbonIcon>;
 
-const dayFormat = new Intl.DateTimeFormat("en-US", {
-	weekday: "short",
-	month: "short",
-	day: "numeric",
-	year: "numeric",
-});
-
-function dayLabel(day: string, local: boolean, t: Translate): string {
+function dayLabel(
+	day: string,
+	local: boolean,
+	t: Translate,
+	dayFormat: Intl.DateTimeFormat,
+): string {
 	const now = new Date();
 	const today = dayKey(now.toISOString(), local);
 	const yesterdayDate = local
@@ -108,7 +107,12 @@ function dayLabel(day: string, local: boolean, t: Translate): string {
 	return dayFormat.format(new Date(`${day}T00:00:00`));
 }
 
-function byDay(entries: TimelineEntryData[], local: boolean, t: Translate) {
+function byDay(
+	entries: TimelineEntryData[],
+	local: boolean,
+	t: Translate,
+	dayFormat: Intl.DateTimeFormat,
+) {
 	const groups = new Map<
 		string,
 		{ day: string; label: string; entries: TimelineEntryData[] }
@@ -123,7 +127,7 @@ function byDay(entries: TimelineEntryData[], local: boolean, t: Translate) {
 		} else {
 			groups.set(day, {
 				day,
-				label: dayLabel(day, local, t),
+				label: dayLabel(day, local, t, dayFormat),
 				entries: [entry],
 			});
 		}
@@ -167,6 +171,17 @@ function TimelineDay({
 
 export function Timeline({ anchor }: { anchor: TimelineAnchor }) {
 	const t = useTranslations("record");
+	const locale = useLocale();
+	const dayFormat = useMemo(
+		() =>
+			new Intl.DateTimeFormat(locale, {
+				weekday: "short",
+				month: "short",
+				day: "numeric",
+				year: "numeric",
+			}),
+		[locale],
+	);
 	const trpc = useTRPC();
 	const hydrated = useHydrated();
 	const labels = tabLabels(t);
@@ -242,7 +257,7 @@ export function Timeline({ anchor }: { anchor: TimelineAnchor }) {
 						/>
 					) : null}
 
-					{byDay(entries, hydrated, t).map((group) => (
+					{byDay(entries, hydrated, t, dayFormat).map((group) => (
 						<TimelineDay
 							key={group.day}
 							label={group.label}

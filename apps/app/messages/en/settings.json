@@ -100,6 +100,7 @@
 			"noneConnected": "Nothing is connected yet."
 		},
 		"google": {
+			"metaTitle": "Google Workspace",
 			"unavailableDescription": "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the root .env file and restart.",
 			"notConfigured": "Not configured",
 			"notConnected": "Not connected",
@@ -141,6 +142,7 @@
 			"manageInGoogle": "Manage in your Google account"
 		},
 		"microsoft": {
+			"metaTitle": "Microsoft 365",
 			"unavailableDescription": "Set MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET in the root .env file and restart.",
 			"notConfigured": "Not configured",
 			"notConnected": "Not connected",
@@ -333,6 +335,7 @@
 			"title": "Currencies in use",
 			"allConvertible": "Every deal with an amount can be converted into the reporting currency.",
 			"someUnconvertible": "{count, plural, one {{deals} cannot be converted, so it is left out of every total.} other {{deals} cannot be converted, so they are left out of every total.}}",
+			"dealsCount": "{count, plural, one {# deal} other {# deals}}",
 			"ratesLastFetched": "Rates last fetched <time></time>.",
 			"noDeals": "No deals have an amount yet.",
 			"reportingCurrencyNote": "reporting currency",

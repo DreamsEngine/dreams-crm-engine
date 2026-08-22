@@ -6,9 +6,10 @@ import { AuthHeading, AuthShell } from "@/components/auth-shell";
 import { requireSession, signInAccounts } from "@/lib/session";
 import { GrantAccess } from "./grant-access";
 
-export const metadata: Metadata = {
-	title: "Grant access",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("auth");
+	return { title: t("grantAccess.metaTitle") };
+}
 
 export const instant = false;
 

@@ -18,8 +18,8 @@ import {
 import { Button } from "@crm/ui/components/button";
 import { Icon } from "@crm/ui/components/icon";
 import { cn } from "@crm/ui/lib/utils";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { runFailureReason } from "@/lib/agent-run-failure";
 import type { RouterOutputs } from "@/lib/trpc/types";
@@ -48,22 +48,31 @@ const eventSummary = z
 
 const auditChange = z.object({ before: z.json(), after: z.json() });
 
-const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
-	month: "short",
-	day: "numeric",
-	hour: "numeric",
-	minute: "2-digit",
-	second: "2-digit",
-	timeZone: "UTC",
-	timeZoneName: "short",
-});
-const TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
-	hour: "2-digit",
-	minute: "2-digit",
-	second: "2-digit",
-	hour12: false,
-	timeZone: "UTC",
-});
+function useAgentDateFormatters() {
+	const locale = useLocale();
+	return useMemo(() => {
+		const date = new Intl.DateTimeFormat(locale, {
+			month: "short",
+			day: "numeric",
+			hour: "numeric",
+			minute: "2-digit",
+			second: "2-digit",
+			timeZone: "UTC",
+			timeZoneName: "short",
+		});
+		const time = new Intl.DateTimeFormat(locale, {
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit",
+			hour12: false,
+			timeZone: "UTC",
+		});
+		return {
+			formatDate: (value: string) => date.format(new Date(value)),
+			formatTime: (value: string) => time.format(new Date(value)),
+		};
+	}, [locale]);
+}
 
 export function AgentRuns({
 	runs,
@@ -79,6 +88,7 @@ export function AgentRuns({
 	retryingRunId?: string;
 }) {
 	const t = useTranslations("agent");
+	const { formatDate } = useAgentDateFormatters();
 	const [outcome, setOutcome] = useState("ALL");
 	const [expanded, setExpanded] = useState<string | null>(null);
 	const [confirming, setConfirming] = useState<string | null>(null);
@@ -154,7 +164,7 @@ export function AgentRuns({
 											className="mt-px size-3.5 shrink-0 text-destructive"
 										/>
 										<span className="min-w-0 wrap-break-word text-destructive text-xs leading-5">
-											{runFailureReason(run.errorCode, run.errorMessage)}
+											{runFailureReason(run.errorCode, run.errorMessage, t)}
 										</span>
 									</span>
 								) : null}
@@ -245,6 +255,7 @@ export function AgentRuns({
 
 function ExpandedRun({ run }: { run: RunRow }) {
 	const t = useTranslations("agent");
+	const { formatTime } = useAgentDateFormatters();
 	const events = runEvents.parse(run.events);
 	const timeline = [
 		...events.map((event) => ({
@@ -360,6 +371,7 @@ function RunMeta({
 
 export function AgentActivity({ activity }: { activity: Activity }) {
 	const t = useTranslations("agent");
+	const { formatDate } = useAgentDateFormatters();
 	const [kind, setKind] = useState("ALL");
 	const visible = activity.filter(
 		(event) => kind === "ALL" || event.type.startsWith(kind),
@@ -448,14 +460,6 @@ function humanStatus(value: string): string {
 		.toLowerCase()
 		.replace(/_/g, " ")
 		.replace(/^./, (character) => character.toUpperCase());
-}
-
-function formatDate(value: string): string {
-	return DATE_FORMATTER.format(new Date(value));
-}
-
-function formatTime(value: string): string {
-	return TIME_FORMATTER.format(new Date(value));
 }
 
 function duration(

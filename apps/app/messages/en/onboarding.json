@@ -1,5 +1,6 @@
 {
 	"page": {
+		"metaTitle": "Set up",
 		"title": "Tell us about your company",
 		"description": "Two things, once. The name is what the CRM calls you; the website is how the agent learns what you sell."
 	},
@@ -13,6 +14,7 @@
 		"continue": "Continue"
 	},
 	"researchPage": {
+		"metaTitle": "Research key",
 		"title": "Level up your CRM data",
 		"description": "Power your research agent with Context to research every company added to your CRM."
 	},

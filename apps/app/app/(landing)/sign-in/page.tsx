@@ -11,9 +11,10 @@ import { DemoCredentialsSignIn } from "./demo-credentials-sign-in";
 import { SocialSignIn } from "./social-sign-in";
 import { type SsoProvider, SsoSignIn } from "./sso-sign-in";
 
-export const metadata: Metadata = {
-	title: "Sign in",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("common");
+	return { title: t("signIn.metaTitle") };
+}
 
 type SignInOptions = {
 	google: boolean;

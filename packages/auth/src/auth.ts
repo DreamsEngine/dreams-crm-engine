@@ -76,7 +76,7 @@ export const auth = betterAuth({
 	}),
 
 	emailAndPassword: {
-		enabled: false,
+		enabled: env.demoOpenSignIn,
 	},
 
 	socialProviders,

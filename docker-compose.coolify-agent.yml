@@ -51,6 +51,7 @@ services:
       APP_URL: ${APP_URL}
       DATABASE_URL: postgresql://crm:${POSTGRES_PASSWORD}@postgres:5432/crm?schema=public
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      DEMO_OPEN_SIGN_IN: ${DEMO_OPEN_SIGN_IN}
       AGENT_URL: http://agent:2000
       AGENT_BRIDGE_SECRET: ${AGENT_BRIDGE_SECRET}
       CRM_TELEMETRY_DISABLED: "1"

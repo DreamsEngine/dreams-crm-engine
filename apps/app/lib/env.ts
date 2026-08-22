@@ -4,3 +4,7 @@ export const API_URL =
 export function isMarketing(): boolean {
 	return process.env.IS_MARKETING === "true";
 }
+
+export function isDemoOpenSignIn(): boolean {
+	return process.env.DEMO_OPEN_SIGN_IN === "1";
+}

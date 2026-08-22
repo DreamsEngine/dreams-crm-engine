@@ -3,8 +3,10 @@ import type { Metadata } from "next";
 import { redirect, unstable_rethrow } from "next/navigation";
 import { Suspense } from "react";
 import { AuthHeading, AuthShell } from "@/components/auth-shell";
+import { isDemoOpenSignIn } from "@/lib/env";
 import { getSession } from "@/lib/session";
 import { getServerQueryClient, getServerTrpc } from "@/lib/trpc/server";
+import { DemoCredentialsSignIn } from "./demo-credentials-sign-in";
 import { SocialSignIn } from "./social-sign-in";
 import { type SsoProvider, SsoSignIn } from "./sso-sign-in";
 
@@ -114,6 +116,7 @@ async function SignIn({
 			{social.map((provider) => (
 				<SocialSignIn key={provider} provider={provider} />
 			))}
+			{isDemoOpenSignIn() ? <DemoCredentialsSignIn /> : null}
 		</>
 	);
 }

@@ -1,0 +1,16 @@
+{
+	"header": {
+		"openNavigation": "Abrir la navegación",
+		"homepage": "Inicio",
+		"loading": "Cargando el encabezado del espacio de trabajo…",
+		"accountMenu": "Menú de la cuenta",
+		"lightMode": "Modo claro",
+		"darkMode": "Modo oscuro",
+		"signOut": "Cerrar sesión",
+		"signOutFailed": "No se pudo cerrar la sesión."
+	},
+	"signIn": {
+		"title": "Bienvenido de nuevo",
+		"description": "Inicie sesión con su cuenta para continuar."
+	}
+}

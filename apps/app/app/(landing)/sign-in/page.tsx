@@ -1,6 +1,7 @@
 import type { MailboxProviderId } from "@crm/auth/scopes";
 import type { Metadata } from "next";
 import { redirect, unstable_rethrow } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { AuthHeading, AuthShell } from "@/components/auth-shell";
 import { isDemoOpenSignIn } from "@/lib/env";
@@ -42,14 +43,18 @@ async function currentSession() {
 	}
 }
 
-export default function SignInPage({ searchParams }: PageProps<"/sign-in">) {
+export default async function SignInPage({
+	searchParams,
+}: PageProps<"/sign-in">) {
+	const t = await getTranslations("common");
+
 	return (
 		<AuthShell>
 			<Suspense
 				fallback={
 					<AuthHeading
-						title="Welcome back"
-						description="Sign in with your account to continue."
+						title={t("signIn.title")}
+						description={t("signIn.description")}
 					/>
 				}
 			>
@@ -62,10 +67,11 @@ export default function SignInPage({ searchParams }: PageProps<"/sign-in">) {
 async function SignIn({
 	searchParams,
 }: Pick<PageProps<"/sign-in">, "searchParams">) {
-	const [session, options, { method }] = await Promise.all([
+	const [session, options, { method }, t] = await Promise.all([
 		currentSession(),
 		signInOptions(),
 		searchParams,
+		getTranslations("common"),
 	]);
 
 	if (session) {
@@ -108,8 +114,8 @@ async function SignIn({
 	return (
 		<>
 			<AuthHeading
-				title="Welcome back"
-				description="Sign in with your account to continue."
+				title={t("signIn.title")}
+				description={t("signIn.description")}
 			/>
 
 			{showSso ? <SsoSignIn providers={providers} /> : null}

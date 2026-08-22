@@ -17,12 +17,14 @@ import {
 } from "@crm/ui/components/input-group";
 import { Spinner } from "@crm/ui/components/spinner";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useId, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useTRPC } from "@/lib/trpc/client";
 
 export function OnboardingForm({ placeholder }: { placeholder: string }) {
+	const t = useTranslations("onboarding");
 	const trpc = useTRPC();
 	const router = useRouter();
 
@@ -60,7 +62,7 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 		>
 			<FieldGroup>
 				<Field>
-					<FieldLabel htmlFor={nameId}>Company name</FieldLabel>
+					<FieldLabel htmlFor={nameId}>{t("form.companyNameLabel")}</FieldLabel>
 					<Input
 						id={nameId}
 						name="name"
@@ -78,7 +80,9 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 				</Field>
 
 				<Field>
-					<FieldLabel htmlFor={slugId}>Workspace URL</FieldLabel>
+					<FieldLabel htmlFor={slugId}>
+						{t("form.workspaceUrlLabel")}
+					</FieldLabel>
 					<InputGroup>
 						<InputGroupAddon>
 							<InputGroupText>/</InputGroupText>
@@ -103,12 +107,12 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 						/>
 					</InputGroup>
 					<FieldDescription>
-						Your team will use this address to open the CRM.
+						{t("form.workspaceUrlDescription")}
 					</FieldDescription>
 				</Field>
 
 				<Field>
-					<FieldLabel htmlFor={websiteId}>Website</FieldLabel>
+					<FieldLabel htmlFor={websiteId}>{t("form.websiteLabel")}</FieldLabel>
 					<InputGroup>
 						<InputGroupAddon>
 							<InputGroupText>https://</InputGroupText>
@@ -116,7 +120,7 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 						<InputGroupInput
 							id={websiteId}
 							name="website"
-							placeholder="acme.com"
+							placeholder={t("form.websitePlaceholder")}
 							autoComplete="off"
 							autoCapitalize="off"
 							autoCorrect="off"
@@ -125,15 +129,13 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 							required
 						/>
 					</InputGroup>
-					<FieldDescription>
-						Read once, so every answer afterwards knows what you sell.
-					</FieldDescription>
+					<FieldDescription>{t("form.websiteDescription")}</FieldDescription>
 				</Field>
 			</FieldGroup>
 
 			<Button type="submit" disabled={save.isPending}>
 				{save.isPending ? <Spinner data-icon="inline-start" /> : null}
-				Continue
+				{t("form.continue")}
 			</Button>
 		</form>
 	);

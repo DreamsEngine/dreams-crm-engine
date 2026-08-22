@@ -5,12 +5,16 @@ import { Button } from "@crm/ui/components/button";
 import { Spinner } from "@crm/ui/components/spinner";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireSession } from "@/lib/session";
 import { getServerQueryClient, getServerTrpc } from "@/lib/trpc/server";
 import { AddConnectionDialog } from "./add-connection-dialog";
 
-export const metadata: Metadata = { title: "Connections" };
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("settings");
+	return { title: t("connections.metaTitle") };
+}
 
 export default function ConnectionsSettingsPage(
 	props: PageProps<"/[slug]/settings/connections">,
@@ -27,7 +31,11 @@ async function ConnectionsSettingsPageContent({
 	searchParams,
 }: PageProps<"/[slug]/settings/connections">) {
 	await requireSession();
-	const [{ slug }, query] = await Promise.all([params, searchParams]);
+	const [{ slug }, query, t] = await Promise.all([
+		params,
+		searchParams,
+		getTranslations("settings"),
+	]);
 	const queryClient = getServerQueryClient();
 	const trpc = getServerTrpc();
 	const [google, microsoft, slack] = await Promise.all([
@@ -40,9 +48,9 @@ async function ConnectionsSettingsPageContent({
 			? [
 					{
 						name: "Google Workspace",
-						status: "Connected",
-						bringsIn: "Emails, meetings and the people on them",
-						sends: "Nothing yet",
+						status: t("connections.list.connected"),
+						bringsIn: t("connections.list.google.bringsIn"),
+						sends: t("connections.list.google.sends"),
 						href: `/${slug}/settings/connections/google`,
 						logo: GoogleLogo,
 					},
@@ -53,10 +61,12 @@ async function ConnectionsSettingsPageContent({
 					{
 						name: "Slack",
 						status: slack.workspace
-							? `Connected to ${slack.workspace}`
-							: "Connected",
-						bringsIn: "Workspace members and channels the app has joined",
-						sends: "Messages to approved channels and people",
+							? t("connections.list.connectedTo", {
+									workspace: slack.workspace,
+								})
+							: t("connections.list.connected"),
+						bringsIn: t("connections.list.slack.bringsIn"),
+						sends: t("connections.list.slack.sends"),
 						href: `/${slug}/settings/connections/slack`,
 						logo: SlackLogo,
 					},
@@ -66,9 +76,9 @@ async function ConnectionsSettingsPageContent({
 			? [
 					{
 						name: "Microsoft 365",
-						status: "Connected",
-						bringsIn: "Outlook email and the people on it",
-						sends: "Nothing yet",
+						status: t("connections.list.connected"),
+						bringsIn: t("connections.list.microsoft.bringsIn"),
+						sends: t("connections.list.microsoft.sends"),
 						href: `/${slug}/settings/connections/microsoft`,
 						logo: MicrosoftLogo,
 					},
@@ -83,22 +93,27 @@ async function ConnectionsSettingsPageContent({
 					<header className="flex items-start justify-between gap-4 px-(--spacing-block-inline)">
 						<div className="flex flex-col gap-2">
 							<h1 className="font-medium text-2xl tracking-tight">
-								Connections
+								{t("connections.list.title")}
 							</h1>
 							<p className="max-w-2xl text-muted-foreground text-sm">
-								Where your CRM gets its information, and what it is allowed to
-								send on your behalf.
+								{t("connections.list.description")}
 							</p>
 						</div>
 						<Button asChild variant="outline">
 							<Link href={`/${slug}/settings/connections?add=1`}>
-								Add connection
+								{t("connections.list.addConnection")}
 							</Link>
 						</Button>
 					</header>
 					<div className="flex flex-col gap-3">
 						{rows.map((row) => (
-							<ConnectionCard key={row.name} {...row} />
+							<ConnectionCard
+								key={row.name}
+								{...row}
+								manageLabel={t("connections.list.manage")}
+								bringsInLabel={t("connections.list.bringsInLabel")}
+								sendsLabel={t("connections.list.sendsLabel")}
+							/>
 						))}
 					</div>
 				</div>
@@ -106,42 +121,46 @@ async function ConnectionsSettingsPageContent({
 				<div className="mx-auto flex w-full max-w-(--container-narrow) flex-1 flex-col justify-center gap-(--spacing-page-gap) text-center">
 					<div className="flex flex-col gap-2 px-(--spacing-block-inline)">
 						<h1 className="font-medium text-2xl tracking-tight">
-							Nothing is connected yet
+							{t("connections.list.emptyTitle")}
 						</h1>
 						<p className="text-muted-foreground text-sm leading-relaxed">
-							Right now every deal, contact and note has to be typed in by hand.
-							Connect a tool and the CRM starts filling itself in from the work
-							your team already does.
+							{t("connections.list.emptyDescription")}
 						</p>
 					</div>
 					<div className="flex flex-col divide-y rounded-lg border bg-card px-(--spacing-block-inline)">
 						<StarterRow
 							logo={GoogleLogo}
 							name="Google Workspace"
-							description="File email and meetings against the right company"
+							description={t("connections.list.starterGoogleDescription")}
 							href={`/${slug}/settings/connections/google`}
+							connectLabel={t("common.connect")}
 						/>
 						<StarterRow
 							logo={SlackLogo}
 							name="Slack"
-							description="Let deployed agents notify approved channels and people"
+							description={t("connections.list.starterSlackDescription")}
 							href={`/${slug}/settings/connections/slack`}
+							connectLabel={t("common.connect")}
 						/>
 						<StarterRow
 							logo={MicrosoftLogo}
 							name="Microsoft 365"
-							description="File Outlook email against the right company"
+							description={t("connections.list.starterMicrosoftDescription")}
 							href={`/${slug}/settings/connections/microsoft`}
+							connectLabel={t("common.connect")}
 						/>
 					</div>
 					<p className="px-(--spacing-block-inline) text-muted-foreground text-sm">
-						Looking for something else?{" "}
-						<Link
-							className="font-medium text-foreground underline underline-offset-4"
-							href={`/${slug}/settings/connections?add=1`}
-						>
-							Browse all connections
-						</Link>
+						{t.rich("connections.list.browsePrompt", {
+							link: (chunks) => (
+								<Link
+									className="font-medium text-foreground underline underline-offset-4"
+									href={`/${slug}/settings/connections?add=1`}
+								>
+									{chunks}
+								</Link>
+							),
+						})}
 					</p>
 				</div>
 			)}
@@ -169,6 +188,9 @@ function ConnectionCard({
 	sends,
 	href,
 	logo: Logo,
+	manageLabel,
+	bringsInLabel,
+	sendsLabel,
 }: {
 	name: string;
 	status: string;
@@ -176,6 +198,9 @@ function ConnectionCard({
 	sends: string;
 	href: string;
 	logo: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	manageLabel: string;
+	bringsInLabel: string;
+	sendsLabel: string;
 }) {
 	return (
 		<section className="flex flex-col gap-4 rounded-lg border bg-card px-(--spacing-block-inline) py-4">
@@ -186,12 +211,12 @@ function ConnectionCard({
 					{status}
 				</p>
 				<Button asChild size="sm" variant="outline">
-					<Link href={href}>Manage</Link>
+					<Link href={href}>{manageLabel}</Link>
 				</Button>
 			</div>
 			<div className="flex flex-col gap-2 pl-8 text-sm">
-				<CapabilityRow label="Brings in" value={bringsIn} />
-				<CapabilityRow label="Sends" value={sends} />
+				<CapabilityRow label={bringsInLabel} value={bringsIn} />
+				<CapabilityRow label={sendsLabel} value={sends} />
 			</div>
 		</section>
 	);
@@ -211,11 +236,13 @@ function StarterRow({
 	name,
 	description,
 	href,
+	connectLabel,
 }: {
 	logo: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	name: string;
 	description: string;
 	href: string;
+	connectLabel: string;
 }) {
 	return (
 		<div className="flex items-center gap-3 py-4 text-left">
@@ -225,7 +252,7 @@ function StarterRow({
 				<p className="text-muted-foreground text-xs">{description}</p>
 			</div>
 			<Button asChild variant="outline" size="sm">
-				<Link href={href}>Connect</Link>
+				<Link href={href}>{connectLabel}</Link>
 			</Button>
 		</div>
 	);

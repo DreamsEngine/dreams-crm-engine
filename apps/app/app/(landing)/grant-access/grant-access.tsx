@@ -10,40 +10,38 @@ import GoogleLogo from "@crm/ui/components/brand-logos/google";
 import MicrosoftLogo from "@crm/ui/components/brand-logos/microsoft";
 import { Button } from "@crm/ui/components/button";
 import { Spinner } from "@crm/ui/components/spinner";
+import { useTranslations } from "next-intl";
 import type { FC, SVGProps } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { signOutAndRedirect } from "@/lib/sign-out";
 
 type ProviderGrant = {
-	label: string;
 	scopes: readonly string[];
 	Logo: FC<SVGProps<SVGSVGElement>>;
 };
 
 const PROVIDERS = {
-	google: {
-		label: "Grant Google access",
-		scopes: [...SYNC_SCOPES],
-		Logo: GoogleLogo,
-	},
-	microsoft: {
-		label: "Grant Microsoft access",
-		scopes: [...MICROSOFT_SYNC_SCOPES],
-		Logo: MicrosoftLogo,
-	},
+	google: { scopes: [...SYNC_SCOPES], Logo: GoogleLogo },
+	microsoft: { scopes: [...MICROSOFT_SYNC_SCOPES], Logo: MicrosoftLogo },
 } as const satisfies Record<MailboxProviderId, ProviderGrant>;
+
+const LABEL_KEYS = {
+	google: "grantAccess.grantGoogle",
+	microsoft: "grantAccess.grantMicrosoft",
+} as const satisfies Record<MailboxProviderId, string>;
 
 export function GrantAccess({
 	providers,
 }: {
 	providers: readonly MailboxProviderId[];
 }) {
+	const t = useTranslations("auth");
 	const [pending, setPending] = useState<MailboxProviderId | null>(null);
 
 	function fail(message?: string) {
 		setPending(null);
-		toast.error(message ?? "Could not reach the provider.");
+		toast.error(message ?? t("grantAccess.genericError"));
 	}
 
 	async function handleGrant(provider: MailboxProviderId) {
@@ -66,7 +64,10 @@ export function GrantAccess({
 	return (
 		<div className="flex flex-col gap-3">
 			{providers.map((provider) => {
-				const { label, Logo } = PROVIDERS[provider];
+				const { Logo } = PROVIDERS[provider];
+				const label = single
+					? t("grantAccess.grantSingle")
+					: t(LABEL_KEYS[provider]);
 
 				return (
 					<Button
@@ -83,7 +84,7 @@ export function GrantAccess({
 						) : (
 							<Logo data-icon="inline-start" className="size-4" />
 						)}
-						{single ? "Grant access" : label}
+						{label}
 					</Button>
 				);
 			})}
@@ -91,12 +92,14 @@ export function GrantAccess({
 			<Button
 				className="w-full"
 				onClick={() => {
-					signOutAndRedirect().catch(() => toast.error("Could not sign out."));
+					signOutAndRedirect().catch(() =>
+						toast.error(t("grantAccess.signOutError")),
+					);
 				}}
 				type="button"
 				variant="ghost"
 			>
-				Sign out
+				{t("grantAccess.signOut")}
 			</Button>
 		</div>
 	);

@@ -3,6 +3,7 @@
 import ArrowRight from "@carbon/icons-react/es/ArrowRight";
 import { Icon } from "@crm/ui/components/icon";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -10,18 +11,18 @@ import { useTRPC } from "@/lib/trpc/client";
 import { useWorkspaceUrl } from "@/lib/use-workspace-url";
 import { AgentComposer, type BuilderComposerPrompt } from "./agent-composer";
 
-const SUGGESTIONS = [
-	"Brief every deal owner before a renewal call",
-	"Flag deals with no activity for 14 days",
-	"Hand new customers from Sales to Onboarding",
-];
-
 export function AgentBuilderHome({ name }: { name: string }) {
+	const t = useTranslations("agent");
 	const router = useRouter();
 	const workspaceUrl = useWorkspaceUrl();
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	const [initialPrompt, setInitialPrompt] = useState("");
+	const suggestions = [
+		t("agentBuilderHome.suggestionBrief"),
+		t("agentBuilderHome.suggestionFlag"),
+		t("agentBuilderHome.suggestionHandoff"),
+	];
 	const create = useMutation(
 		trpc.conversations.createBuilder.mutationOptions({
 			onSuccess: async ({ id }) => {
@@ -48,11 +49,12 @@ export function AgentBuilderHome({ name }: { name: string }) {
 		<main className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 pt-14 pb-20 sm:px-6 sm:pt-12 sm:pb-28">
 			<div className="flex w-full max-w-3xl flex-col items-center gap-3 pb-6 text-center">
 				<h1 className="text-balance font-medium text-2xl tracking-tight sm:text-3xl">
-					What can I help with, {firstName(name)}?
+					{t("agentBuilderHome.greeting", {
+						name: firstName(name, t("agentBuilderHome.defaultName")),
+					})}
 				</h1>
 				<p className="max-w-xl text-balance text-muted-foreground text-sm">
-					Ask about your CRM, tag a record or integration, or describe an agent
-					to build to automate a task.
+					{t("agentBuilderHome.subtitle")}
 				</p>
 			</div>
 
@@ -64,15 +66,14 @@ export function AgentBuilderHome({ name }: { name: string }) {
 					onSubmit={submit}
 				/>
 				<p className="flex h-8 items-center px-px text-muted-foreground text-xs">
-					Chats and agent drafts stay private to you. Deploying an agent makes
-					it available to the whole team.
+					{t("agentBuilderHome.privacyNote")}
 				</p>
 
 				<div className="pt-1">
 					<p className="flex h-7 items-center text-muted-foreground text-xs">
-						Suggested agents
+						{t("agentBuilderHome.suggestedAgents")}
 					</p>
-					{SUGGESTIONS.map((suggestion) => (
+					{suggestions.map((suggestion) => (
 						<button
 							key={suggestion}
 							type="button"
@@ -94,6 +95,6 @@ export function AgentBuilderHome({ name }: { name: string }) {
 	);
 }
 
-function firstName(name: string): string {
-	return name.trim().split(/\s+/)[0] || "there";
+function firstName(name: string, fallback: string): string {
+	return name.trim().split(/\s+/)[0] || fallback;
 }

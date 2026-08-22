@@ -1,1 +1,535 @@
-{}
+{
+	"common": {
+		"cancel": "Cancelar",
+		"remove": "Eliminar",
+		"connect": "Conectar",
+		"checking": "Comprobando…"
+	},
+	"nav": {
+		"ariaLabel": "Configuración del espacio de trabajo",
+		"general": "General",
+		"tracking": "Seguimiento y análisis",
+		"connections": "Conexiones",
+		"currencies": "Monedas",
+		"members": "Miembros",
+		"sso": "SSO"
+	},
+	"general": {
+		"metaTitle": "General",
+		"title": "General",
+		"description": "Quién es usted y el modelo con el que piensa el agente de investigación.",
+		"workspace": {
+			"title": "Espacio de trabajo",
+			"description": "El nombre y el sitio web de la empresa que usa este CRM.",
+			"save": "Guardar",
+			"nameLabel": "Nombre",
+			"namePlaceholder": "Acme Inc.",
+			"nameDescription": "Se muestra donde el CRM se refiere a su propia empresa.",
+			"websiteLabel": "Sitio web",
+			"websitePlaceholder": "acme.com",
+			"websiteDescription": "El sitio web de su propia empresa.",
+			"restricted": "Solo un propietario o un administrador puede cambiar esto.",
+			"saved": "Espacio de trabajo guardado."
+		},
+		"researchKey": {
+			"title": "Investigación de empresas",
+			"description": "Ingrese su clave de la API de Context para que nuestros agentes investiguen cada empresa en el CRM.",
+			"replaceKey": "Reemplazar clave",
+			"saveKey": "Guardar clave",
+			"fieldLabel": "Clave de la API de Context",
+			"connected": "Conectado",
+			"notConnected": "No conectado",
+			"placeholder": "Pegue la clave",
+			"signupPrompt": "¿No tiene una clave de la API de Context? <link>Regístrese aquí</link>",
+			"saved": "Clave de la API de Context guardada."
+		},
+		"agentModel": {
+			"title": "Agente de investigación",
+			"description": "El modelo con el que piensa el agente, enrutado a través de Vercel AI Gateway.",
+			"modelAriaLabel": "Modelo",
+			"searchPlaceholder": "Buscar modelos…",
+			"noMatch": "Ningún modelo coincide con eso.",
+			"default": "Predeterminado — {name}",
+			"priceHint": "{input} entrada · {output} salida por 1M",
+			"contextMillions": "{count}M de contexto",
+			"contextThousands": "{count}K de contexto",
+			"unavailable": "No se pudo conectar con AI Gateway para listar los modelos. El agente sigue usando {model}.",
+			"saved": "El agente usará este modelo desde su próxima sesión."
+		}
+	},
+	"connections": {
+		"metaTitle": "Conexiones",
+		"list": {
+			"title": "Conexiones",
+			"description": "De dónde obtiene el CRM su información y qué puede enviar en su nombre.",
+			"addConnection": "Agregar conexión",
+			"manage": "Administrar",
+			"bringsInLabel": "Trae",
+			"sendsLabel": "Envía",
+			"connected": "Conectado",
+			"connectedTo": "Conectado a {workspace}",
+			"google": {
+				"bringsIn": "Correos, reuniones y las personas en ellos",
+				"sends": "Nada todavía"
+			},
+			"slack": {
+				"bringsIn": "Miembros del espacio de trabajo y los canales a los que la app se unió",
+				"sends": "Mensajes a los canales y personas aprobados"
+			},
+			"microsoft": {
+				"bringsIn": "Correo de Outlook y las personas en él",
+				"sends": "Nada todavía"
+			},
+			"emptyTitle": "Nada está conectado todavía",
+			"emptyDescription": "Ahora mismo cada negocio, contacto y nota se escribe a mano. Conecte una herramienta y el CRM empieza a completarse con el trabajo que su equipo ya hace.",
+			"starterGoogleDescription": "Archive correos y reuniones contra la empresa correcta",
+			"starterSlackDescription": "Deje que los agentes desplegados notifiquen a canales y personas aprobados",
+			"starterMicrosoftDescription": "Archive correo de Outlook contra la empresa correcta",
+			"browsePrompt": "¿Busca algo más? <link>Ver todas las conexiones</link>"
+		},
+		"addDialog": {
+			"title": "Agregar una conexión",
+			"description": "Nada se mueve hasta que termine de configurarla.",
+			"googleDescription": "Traiga mensajes de Gmail y reuniones de Google Calendar",
+			"slackDescription": "Deje que los agentes desplegados notifiquen a canales y personas aprobados",
+			"microsoftDescription": "Traiga correo de Outlook y las personas en él",
+			"comingSoon": "Próximamente",
+			"otherName": "Algo más",
+			"otherDescription": "La API de intake no está disponible todavía",
+			"alreadyConnected": "{count, plural, one {{list} ya está conectado.} other {{list} ya están conectados.}}",
+			"noneConnected": "Nada está conectado todavía."
+		},
+		"google": {
+			"unavailableDescription": "Defina GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en el archivo .env raíz y reinicie.",
+			"notConfigured": "No configurado",
+			"notConnected": "No conectado",
+			"connectDescription": "Gmail y Calendar de solo lectura. Solo se guardan las conversaciones con empresas del CRM.",
+			"connectFailed": "No se pudo conectar con Google.",
+			"connectErrorTitle": "Google no terminó de conectarse",
+			"connectErrorFallback": "Google devolvió un error antes de completar la conexión. Intente de nuevo.",
+			"connectErrorEmailMismatch": "Esa cuenta de Google tiene una dirección de correo distinta a la que usa para iniciar sesión, así que no se puede vincular a su cuenta. Conecte la cuenta de Google que coincida con su dirección de inicio de sesión.",
+			"connected": "Conectado",
+			"needsAttention": "Necesita atención",
+			"description": "Las reuniones y los hilos de correo llegan a la empresa correspondiente en cuanto ocurren.",
+			"checkNow": "Comprobar ahora",
+			"noRefreshTokenTitle": "Google no devolvió un token de actualización",
+			"noRefreshTokenDescription": "Cierre sesión y vuelva a entrar.",
+			"syncFailedTitle": "Falló la sincronización de {source}",
+			"resolve": "Resolver",
+			"waitingFirstCheck": "Esperando la primera comprobación",
+			"lastChecked": "Última comprobación <time></time>",
+			"sources": {
+				"calendar": {
+					"label": "Reuniones",
+					"autoCreate": "Agregar la empresa y el contacto cuando conozca a alguien nuevo"
+				},
+				"gmail": {
+					"label": "Correo",
+					"autoCreate": "Agregar la empresa y el contacto cuando responda a alguien nuevo"
+				}
+			},
+			"deleteSyncedData": "Eliminar datos sincronizados",
+			"deleteSyncedDataTitle": "¿Eliminar los datos sincronizados?",
+			"deleteSyncedDataDescription": "Se elimina del CRM cada correo y reunión traídos de Google. La siguiente comprobación empieza desde ahora, así que nada de lo eliminado aquí vuelve.",
+			"deleteAction": "Eliminar",
+			"purgeSuccess": "{count, plural, one {Se eliminó # elemento sincronizado.} other {Se eliminaron # elementos sincronizados.}}",
+			"revokeAccess": "Revocar el acceso a Google",
+			"revokeAccessTitle": "¿Revocar el acceso a Google?",
+			"revokeDescriptionRequired": "Se cerrará su sesión y no podrá volver a usar el CRM hasta que conceda el acceso.",
+			"revokeDescriptionOptional": "Dejan de llegar correos y reuniones nuevos. Todo lo ya sincronizado se conserva, y puede volver a conectar Google desde esta página.",
+			"revokeAction": "Revocar",
+			"manageInGoogle": "Administrar en su cuenta de Google"
+		},
+		"microsoft": {
+			"unavailableDescription": "Defina MICROSOFT_CLIENT_ID y MICROSOFT_CLIENT_SECRET en el archivo .env raíz y reinicie.",
+			"notConfigured": "No configurado",
+			"notConnected": "No conectado",
+			"connectDescription": "Correo de Outlook de solo lectura. Solo se guardan las conversaciones con empresas del CRM.",
+			"connectFailed": "No se pudo conectar con Microsoft.",
+			"connectErrorTitle": "Microsoft no terminó de conectarse",
+			"connectErrorFallback": "Microsoft devolvió un error antes de completar la conexión. Intente de nuevo.",
+			"connectErrorEmailMismatch": "Esa cuenta de Microsoft tiene una dirección de correo distinta a la que usa para iniciar sesión, así que no se puede vincular a su cuenta. Conecte la cuenta de Microsoft que coincida con su dirección de inicio de sesión.",
+			"connected": "Conectado",
+			"needsAttention": "Necesita atención",
+			"description": "Los hilos de correo llegan a la empresa correspondiente en cuanto ocurren.",
+			"checkNow": "Comprobar ahora",
+			"noRefreshTokenTitle": "Microsoft no devolvió un token de actualización",
+			"noRefreshTokenDescription": "Cierre sesión y vuelva a entrar.",
+			"emailSyncFailedTitle": "Falló la sincronización de correo",
+			"waitingFirstCheck": "Esperando la primera comprobación",
+			"lastChecked": "Última comprobación <time></time>",
+			"emailLabel": "Correo",
+			"autoCreate": "Agregar la empresa y el contacto cuando responda a alguien nuevo",
+			"deleteSyncedData": "Eliminar datos sincronizados",
+			"deleteSyncedDataTitle": "¿Eliminar los datos sincronizados?",
+			"deleteSyncedDataDescription": "Se elimina del CRM cada correo traído de Outlook. La siguiente comprobación empieza desde ahora, así que nada de lo eliminado aquí vuelve.",
+			"deleteAction": "Eliminar",
+			"purgeSuccess": "{count, plural, one {Se eliminó # elemento sincronizado.} other {Se eliminaron # elementos sincronizados.}}",
+			"disconnectButton": "Desconectar Microsoft",
+			"disconnectTitle": "¿Desconectar Microsoft?",
+			"disconnectDescriptionRequired": "Se cerrará su sesión y no podrá volver a usar el CRM hasta que conceda el acceso. Microsoft no tiene forma de que retiremos el consentimiento nosotros mismos: quite esta app de su cuenta de Microsoft para hacerlo.",
+			"disconnectDescriptionOptional": "Deja de llegar correo nuevo. Todo lo ya sincronizado se conserva, y puede volver a conectar Microsoft desde esta página. Microsoft no tiene forma de que retiremos el consentimiento nosotros mismos: quite esta app de su cuenta de Microsoft para hacerlo.",
+			"disconnectAction": "Desconectar",
+			"manageInMicrosoft": "Administrar en su cuenta de Microsoft"
+		},
+		"intake": {
+			"title": "Endpoint de intake",
+			"description": "Esta conexión no está disponible todavía. No se ha creado ningún endpoint, clave de API ni actividad de intake para este espacio de trabajo.",
+			"back": "Volver a conexiones"
+		},
+		"slack": {
+			"page": {
+				"notConnected": "No conectado",
+				"introDescription": "Conectar Slack le da al CRM una entrada y una salida. Lo que hace con eso depende de usted después, una automatización a la vez.",
+				"handingOverTitle": "Lo que está entregando",
+				"grantedTitle": "Lo que este espacio de trabajo concedió",
+				"neverTitle": "Lo que nunca hará",
+				"never": [
+					"Enviar algo hasta que usted cree una automatización y la active",
+					"Publicar en otro lugar que no sea el destino aprobado en esa automatización",
+					"Leer un mensaje directo entre dos personas"
+				],
+				"connectNote": "Usted aprueba el espacio de trabajo en Slack. Puede desconectarlo aquí en cualquier momento.",
+				"suggestionsTitle": "Después, la mayoría de los equipos empiezan con una de estas",
+				"suggestionsDescription": "Son sugerencias, no configuraciones. Ninguna existe hasta que elija una y la active.",
+				"suggestions": [
+					{
+						"title": "Cuando se crea un negocio",
+						"description": "Publique el negocio en un canal de ventas aprobado."
+					},
+					{
+						"title": "Cuando se gana un negocio",
+						"description": "Avise a un canal aprobado que el negocio se cerró."
+					},
+					{
+						"title": "Cuando un negocio se reabre",
+						"description": "Notifique a un canal o compañero aprobado."
+					}
+				],
+				"connectedFallback": "Conectado",
+				"canManageDescription": "Esto es lo que Slack nos dio. Los agentes solo publican donde su automatización lo indica.",
+				"cannotManageDescription": "Esto es lo que Slack nos dio. Solo un propietario o un administrador puede desconectarlo.",
+				"agentsTitle": "Agentes que usan Slack",
+				"agentsDescription": "Se crean en el chat, no aquí. Abra uno para cambiarlo.",
+				"newAgent": "Nuevo agente",
+				"noAgents": "Ningún agente desplegado usa Slack todavía.",
+				"agentRunning": "Activo",
+				"agentPaused": "Pausado",
+				"describeInChat": "Describa otro agente en el chat",
+				"peopleNoneReviewed": "Todavía no se ha revisado a nadie del espacio de trabajo.",
+				"peopleReviewedSummary": "{matched} de {reviewed} personas revisadas están emparejadas.",
+				"review": "Revisar",
+				"cannotReachPrivate": "Comp AI no puede llegar a canales privados",
+				"heldBackPermissions": "{count, plural, one {Slack retuvo # permiso} other {Slack retuvo # permisos}}",
+				"reconnectPrompt": "Vuelva a conectar para pedirlo de nuevo. No pierde nada."
+			},
+			"scopeGroups": {
+				"description": "Amplio significa todo el espacio de trabajo, no un canal. Abra un grupo para ver los detalles.",
+				"broadOfTotal": "{broad} amplios de {total}",
+				"heldBackNote": "Slack retuvo este, así que está desactivado.",
+				"notGranted": "No concedido"
+			},
+			"connectButton": {
+				"errors": {
+					"accessDenied": "La instalación de Slack se canceló antes de conceder el acceso.",
+					"alreadyLinked": "Ese instalador de Slack ya está vinculado a otra cuenta del CRM.",
+					"emailMismatch": "El correo del instalador de Slack debe coincidir con la cuenta del CRM con la que inició sesión.",
+					"oauthVerificationFailed": "Slack rechazó las credenciales de la app o la URL de redirección. Revise el ID de cliente, el secreto de cliente y la URL de redirección de OAuth, luego intente de nuevo.",
+					"userInfoMissing": "Slack no devolvió el perfil del instalador. Confirme que la app tiene users:read y users:read.email, reinstálela y luego intente de nuevo."
+				},
+				"connectFailedDefault": "No se pudo conectar Slack.",
+				"openingSlack": "Abriendo Slack…",
+				"reconnect": "Reconectar",
+				"connectSlack": "Conectar Slack",
+				"notConfigured": "Slack no está configurado",
+				"connectErrorFallback": "No se pudo conectar Slack ({code})."
+			},
+			"disconnectButton": {
+				"disconnect": "Desconectar",
+				"confirmTitle": "¿Desconectar {workspace}?",
+				"confirmDescription": "Los agentes dejan de enviar a Slack de inmediato, y se borra la lista de canales en caché para que una app nueva la vuelva a leer. Se conserva quién está emparejado con qué cuenta de Slack, así que reconectar el mismo espacio de trabajo no le pide volver a emparejar a todos.",
+				"disconnected": "Slack desconectado.",
+				"disconnecting": "Desconectando…"
+			},
+			"channels": {
+				"title": "Canales a los que Comp AI puede llegar",
+				"description": "Los agentes eligen de esta lista.",
+				"refresh": "Actualizar",
+				"refreshing": "Actualizando…",
+				"stalled": "Comp AI no está leyendo Slack en este momento. La lista puede estar desactualizada.",
+				"searchPlaceholder": "Buscar canales",
+				"emptyReading": "Leyendo la lista de canales de Slack…",
+				"emptySearch": "Ningún canal coincide con “{query}”.",
+				"emptyNoChannels": "Todavía no hay canales. Comp AI lee la lista de Slack después de conectarse.",
+				"loadMore": "Cargar más",
+				"loading": "Cargando…",
+				"joinAlreadyJoined": "Comp AI ya está ahí.",
+				"joinQueued": "Comp AI se está uniendo.",
+				"joinAskInside": "Pida a alguien de adentro que invite a Comp AI.",
+				"readingChannelList": "Leyendo la lista de canales de Slack.",
+				"addTitle": "¿Agregar Comp AI a #{channel}?",
+				"askSomeoneTitle": "Pida a alguien que agregue a Comp AI",
+				"addDescription": "Es un canal privado, así que Comp AI se une como usted. Es igual que escribir la invitación usted mismo. Todos en el canal ven que se une. No lee nada hasta que active un permiso.",
+				"askDescription": "Todavía no podemos agregar a Comp AI a un canal privado. Alguien que ya esté en #{channel} tiene que ejecutar esto.",
+				"copyFailed": "No se pudo copiar. Copie el comando de arriba a mano.",
+				"commandCopied": "Comando copiado.",
+				"addAction": "Agregar Comp AI",
+				"copyAndAsk": "Copiar y marcar como pedido",
+				"adding": "Agregando…"
+			},
+			"people": {
+				"connectedTitle": "Slack está conectado",
+				"description": "Empareje a su gente del CRM con Slack una vez. Los agentes usan estas cuentas exactas después, en lugar de adivinar por un nombre parecido.",
+				"matchedSummary": "{matched} de {total} emparejados",
+				"refresh": "Actualizar desde Slack",
+				"stalled": "Comp AI no está leyendo Slack en este momento. Estos emparejamientos pueden estar desactualizados.",
+				"noneAvailable": "No hay compañeros del CRM disponibles para emparejar.",
+				"noExactMatch": "Sin coincidencia exacta de correo",
+				"footerNote": "Actualice después de que cambie un correo de Slack. El CRM solo empareja direcciones de correo exactas. Alguien sin coincidencia exacta queda sin emparejar, y un agente se detiene en lugar de adivinar por un nombre parecido.",
+				"continue": "Continuar"
+			}
+		}
+	},
+	"currencies": {
+		"metaTitle": "Monedas",
+		"title": "Monedas",
+		"description": "En qué se reportan sus números, y cómo llegan ahí las demás monedas.",
+		"columns": {
+			"currency": "Moneda",
+			"rate": "Tasa",
+			"source": "Origen",
+			"asOf": "Al",
+			"actions": "Acciones",
+			"deals": "Negocios",
+			"convertible": "Convertible"
+		},
+		"reporting": {
+			"title": "Moneda de reporte",
+			"description": "Cada total, gráfica y promedio del CRM se expresa en esta moneda. Cada negocio conserva la moneda en la que se vendió.",
+			"fieldLabel": "Reportar totales en",
+			"hintManage": "Cambiar esto reconvierte cada negocio a las tasas de hoy. Las cifras ya reportadas se moverán.",
+			"hintRestricted": "Solo un propietario o un administrador puede cambiar cómo se reporta el dinero.",
+			"saved": "Todo total ahora se reporta en {currency}."
+		},
+		"rates": {
+			"title": "Tasas de cambio",
+			"description": "Cuántos {currency} compra una unidad de cada moneda. Se obtienen a diario de open.er-api.com; una tasa que usted ingrese aquí tiene prioridad.",
+			"refresh": "Actualizar",
+			"currencyLabel": "Moneda",
+			"currencyPlaceholder": "Elija una",
+			"valueLabel": "1 {currency} = ? {reporting}",
+			"valueUnit": "unidad",
+			"ratePlaceholder": "1.09",
+			"saveRate": "Guardar tasa",
+			"saved": "Tasa guardada.",
+			"removed": "Tasa eliminada.",
+			"refreshed": "Tasas actualizadas.",
+			"invalidRate": "Una tasa debe ser un número mayor que cero.",
+			"empty": "Todavía no hay tasas. Actualice para obtenerlas, o ingrese una a mano.",
+			"sourceManual": "A mano",
+			"sourceFetched": "Obtenida"
+		},
+		"inUse": {
+			"title": "Monedas en uso",
+			"allConvertible": "Todo negocio con un monto se puede convertir a la moneda de reporte.",
+			"someUnconvertible": "{count, plural, one {{deals} no se puede convertir, así que queda fuera de todos los totales.} other {{deals} no se pueden convertir, así que quedan fuera de todos los totales.}}",
+			"ratesLastFetched": "Tasas obtenidas por última vez <time></time>.",
+			"noDeals": "Todavía ningún negocio tiene un monto.",
+			"reportingCurrencyNote": "moneda de reporte",
+			"yes": "Sí",
+			"noRate": "Sin tasa"
+		}
+	},
+	"members": {
+		"metaTitle": "Miembros",
+		"title": "Miembros",
+		"description": "Todos los que tienen acceso a su CRM.",
+		"columns": {
+			"name": "Nombre",
+			"email": "Correo",
+			"role": "Rol",
+			"joined": "Se unió",
+			"joinedLabel": "Fecha de ingreso",
+			"actions": "Acciones"
+		},
+		"you": "Usted",
+		"changeRole": "Cambiar el rol de {name}",
+		"roles": {
+			"owner": "Propietario",
+			"admin": "Administrador",
+			"member": "Miembro"
+		},
+		"searchPlaceholder": "Buscar por nombre o correo…",
+		"empty": "Nadie coincide con esta vista.",
+		"roleChanged": "Rol cambiado."
+	},
+	"sso": {
+		"metaTitle": "SSO",
+		"title": "SSO",
+		"description": "Deje que su gente inicie sesión mediante su propio proveedor de identidad. Mientras uno esté configurado, la página de inicio de sesión lo ofrece en lugar de Google.",
+		"table": {
+			"columns": {
+				"provider": "Proveedor",
+				"domain": "Dominio de correo",
+				"issuer": "Emisor",
+				"redirectUri": "URI de redirección",
+				"actions": "Acciones"
+			},
+			"clientSuffix": " · cliente …{last4}",
+			"removeSr": "Eliminar {name}",
+			"removeTitle": "¿Eliminar {name}?",
+			"removeDescription": "Nadie podrá volver a iniciar sesión con este. Si es el único proveedor, la página de inicio de sesión vuelve a Google.",
+			"removed": "Proveedor de identidad eliminado.",
+			"searchPlaceholder": "Buscar por nombre, dominio o emisor…",
+			"empty": "Todavía no hay proveedor de identidad — todos inician sesión con Google."
+		},
+		"add": {
+			"addProvider": "Agregar proveedor",
+			"title": "Agregar un proveedor de identidad",
+			"description": "Configure un proveedor de OpenID Connect.",
+			"nameLabel": "Nombre",
+			"namePlaceholder": "okta",
+			"nameHint": "Nombra el botón de inicio de sesión. No se puede cambiar después.",
+			"issuerLabel": "URL del emisor",
+			"issuerPlaceholder": "https://acme.okta.com",
+			"issuerHint": "Dónde se aloja el descubrimiento.",
+			"domainLabel": "Dominio de correo",
+			"domainPlaceholder": "acme.com",
+			"domainHint": "Separe varios con comas.",
+			"clientIdLabel": "ID de cliente",
+			"clientSecretLabel": "Secreto de cliente",
+			"clientSecretHint": "No se vuelve a mostrar.",
+			"redirectHint": "Agregue esto en su proveedor antes de guardar.",
+			"saved": "{name} guardado."
+		},
+		"copyValue": {
+			"copyFailed": "No se pudo copiar {label}. Selecciónelo a mano.",
+			"copied": "{label} copiado.",
+			"srCopy": "Copiar {label}"
+		}
+	},
+	"tracking": {
+		"metaTitle": "Seguimiento y análisis",
+		"title": "Seguimiento y análisis",
+		"description": "Rastree a los visitantes del sitio web y agregue contactos automáticamente cuando se envíe un formulario.",
+		"script": {
+			"title": "Script de seguimiento",
+			"statusPaused": "Pausado",
+			"statusReceiving": "Recibiendo vistas de página",
+			"statusNone": "Todavía sin vistas de página",
+			"description": "Una etiqueta, 4 KB, en el head de cada página que mida.",
+			"copy": "Copiar",
+			"copyFailedSelect": "No se pudo copiar el script. Selecciónelo a mano.",
+			"copied": "Script copiado.",
+			"copyFailed": "No se pudo copiar el script.",
+			"htmlTab": "Péguelo en su HTML",
+			"siteIdNote": "Site ID <code>{siteId}</code> · Rotarlo detiene de inmediato cada copia del script anterior.",
+			"gtmTab": "Agréguelo mediante Google Tag Manager",
+			"gtmStep1": "En Tag Manager, agregue una nueva etiqueta HTML personalizada.",
+			"gtmStep2": "Pegue este fragmento, no el de arriba, como el HTML de la etiqueta.",
+			"gtmStep3": "Actívelo en todas las páginas y luego publique el contenedor. Mantenga <code>{scriptUrl}</code> fuera de cualquier categoría bloqueada por consentimiento que no necesite.",
+			"gtmNote": "Tag Manager quita el atributo <code>data-site</code> al inyectar un script, así que este formulario lleva el Site ID en la URL en su lugar.",
+			"pauseLabel": "Pausar seguimiento",
+			"pauseHint": "El script sigue cargando y no registra nada. Sus dominios y configuraciones se conservan",
+			"rotateButton": "Rotar Site ID",
+			"rotateTitle": "¿Rotar el Site ID?",
+			"rotateDescription": "Cada copia del script anterior deja de registrar de inmediato, incluida cualquiera que haya olvidado. Tendrá que pegar la nueva etiqueta en cada página que lleve la anterior. Nada de lo ya recopilado se pierde.",
+			"rotateAction": "Rotar",
+			"pausedToast": "Seguimiento pausado. El script deja de registrar en cinco minutos.",
+			"resumedToast": "Seguimiento reanudado.",
+			"rotatedToast": "Site ID rotado. Pegue la nueva etiqueta en su sitio web."
+		},
+		"verify": {
+			"title": "Verificar instalación",
+			"description": "Cargamos una página y buscamos el script, luego leemos su contenedor de Tag Manager si no está en el HTML.",
+			"checkNow": "Comprobar ahora",
+			"pageLabel": "Página a comprobar",
+			"pagePlaceholder": "acme.com/precios",
+			"pageHint": "La página tiene que ser pública. Una página detrás de un inicio de sesión siempre falla esta comprobación.",
+			"verifiedJustNow": "Verificado hace un momento",
+			"tagManagerNeedsFix": "Tag Manager necesita un ajuste",
+			"noPageViewYet": "Todavía sin vista de página",
+			"notDetected": "No detectado",
+			"unreachableTitle": "No se pudo abrir {host}",
+			"unreachableDescription": "{detail} Solo seguimos páginas públicas, y nunca seguimos una redirección a una dirección privada.",
+			"missingTitle": "Sin script en {host}",
+			"missingDescription": "La página respondió en {ms} ms, pero la etiqueta no estaba en el HTML. Verifique que esté en el head, por encima de todo lo que reescriba la página.",
+			"missingContainersNote": " También leímos el contenedor de Tag Manager {containers}, y la etiqueta tampoco está ahí.",
+			"dropTitle": "Tag Manager va a perder el Site ID",
+			"dropDescription": "El contenedor {containerId} lleva la etiqueta, pero el Site ID no está en la URL del script. Tag Manager conserva solo la URL al inyectar un script, así que un atributo data-site nunca llega a la página y el rastreador nunca arranca. Copie el fragmento de Tag Manager de arriba y reemplace el HTML de la etiqueta.",
+			"dropPageViewNote": " Sí llegó una vista de página en los últimos cinco minutos, así que algo en este sitio todavía está registrando.",
+			"foundInContainer": "Script encontrado en el contenedor {containerId}",
+			"foundOnHost": "Script encontrado en {host}",
+			"answeredIn": "Respondió en {ms} ms. El Site ID {siteId} coincidió, y {allowedClause}.",
+			"allowedYes": "este dominio está en la lista de permitidos",
+			"allowedNo": "este dominio no está en la lista de permitidos",
+			"tagNotInHtmlNote": " La etiqueta no está en el HTML, así que solo se ejecuta cuando Tag Manager la activa: una vista de página es la prueba.",
+			"pageViewArrivedNote": " Llegó una vista de página en los últimos cinco minutos.",
+			"noPageViewYetNote": " Todavía no ha llegado ninguna vista de página: abra la página en un navegador para enviar una."
+		},
+		"domains": {
+			"title": "Dominios permitidos",
+			"description": "El script registra vistas de página solo en estos hosts.",
+			"addButton": "Agregar dominio",
+			"empty": "Agregue el dominio donde corre su sitio web para obtener su script de seguimiento.",
+			"columns": {
+				"domain": "Dominio",
+				"scope": "Alcance",
+				"pageViews": "Vistas de página",
+				"lastSeen": "Visto por última vez",
+				"actions": "Acciones"
+			},
+			"scopeSiteAndSubdomains": "Sitio + subdominios",
+			"scopeExactHost": "Host exacto",
+			"removed": "Dominio eliminado.",
+			"added": "Dominio agregado.",
+			"hostLabel": "Dominio",
+			"hostPlaceholder": "acme.com",
+			"scopeLabel": "Alcance"
+		},
+		"cookies": {
+			"title": "Cookies",
+			"description": "Cómo se reconoce a un visitante que regresa.",
+			"toggles": {
+				"subdomains": {
+					"label": "Limitar cookies a subdominios",
+					"hint": "Ponga la cookie en el host exacto que sirvió la página, nunca en el dominio principal"
+				},
+				"secure": {
+					"label": "Usar solo cookies seguras",
+					"hint": "Envíe la cookie por HTTPS y descártela en HTTP simple"
+				},
+				"dnt": {
+					"label": "Respetar Do Not Track",
+					"hint": "No registre nada cuando el navegador pida no ser rastreado"
+				}
+			},
+			"lifetimeLabel": "Duración de la cookie",
+			"lifetimeHint": "Después de esto, un visitante que regresa cuenta como alguien nuevo. Acórtelo si su política se lo pide.",
+			"saved": "Duración de la cookie guardada."
+		},
+		"rules": {
+			"title": "Reglas de seguimiento",
+			"description": "Dónde puede correr el script, y cómo sigue a un visitante.",
+			"crossDomain": {
+				"label": "Enlace automático entre dominios",
+				"hint": "Lleve al visitante entre los dominios de abajo, para que un mismo recorrido no se cuente como dos personas"
+			},
+			"limitToDomains": {
+				"label": "Limitar el seguimiento a los dominios de abajo",
+				"hint": "En cualquier otro dominio, el script carga y luego no hace nada"
+			}
+		},
+		"sources": {
+			"title": "Fuentes de tráfico",
+			"description": "De dónde vienen sus visitantes. Solo las personas que enviaron un formulario se atribuyen a un registro.",
+			"empty": "Todavía no hay fuentes. Aparecen en cuanto el script registra su primera vista de página.",
+			"columns": {
+				"source": "Fuente",
+				"medium": "Medio",
+				"views": "Vistas de página",
+				"contacts": "Contactos"
+			}
+		}
+	}
+}

@@ -1,1 +1,57 @@
-{}
+{
+	"page": {
+		"title": "Contactos",
+		"description": "Todos en el pipeline."
+	},
+	"table": {
+		"columns": {
+			"name": "Nombre",
+			"title": "Puesto",
+			"email": "Correo",
+			"company": "Empresa",
+			"owner": "Responsable",
+			"created": "Creado",
+			"createdLabel": "Fecha de creación",
+			"lastActivity": "Última actividad"
+		},
+		"searchPlaceholder": "Buscar por nombre, correo o empresa…",
+		"facets": {
+			"owner": "Responsable",
+			"unassigned": "Sin asignar",
+			"company": "Empresa",
+			"searching": "Buscando…",
+			"noCompanyMatch": "Ninguna empresa coincide.",
+			"noCompany": "Sin empresa"
+		},
+		"empty": "Ningún contacto coincide con esta vista."
+	},
+	"bulkActions": {
+		"unassignedLabel": "Nadie",
+		"moveToCompany": "Mover a otra empresa",
+		"noCompany": "Sin empresa",
+		"reEnrich": "Volver a enriquecer",
+		"delete": "Eliminar",
+		"reassigned": "{count, plural, one {# contacto reasignado} other {# contactos reasignados}}.",
+		"moved": "{count, plural, one {# contacto movido} other {# contactos movidos}}.",
+		"enriching": "Buscando datos de {count, plural, one {# contacto} other {# contactos}} — la tabla se actualizará.",
+		"deleted": "{count, plural, one {# contacto eliminado} other {# contactos eliminados}}.",
+		"deleteTitle": "¿Eliminar {count, plural, one {# contacto} other {# contactos}}?",
+		"deleteDescription": "Sus direcciones de correo quedan suprimidas, así que la sincronización de la bandeja no volverá a archivarlos. Esto no se puede deshacer."
+	},
+	"createSheet": {
+		"newContact": "Nuevo contacto",
+		"description": "Las direcciones de correo son únicas, así que importar a la misma persona dos veces la actualiza en lugar de duplicarla.",
+		"firstNameLabel": "Nombre",
+		"lastNameLabel": "Apellido",
+		"emailLabel": "Correo",
+		"titleLabel": "Puesto",
+		"titlePlaceholder": "Jefe de Seguridad",
+		"companyLabel": "Empresa",
+		"noCompany": "Sin empresa",
+		"ownerLabel": "Responsable",
+		"unassigned": "Sin asignar",
+		"submit": "Agregar contacto",
+		"cancel": "Cancelar",
+		"added": "{name} agregado."
+	}
+}

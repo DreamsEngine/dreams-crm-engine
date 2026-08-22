@@ -1,1 +1,80 @@
-{}
+{
+	"greeting": {
+		"title": "Bienvenido de nuevo",
+		"descriptionMine": "Lo que ha cerrado, lo que sigue en juego y lo que necesita su atención hoy.",
+		"descriptionEveryone": "Lo que el equipo ha cerrado, lo que sigue en juego y lo que necesita atención hoy."
+	},
+	"scopeToggle": {
+		"ariaLabel": "De quién mostrar las cifras",
+		"me": "Yo",
+		"everyone": "Todos"
+	},
+	"salesDashboard": {
+		"trend": {
+			"closedWon": "Ganado",
+			"newPipeline": "Pipeline nuevo"
+		},
+		"stats": {
+			"closedWonThisMonth": "Ganado este mes",
+			"vsLastMonth": "vs. el mes pasado",
+			"wonDescription": "{count, plural, one {# negocio} other {# negocios}} · {amount} el mes pasado",
+			"openPipeline": "Pipeline abierto",
+			"openPipelineDescription": "{count, plural, one {# negocio} other {# negocios}} en curso · {amount} vence este mes",
+			"winRate": "Tasa de cierre ({days}d)",
+			"winRateEmpty": "Aún no se ha cerrado nada",
+			"winRateDescription": "{wins} ganados · {losses} perdidos",
+			"averageDeal": "Negocio promedio ({days}d)",
+			"averageDealEmpty": "Sin negocios ganados para medir",
+			"averageDealDescription": "Ciclo promedio de {days} días"
+		},
+		"unconvertedNotice": "Cada cifra anterior está en {reportingCurrency}. {count, plural, one {# negocio} other {# negocios}} en {currencies} no {count, plural, one {está incluido} other {están incluidos}}: no hay una tasa para convertir{currencyCount, plural, one {la} other {las}}. <link>Configurar una</link>.",
+		"trendChart": {
+			"title": "Ganado vs. pipeline nuevo",
+			"description": "Últimos seis meses, según el mes en que un negocio se cerró o se creó",
+			"empty": "Aún no hay negocios cerrados o creados"
+		},
+		"stageChart": {
+			"title": "Pipeline abierto por etapa",
+			"description": "Dónde está el valor en este momento",
+			"centerLabel": "abierto",
+			"empty": "Nada abierto"
+		}
+	},
+	"dashboardSummary": {
+		"columns": {
+			"deal": "Negocio",
+			"stage": "Etapa",
+			"shareOfLargest": "Proporción del mayor",
+			"value": "Valor",
+			"done": "Hecho",
+			"task": "Tarea",
+			"overdue": "Vencido",
+			"activity": "Actividad",
+			"company": "Empresa",
+			"who": "Quién",
+			"when": "Cuándo"
+		},
+		"dealsInProgress": {
+			"title": "Negocios en curso",
+			"description": "Los negocios abiertos más grandes, y cuánto tiempo lleva cada uno en su etapa",
+			"openDeals": "Negocios abiertos",
+			"empty": "Nada abierto. Es hora de llenar el pipeline."
+		},
+		"overdueTasks": {
+			"title": "Tareas vencidas",
+			"descriptionEmpty": "Todas las tareas registradas están hechas o aún por llegar",
+			"descriptionCount": "{count, plural, one {# tarea vencida} other {# tareas vencidas}}",
+			"empty": "Nada vencido. Bien hecho.",
+			"markAsDone": "Marcar como hecho",
+			"noDueDate": "Sin fecha límite"
+		},
+		"recentActivity": {
+			"titleMine": "Su actividad reciente",
+			"titleEveryone": "Actividad reciente",
+			"descriptionMine": "Cada nota, tarea y cambio de etapa que ha registrado",
+			"descriptionEveryone": "Cada nota, tarea y cambio de etapa en todo el espacio de trabajo",
+			"allCompanies": "Todas las empresas",
+			"empty": "Aún no ha pasado nada."
+		}
+	}
+}

@@ -31,50 +31,38 @@ import { Icon } from "@crm/ui/components/icon";
 import { SortableItem, SortableList } from "@crm/ui/components/sortable-list";
 import { Spinner } from "@crm/ui/components/spinner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
-import {
-	ARCHIVED_NOTE,
-	ARCHIVED_ROW,
-	CUSTOM_GROUP,
-	DRAG_NOTE,
-	EMPTY_BODY,
-	EMPTY_TITLE,
-	ERROR_BODY,
-	ERROR_TITLE,
-	MANUAL_ONLY,
-	NEW_FIELD,
-	ORDER_NOTE,
-	RETRY,
-	STANDARD_NOTE,
-	STANDARD_ROW,
-	TABLE_NOTE,
-} from "./fields-copy";
 import { type FieldEntity, kindOf } from "./fields-entity";
 import { STANDARD_FIELDS } from "./standard-fields";
 
 type Field = RouterOutputs["fields"]["list"][number];
+type Translate = (
+	key: string,
+	values?: Record<string, string | number>,
+) => string;
 
 const ROW = "flex items-center gap-2.5 border-b px-5 py-2";
 
-function summaryOf(field: Field): string {
+function summaryOf(field: Field, t: Translate): string {
 	const parts: string[] = [];
 
 	if (field.agentFilled) {
 		parts.push(
 			field.agentBrief ??
 				(field.options.length > 0
-					? `${field.options.length} options`
+					? t("fields.optionsCount", { count: field.options.length })
 					: field.label),
 		);
 	} else {
-		parts.push(MANUAL_ONLY);
-		if (field.required) parts.push("required");
+		parts.push(t("fields.manualOnly"));
+		if (field.required) parts.push(t("fields.required"));
 	}
 
-	if (field.showOnTable) parts.push(TABLE_NOTE);
+	if (field.showOnTable) parts.push(t("fields.tableNote"));
 
 	return parts.join(" · ");
 }
@@ -133,6 +121,7 @@ export function FieldsList({
 	onEdit: (key: string) => void;
 	onNew: () => void;
 }) {
+	const t = useTranslations("record");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const queryClient = useQueryClient();
@@ -186,8 +175,8 @@ export function FieldsList({
 		<>
 			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
 				<DisclosureRow
-					title={STANDARD_ROW}
-					note={`${standard.length} · ${STANDARD_NOTE}`}
+					title={t("fields.standardRow")}
+					note={`${standard.length} · ${t("fields.standardNote")}`}
 				>
 					<ul className="border-b bg-muted/40 py-1">
 						{standard.map((field) => (
@@ -195,7 +184,7 @@ export function FieldsList({
 								key={field}
 								className="px-5 py-1 text-muted-foreground text-xs"
 							>
-								{field}
+								{t(`fields.standard.${field}`)}
 							</li>
 						))}
 					</ul>
@@ -211,8 +200,8 @@ export function FieldsList({
 							<EmptyMedia variant="icon">
 								<Icon icon={Warning} />
 							</EmptyMedia>
-							<EmptyTitle>{ERROR_TITLE}</EmptyTitle>
-							<EmptyDescription>{ERROR_BODY}</EmptyDescription>
+							<EmptyTitle>{t("fields.errorTitle")}</EmptyTitle>
+							<EmptyDescription>{t("fields.errorBody")}</EmptyDescription>
 						</EmptyHeader>
 						<EmptyContent>
 							<Button
@@ -221,7 +210,7 @@ export function FieldsList({
 								onClick={() => query.refetch()}
 							>
 								<Icon icon={Renew} data-icon="inline-start" />
-								{RETRY}
+								{t("fields.retry")}
 							</Button>
 						</EmptyContent>
 					</Empty>
@@ -233,13 +222,13 @@ export function FieldsList({
 									<EmptyMedia variant="icon">
 										<Icon icon={Add} />
 									</EmptyMedia>
-									<EmptyTitle>{EMPTY_TITLE}</EmptyTitle>
-									<EmptyDescription>{EMPTY_BODY}</EmptyDescription>
+									<EmptyTitle>{t("fields.emptyTitle")}</EmptyTitle>
+									<EmptyDescription>{t("fields.emptyBody")}</EmptyDescription>
 								</EmptyHeader>
 								<EmptyContent>
 									<Button onClick={onNew}>
 										<Icon icon={Add} data-icon="inline-start" />
-										{NEW_FIELD}
+										{t("fields.newField")}
 									</Button>
 								</EmptyContent>
 							</Empty>
@@ -247,10 +236,10 @@ export function FieldsList({
 							<>
 								<div className="flex items-center justify-between gap-3 px-5 pt-3.5 pb-2">
 									<span className="font-medium text-muted-foreground text-xs uppercase tracking-wider">
-										{CUSTOM_GROUP}
+										{t("fields.customGroup")}
 									</span>
 									<span className="text-muted-foreground text-xs">
-										{DRAG_NOTE}
+										{t("fields.dragNote")}
 									</span>
 								</div>
 
@@ -274,7 +263,7 @@ export function FieldsList({
 													{field.label}
 												</span>
 												<span className="w-full truncate text-muted-foreground text-xs">
-													{summaryOf(field)}
+													{summaryOf(field, t)}
 												</span>
 											</button>
 
@@ -290,19 +279,19 @@ export function FieldsList({
 													<Button variant="ghost" size="icon-xs">
 														<Icon icon={OverflowMenuVertical} />
 														<span className="sr-only">
-															More for {field.label}
+															{t("fields.moreFor", { label: field.label })}
 														</span>
 													</Button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end">
 													<DropdownMenuItem onSelect={() => onEdit(field.key)}>
-														Edit
+														{t("fields.edit")}
 													</DropdownMenuItem>
 													<DropdownMenuSeparator />
 													<DropdownMenuItem
 														onSelect={() => archive.mutate({ id: field.id })}
 													>
-														Archive
+														{t("fields.archive")}
 													</DropdownMenuItem>
 												</DropdownMenuContent>
 											</DropdownMenu>
@@ -314,8 +303,8 @@ export function FieldsList({
 
 						{archived.length > 0 ? (
 							<DisclosureRow
-								title={ARCHIVED_ROW}
-								note={`${archived.length} · ${ARCHIVED_NOTE}`}
+								title={t("fields.archivedRow")}
+								note={`${archived.length} · ${t("fields.archivedNote")}`}
 							>
 								<ul className="border-b">
 									{archived.map((field) => (
@@ -331,7 +320,7 @@ export function FieldsList({
 												size="xs"
 												onClick={() => restore.mutate({ id: field.id })}
 											>
-												Restore
+												{t("fields.restore")}
 											</Button>
 										</li>
 									))}
@@ -346,10 +335,10 @@ export function FieldsList({
 				<div className="flex shrink-0 items-center justify-between gap-3 border-t px-5 py-3">
 					<Button onClick={onNew}>
 						<Icon icon={Add} data-icon="inline-start" />
-						{NEW_FIELD}
+						{t("fields.newField")}
 					</Button>
 					<span className="text-right text-muted-foreground text-xs">
-						{ORDER_NOTE}
+						{t("fields.orderNote")}
 					</span>
 				</div>
 			) : null}

@@ -1,5 +1,6 @@
 import { DEFAULT_WORKSPACE_NAME } from "@crm/auth";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { AuthHeading, AuthShell } from "@/components/auth-shell";
 import { requireMailboxAccess } from "@/lib/session";
 import { OnboardingForm } from "./onboarding-form";
@@ -13,11 +14,13 @@ export const instant = false;
 export default async function OnboardingPage() {
 	await requireMailboxAccess();
 
+	const t = await getTranslations("onboarding");
+
 	return (
 		<AuthShell>
 			<AuthHeading
-				title="Tell us about your company"
-				description="Two things, once. The name is what the CRM calls you; the website is how the agent learns what you sell."
+				title={t("page.title")}
+				description={t("page.description")}
 			/>
 
 			<OnboardingForm placeholder={DEFAULT_WORKSPACE_NAME} />

@@ -38,6 +38,7 @@ import { Spinner } from "@crm/ui/components/spinner";
 import { StatusIndicator } from "@crm/ui/components/status-indicator";
 import { Switch } from "@crm/ui/components/switch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -46,16 +47,24 @@ import { isSyncing, SYNC_POLL_MS } from "@/lib/sync-status";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 
-const SOURCES = {
-	calendar: {
-		label: "Meetings",
-		autoCreate: "Add the company and contact when you meet someone new",
-	},
-	gmail: {
-		label: "Email",
-		autoCreate: "Add the company and contact when you reply to someone new",
-	},
-} as const;
+type SettingsTranslator = ReturnType<typeof useTranslations<"settings">>;
+
+type SyncSource = "calendar" | "gmail";
+
+function sourceCopy(
+	t: SettingsTranslator,
+	source: SyncSource,
+): { label: string; autoCreate: string } {
+	return source === "calendar"
+		? {
+				label: t("connections.google.sources.calendar.label"),
+				autoCreate: t("connections.google.sources.calendar.autoCreate"),
+			}
+		: {
+				label: t("connections.google.sources.gmail.label"),
+				autoCreate: t("connections.google.sources.gmail.autoCreate"),
+			};
+}
 
 const RESOLVE_HOSTS = [
 	"console.cloud.google.com",
@@ -105,30 +114,39 @@ function failureSignature(
 }
 
 function GoogleUnavailable() {
+	const t = useTranslations("settings");
+
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>
 					<div className="flex items-center gap-2">
 						Google
-						<StatusIndicator size="sm" tone="neutral" label="Not configured" />
+						<StatusIndicator
+							size="sm"
+							tone="neutral"
+							label={t("connections.google.notConfigured")}
+						/>
 					</div>
 				</CardTitle>
 				<CardDescription>
-					Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the root .env file
-					and restart.
+					{t("connections.google.unavailableDescription")}
 				</CardDescription>
 			</CardHeader>
 		</Card>
 	);
 }
 
-const CONNECT_ERRORS = new Map([
-	[
-		"email_doesn't_match",
-		"That Google account has a different email address to the one you sign in with, so it cannot be attached to your account. Connect the Google account that matches your sign-in address.",
-	],
-]);
+function connectErrorMessage(
+	t: SettingsTranslator,
+	code: string | undefined,
+): string | null {
+	if (!code) return null;
+	if (code === "email_doesn't_match") {
+		return t("connections.google.connectErrorEmailMismatch");
+	}
+	return t("connections.google.connectErrorFallback");
+}
 
 function ConnectGoogle({
 	slug,
@@ -137,11 +155,12 @@ function ConnectGoogle({
 	slug: string;
 	connectError?: string;
 }) {
+	const t = useTranslations("settings");
 	const [pending, setPending] = useState(false);
 
 	function fail(message?: string) {
 		setPending(false);
-		toast.error(message ?? "Could not reach Google.");
+		toast.error(message ?? t("connections.google.connectFailed"));
 	}
 
 	async function handleConnect() {
@@ -165,12 +184,15 @@ function ConnectGoogle({
 				<CardTitle>
 					<div className="flex items-center gap-2">
 						Google
-						<StatusIndicator size="sm" tone="neutral" label="Not connected" />
+						<StatusIndicator
+							size="sm"
+							tone="neutral"
+							label={t("connections.google.notConnected")}
+						/>
 					</div>
 				</CardTitle>
 				<CardDescription>
-					Read-only Gmail and Calendar. Only conversations with companies in the
-					CRM are stored.
+					{t("connections.google.connectDescription")}
 				</CardDescription>
 
 				<CardAction>
@@ -187,7 +209,7 @@ function ConnectGoogle({
 						) : (
 							<GoogleLogo data-icon="inline-start" className="size-4" />
 						)}
-						Connect
+						{t("common.connect")}
 					</Button>
 				</CardAction>
 			</CardHeader>
@@ -196,10 +218,9 @@ function ConnectGoogle({
 				<CardContent>
 					<Alert variant="destructive">
 						<Icon icon={Warning} />
-						<AlertTitle>Google did not finish connecting</AlertTitle>
+						<AlertTitle>{t("connections.google.connectErrorTitle")}</AlertTitle>
 						<AlertDescription>
-							{CONNECT_ERRORS.get(connectError) ??
-								"Google returned an error before the connection was made. Try again."}
+							{connectErrorMessage(t, connectError)}
 						</AlertDescription>
 					</Alert>
 				</CardContent>
@@ -215,6 +236,7 @@ export function GoogleConnection({
 	slug: string;
 	connectError?: string;
 }) {
+	const t = useTranslations("settings");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const queryClient = useQueryClient();
@@ -231,7 +253,9 @@ export function GoogleConnection({
 		trpc.google.purgeSyncedData.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.google();
-				toast.success(`Removed ${result.purged} synced items.`);
+				toast.success(
+					t("connections.google.purgeSuccess", { count: result.purged }),
+				);
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -301,14 +325,15 @@ export function GoogleConnection({
 						<StatusIndicator
 							size="sm"
 							tone={healthy ? "success" : "warning"}
-							label={healthy ? "Connected" : "Needs attention"}
+							label={
+								healthy
+									? t("connections.google.connected")
+									: t("connections.google.needsAttention")
+							}
 						/>
 					</div>
 				</CardTitle>
-				<CardDescription>
-					Meetings and email threads land on the matching company as they
-					happen.
-				</CardDescription>
+				<CardDescription>{t("connections.google.description")}</CardDescription>
 
 				<CardAction>
 					<Button
@@ -317,7 +342,9 @@ export function GoogleConnection({
 						disabled={syncNow.isPending}
 						onClick={() => syncNow.mutate()}
 					>
-						{syncNow.isPending ? "Checking…" : "Check now"}
+						{syncNow.isPending
+							? t("common.checking")
+							: t("connections.google.checkNow")}
 					</Button>
 				</CardAction>
 			</CardHeader>
@@ -326,8 +353,12 @@ export function GoogleConnection({
 				{!hasRefreshToken ? (
 					<Alert variant="destructive" attention={insistence}>
 						<Icon icon={Warning} />
-						<AlertTitle>Google did not return a refresh token</AlertTitle>
-						<AlertDescription>Sign out and back in.</AlertDescription>
+						<AlertTitle>
+							{t("connections.google.noRefreshTokenTitle")}
+						</AlertTitle>
+						<AlertDescription>
+							{t("connections.google.noRefreshTokenDescription")}
+						</AlertDescription>
 					</Alert>
 				) : failing.length > 0 ? (
 					failing.map((source) => {
@@ -343,7 +374,9 @@ export function GoogleConnection({
 							>
 								<Icon icon={Warning} />
 								<AlertTitle>
-									{SOURCES[source.source].label} sync failed
+									{t("connections.google.syncFailedTitle", {
+										source: sourceCopy(t, source.source).label,
+									})}
 								</AlertTitle>
 								<AlertDescription>{summary}</AlertDescription>
 
@@ -351,7 +384,7 @@ export function GoogleConnection({
 									<AlertAction>
 										<Button variant="contrast" size="xs" asChild>
 											<a href={url} target="_blank" rel="noreferrer">
-												Resolve
+												{t("connections.google.resolve")}
 												<Icon icon={Launch} data-icon="inline-end" />
 											</a>
 										</Button>
@@ -362,18 +395,16 @@ export function GoogleConnection({
 					})
 				) : (
 					<p className="text-muted-foreground text-xs">
-						{lastSyncedAt ? (
-							<>
-								Last checked <LocalRelativeTime date={lastSyncedAt} />
-							</>
-						) : (
-							"Waiting for the first check"
-						)}
+						{lastSyncedAt
+							? t.rich("connections.google.lastChecked", {
+									time: () => <LocalRelativeTime date={lastSyncedAt} />,
+								})
+							: t("connections.google.waitingFirstCheck")}
 					</p>
 				)}
 
 				{sources.map((source) => {
-					const copy = SOURCES[source.source];
+					const copy = sourceCopy(t, source.source);
 
 					return (
 						<div
@@ -407,27 +438,27 @@ export function GoogleConnection({
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
 								<Button variant="ghost" size="xs" disabled={purge.isPending}>
-									Delete synced data
+									{t("connections.google.deleteSyncedData")}
 								</Button>
 							</AlertDialogTrigger>
 
 							<AlertDialogContent>
 								<AlertDialogHeader>
-									<AlertDialogTitle>Delete synced data?</AlertDialogTitle>
+									<AlertDialogTitle>
+										{t("connections.google.deleteSyncedDataTitle")}
+									</AlertDialogTitle>
 									<AlertDialogDescription>
-										Every email and meeting brought in from Google is removed
-										from the CRM. The next check starts from now, so nothing
-										deleted here comes back.
+										{t("connections.google.deleteSyncedDataDescription")}
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 
 								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
 									<AlertDialogAction
 										variant="destructive"
 										onClick={() => purge.mutate()}
 									>
-										Delete
+										{t("connections.google.deleteAction")}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
@@ -436,27 +467,29 @@ export function GoogleConnection({
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
 								<Button variant="ghost" size="xs" disabled={revoke.isPending}>
-									Revoke Google access
+									{t("connections.google.revokeAccess")}
 								</Button>
 							</AlertDialogTrigger>
 
 							<AlertDialogContent>
 								<AlertDialogHeader>
-									<AlertDialogTitle>Revoke Google access?</AlertDialogTitle>
+									<AlertDialogTitle>
+										{t("connections.google.revokeAccessTitle")}
+									</AlertDialogTitle>
 									<AlertDialogDescription>
 										{required
-											? "You will be signed out, and you cannot use the CRM again until you grant access."
-											: "New email and meetings stop arriving. Everything already synced stays, and you can connect Google again from this page."}
+											? t("connections.google.revokeDescriptionRequired")
+											: t("connections.google.revokeDescriptionOptional")}
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 
 								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
 									<AlertDialogAction
 										variant="destructive"
 										onClick={() => revoke.mutate()}
 									>
-										Revoke
+										{t("connections.google.revokeAction")}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
@@ -468,7 +501,7 @@ export function GoogleConnection({
 								target="_blank"
 								rel="noreferrer"
 							>
-								Manage in your Google account
+								{t("connections.google.manageInGoogle")}
 							</Link>
 						</Button>
 					</div>

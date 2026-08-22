@@ -14,6 +14,7 @@ import {
 	DialogTitle,
 } from "@crm/ui/components/dialog";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 export function AddConnectionDialog({
@@ -25,6 +26,7 @@ export function AddConnectionDialog({
 	open: boolean;
 	connected: string[];
 }) {
+	const t = useTranslations("settings");
 	const router = useRouter();
 	return (
 		<Dialog
@@ -35,9 +37,11 @@ export function AddConnectionDialog({
 		>
 			<DialogContent className="max-w-(--container-narrow) gap-0 p-0 md:left-[calc(50%+calc((56px+213px)/2))]">
 				<DialogHeader className="gap-2 px-(--spacing-block-inline) pt-5 pb-4">
-					<DialogTitle className="text-base">Add a connection</DialogTitle>
+					<DialogTitle className="text-base">
+						{t("connections.addDialog.title")}
+					</DialogTitle>
 					<DialogDescription>
-						Nothing moves until you finish setting one up.
+						{t("connections.addDialog.description")}
 					</DialogDescription>
 				</DialogHeader>
 				<div className="flex flex-col border-y px-2 py-2">
@@ -45,7 +49,7 @@ export function AddConnectionDialog({
 						<CatalogRow
 							logo={GoogleLogo}
 							name="Google Workspace"
-							description="Bring in Gmail messages and Google Calendar meetings"
+							description={t("connections.addDialog.googleDescription")}
 							href={`/${slug}/settings/connections/google`}
 						/>
 					) : null}
@@ -53,7 +57,7 @@ export function AddConnectionDialog({
 						<CatalogRow
 							logo={SlackLogo}
 							name="Slack"
-							description="Let deployed agents notify approved channels and people"
+							description={t("connections.addDialog.slackDescription")}
 							href={`/${slug}/settings/connections/slack`}
 						/>
 					) : null}
@@ -61,31 +65,34 @@ export function AddConnectionDialog({
 						<CatalogRow
 							logo={MicrosoftLogo}
 							name="Microsoft 365"
-							description="Bring in Outlook email and the people on it"
+							description={t("connections.addDialog.microsoftDescription")}
 							href={`/${slug}/settings/connections/microsoft`}
 						/>
 					) : null}
 					<CatalogRow
 						logo={StripeLogo}
 						name="Stripe"
-						description="Coming soon"
+						description={t("connections.addDialog.comingSoon")}
 					/>
 					<CatalogRow
 						logo={DocusignLogo}
 						name="Docusign"
-						description="Coming soon"
+						description={t("connections.addDialog.comingSoon")}
 					/>
 					<CatalogRow
 						logo={Plug}
-						name="Anything else"
-						description="The intake API is not available yet"
+						name={t("connections.addDialog.otherName")}
+						description={t("connections.addDialog.otherDescription")}
 						href={`/${slug}/settings/connections/intake`}
 					/>
 				</div>
 				<p className="px-(--spacing-block-inline) py-4 text-muted-foreground text-xs">
 					{connected.length > 0
-						? `${connected.join(", ")} ${connected.length === 1 ? "is" : "are"} already connected.`
-						: "Nothing is connected yet."}
+						? t("connections.addDialog.alreadyConnected", {
+								count: connected.length,
+								list: connected.join(", "),
+							})
+						: t("connections.addDialog.noneConnected")}
 				</p>
 			</DialogContent>
 		</Dialog>

@@ -1,1 +1,57 @@
-{}
+{
+	"page": {
+		"title": "Contacts",
+		"description": "Everyone in the pipeline."
+	},
+	"table": {
+		"columns": {
+			"name": "Name",
+			"title": "Title",
+			"email": "Email",
+			"company": "Company",
+			"owner": "Owner",
+			"created": "Created",
+			"createdLabel": "Created date",
+			"lastActivity": "Last activity"
+		},
+		"searchPlaceholder": "Search by name, email or company…",
+		"facets": {
+			"owner": "Owner",
+			"unassigned": "Unassigned",
+			"company": "Company",
+			"searching": "Searching…",
+			"noCompanyMatch": "No company matches.",
+			"noCompany": "No company"
+		},
+		"empty": "No contacts match this view."
+	},
+	"bulkActions": {
+		"unassignedLabel": "Nobody",
+		"moveToCompany": "Move to company",
+		"noCompany": "No company",
+		"reEnrich": "Re-enrich",
+		"delete": "Delete",
+		"reassigned": "{count, plural, one {# contact} other {# contacts}} reassigned.",
+		"moved": "{count, plural, one {# contact} other {# contacts}} moved.",
+		"enriching": "Looking up {count, plural, one {# contact} other {# contacts}} — the table will update.",
+		"deleted": "{count, plural, one {# contact} other {# contacts}} deleted.",
+		"deleteTitle": "Delete {count, plural, one {# contact} other {# contacts}}?",
+		"deleteDescription": "Their email addresses are suppressed, so the inbox sync will not file them again. This cannot be undone."
+	},
+	"createSheet": {
+		"newContact": "New contact",
+		"description": "Email addresses are unique, so importing the same person twice updates them rather than duplicating them.",
+		"firstNameLabel": "First name",
+		"lastNameLabel": "Last name",
+		"emailLabel": "Email",
+		"titleLabel": "Title",
+		"titlePlaceholder": "Head of Security",
+		"companyLabel": "Company",
+		"noCompany": "No company",
+		"ownerLabel": "Owner",
+		"unassigned": "Unassigned",
+		"submit": "Add contact",
+		"cancel": "Cancel",
+		"added": "{name} added."
+	}
+}

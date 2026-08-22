@@ -14,6 +14,7 @@ import { Input } from "@crm/ui/components/input";
 import { Label } from "@crm/ui/components/label";
 import { Switch } from "@crm/ui/components/switch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTRPC } from "@/lib/trpc/client";
@@ -25,6 +26,7 @@ export function CreateChannelDialog({
 	children: React.ReactNode;
 	onCreated: () => Promise<void> | void;
 }) {
+	const t = useTranslations("agent");
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	const [open, setOpen] = useState(false);
@@ -40,7 +42,7 @@ export function CreateChannelDialog({
 				await onCreated();
 				setOpen(false);
 				setName("");
-				toast.success("Creating the channel in Slack.");
+				toast.success(t("createChannelDialog.createdToast"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -55,26 +57,29 @@ export function CreateChannelDialog({
 
 			<DialogContent className="sm:max-w-(--container-narrow)">
 				<DialogHeader>
-					<DialogTitle>Create a channel</DialogTitle>
+					<DialogTitle>{t("createChannelDialog.title")}</DialogTitle>
 					<DialogDescription>
-						Comp AI makes it in Slack and joins it. You can put the agent in it
-						straight after.
+						{t("createChannelDialog.description")}
 					</DialogDescription>
 				</DialogHeader>
 
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-1.5">
-						<Label htmlFor="channel-name">Name</Label>
+						<Label htmlFor="channel-name">
+							{t("createChannelDialog.nameLabel")}
+						</Label>
 						<Input
 							id="channel-name"
 							onChange={(event) => setName(event.target.value)}
-							placeholder="renewals"
+							placeholder={t("createChannelDialog.exampleName")}
 							value={name}
 						/>
 						<p className="text-muted-foreground text-xs">
 							{slug && !valid
-								? "Use lowercase letters, numbers and dashes."
-								: `Slack will call it #${slug || "renewals"}.`}
+								? t("createChannelDialog.invalidSlug")
+								: t("createChannelDialog.slackWillCall", {
+										slug: slug || t("createChannelDialog.exampleName"),
+									})}
 						</p>
 					</div>
 
@@ -85,7 +90,7 @@ export function CreateChannelDialog({
 							onCheckedChange={setIsPrivate}
 						/>
 						<Label htmlFor="channel-private">
-							Private. Only people you invite can see it.
+							{t("createChannelDialog.privateLabel")}
 						</Label>
 					</div>
 				</div>
@@ -96,13 +101,15 @@ export function CreateChannelDialog({
 						onClick={() => setOpen(false)}
 						variant="outline"
 					>
-						Cancel
+						{t("createChannelDialog.cancel")}
 					</Button>
 					<Button
 						disabled={!valid || create.isPending}
 						onClick={() => create.mutate({ name: slug, isPrivate })}
 					>
-						{create.isPending ? "Creating…" : "Create channel"}
+						{create.isPending
+							? t("createChannelDialog.creating")
+							: t("createChannelDialog.create")}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

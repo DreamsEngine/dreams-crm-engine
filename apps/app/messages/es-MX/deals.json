@@ -1,1 +1,77 @@
-{}
+{
+	"page": {
+		"title": "Negocios",
+		"description": "El pipeline, y todo lo que ya se cerró."
+	},
+	"stages": {
+		"DEMO_BOOKED": "Demo agendada",
+		"QUALIFIED_TO_BUY": "Calificado para compra",
+		"DECISION_MAKER_BOUGHT_IN": "Decisor convencido",
+		"CONTRACT_SENT": "Contrato enviado",
+		"CLOSED_WON": "Ganado",
+		"CLOSED_LOST": "Perdido",
+		"UNQUALIFIED_TO_BUY": "No calificado"
+	},
+	"table": {
+		"columns": {
+			"deal": "Negocio",
+			"company": "Empresa",
+			"stage": "Etapa",
+			"amount": "Monto",
+			"owner": "Responsable",
+			"closeDate": "Fecha de cierre",
+			"created": "Creado",
+			"createdLabel": "Fecha de creación",
+			"lastActivity": "Última actividad"
+		},
+		"searchPlaceholder": "Buscar negocios por nombre o empresa…",
+		"facets": {
+			"owner": "Responsable",
+			"stage": "Etapa",
+			"closing": "Cierre"
+		},
+		"tabs": {
+			"all": "Todos los negocios",
+			"open": "Abiertos",
+			"closed": "Cerrados"
+		},
+		"empty": "Ningún negocio coincide con esta vista.",
+		"meta": "{count, plural, one {# negocio} other {# negocios}} · <money>{amount}</money> en pipeline abierto",
+		"metaUnconverted": " · {count, plural, one {# negocio} other {# negocios}} sin contar (sin tasa de {currencies})"
+	},
+	"bulkActions": {
+		"changeStage": "Cambiar etapa",
+		"delete": "Eliminar",
+		"reassigned": "{count, plural, one {# negocio reasignado} other {# negocios reasignados}}.",
+		"moved": "{count, plural, one {# negocio movido} other {# negocios movidos}}.",
+		"deleted": "{count, plural, one {# negocio eliminado} other {# negocios eliminados}}.",
+		"closeAsLost": "Cerrar {count, plural, one {# negocio} other {# negocios}} como {count, plural, one {perdido} other {perdidos}}",
+		"markUnqualified": "Marcar {count, plural, one {# negocio} other {# negocios}} como {count, plural, one {no calificado} other {no calificados}}",
+		"closeReasonDescription": "El mismo motivo se aplica a todos, así que manténgalo en lo que tienen en común.",
+		"reasonLabel": "Motivo",
+		"reasonPlaceholder": "Se recortó el presupuesto del trimestre",
+		"save": "Guardar",
+		"cancel": "Cancelar",
+		"deleteTitle": "¿Eliminar {count, plural, one {# negocio} other {# negocios}}?",
+		"deleteDescription": "Todo lo relacionado con ellos — actividad, notas, los montos de su pipeline — también se elimina. Esto no se puede deshacer."
+	},
+	"createSheet": {
+		"newDeal": "Nuevo negocio",
+		"description": "Todo negocio pertenece a una empresa y tiene el nombre de alguien asignado.",
+		"nameLabel": "Nombre",
+		"namePlaceholder": "Stripe — Comp AI",
+		"companyLabel": "Empresa",
+		"ownerLabel": "Responsable",
+		"ownerPlaceholder": "Elija un responsable",
+		"stageLabel": "Etapa",
+		"stageDescription": "Un negocio nuevo es un negocio abierto — ciérrelo desde el pipeline en cuanto haya un resultado que registrar.",
+		"amountLabel": "Monto",
+		"amountPlaceholder": "24000",
+		"currencyLabel": "Moneda",
+		"closeDateLabel": "Fecha de cierre esperada",
+		"closeDatePlaceholder": "Aún sin fecha",
+		"submit": "Agregar negocio",
+		"cancel": "Cancelar",
+		"added": "{name} agregado."
+	}
+}

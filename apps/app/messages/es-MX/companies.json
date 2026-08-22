@@ -1,1 +1,53 @@
-{}
+{
+	"page": {
+		"title": "Empresas",
+		"description": "Cada cuenta en el pipeline."
+	},
+	"table": {
+		"columns": {
+			"company": "Empresa",
+			"domain": "Dominio",
+			"industry": "Industria",
+			"owner": "Responsable",
+			"contacts": "Contactos",
+			"openDeals": "Negocios abiertos",
+			"created": "Creado",
+			"createdLabel": "Fecha de creación",
+			"lastActivity": "Última actividad",
+			"enrichment": "Enriquecimiento",
+			"enrichmentLabel": "Estado del enriquecimiento"
+		},
+		"searchPlaceholder": "Buscar empresas por nombre o dominio…",
+		"facets": {
+			"owner": "Responsable",
+			"unassigned": "Sin asignar",
+			"industry": "Industria",
+			"enrichment": "Enriquecimiento"
+		},
+		"empty": "Ninguna empresa coincide con esta vista."
+	},
+	"bulkActions": {
+		"unassignedLabel": "Nadie",
+		"reEnrich": "Volver a enriquecer",
+		"delete": "Eliminar",
+		"reassigned": "{count, plural, one {# empresa reasignada} other {# empresas reasignadas}}.",
+		"enriching": "Buscando datos de {count, plural, one {# empresa} other {# empresas}} — la tabla se actualizará.",
+		"deleted": "{count, plural, one {# empresa eliminada} other {# empresas eliminadas}}.",
+		"deleteTitle": "¿Eliminar {count, plural, one {# empresa} other {# empresas}}?",
+		"deleteDescription": "Sus contactos se conservan, sin empresa. Los negocios de estas empresas se eliminan con ellas, y nada de esto se puede deshacer."
+	},
+	"createSheet": {
+		"newCompany": "Nueva empresa",
+		"description": "Póngale un nombre y un dominio. El agente completa el logotipo, la descripción, la industria, la dirección y las redes sociales.",
+		"nameLabel": "Nombre",
+		"namePlaceholder": "Stripe",
+		"domainLabel": "Dominio",
+		"domainPlaceholder": "stripe.com",
+		"domainDescription": "Una URL completa está bien — se reduce al dominio simple, que debe ser único.",
+		"ownerLabel": "Responsable",
+		"unassigned": "Sin asignar",
+		"submit": "Agregar empresa",
+		"cancel": "Cancelar",
+		"added": "{name} agregada."
+	}
+}

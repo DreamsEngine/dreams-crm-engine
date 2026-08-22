@@ -9,6 +9,7 @@ import { Button } from "@crm/ui/components/button";
 import { Icon } from "@crm/ui/components/icon";
 import { cn } from "@crm/ui/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ChatDateGroup, chatDateGroup } from "@/lib/chat-date-group";
@@ -35,6 +36,7 @@ export function AgentBuilderSidebar({
 	onNavigate?: () => void;
 	initialData?: SidebarData;
 }) {
+	const t = useTranslations("agent");
 	const pathname = usePathname();
 	const workspaceUrl = useWorkspaceUrl();
 	const trpc = useTRPC();
@@ -78,11 +80,13 @@ export function AgentBuilderSidebar({
 	return (
 		<aside className={cn("min-h-0 min-w-0 flex-col p-4 font-sans", className)}>
 			<div className="flex h-7 shrink-0 items-center justify-between pl-2">
-				<span className="font-medium text-xs">Chats</span>
+				<span className="font-medium text-xs">
+					{t("agentBuilderSidebar.chats")}
+				</span>
 				<Button asChild variant="ghost" size="icon-xs">
 					<Link
 						href={workspaceUrl("/chat")}
-						aria-label="New agent chat"
+						aria-label={t("agentBuilderSidebar.newChat")}
 						onClick={onNavigate}
 					>
 						<Icon icon={Add} />
@@ -90,16 +94,20 @@ export function AgentBuilderSidebar({
 				</Button>
 			</div>
 
-			<nav aria-label="Agent chats" className="min-h-0 flex-1 overflow-y-auto">
+			<nav
+				aria-label={t("agentBuilderSidebar.navLabel")}
+				className="min-h-0 flex-1 overflow-y-auto"
+			>
 				{groups.map((group) => (
 					<div key={group.label}>
 						<div className="flex h-8 items-end pb-1 pl-2 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.08em]">
-							{group.label}
+							{sidebarGroupLabel(t, group.label)}
 						</div>
 						{group.items.map((conversation) => {
 							const href = workspaceUrl(`/chat/${conversation.id}`);
 							const active = pathname === href;
-							const title = conversation.title ?? "Untitled chat";
+							const title =
+								conversation.title ?? t("agentBuilderSidebar.untitledChat");
 							return (
 								<div
 									key={conversation.id}
@@ -141,7 +149,7 @@ export function AgentBuilderSidebar({
 
 				{groups.length === 0 ? (
 					<p className="px-2 py-3 text-muted-foreground text-xs">
-						No chats in the last 7 days.
+						{t("agentBuilderSidebar.emptyChats")}
 					</p>
 				) : null}
 
@@ -164,6 +172,7 @@ function TeamAgents({
 	pathname: string;
 	onNavigate?: () => void;
 }) {
+	const t = useTranslations("agent");
 	const workspaceUrl = useWorkspaceUrl();
 
 	return (
@@ -174,7 +183,9 @@ function TeamAgents({
 				onClick={onNavigate}
 				className="flex h-8 items-end gap-2 rounded-sm px-2 pb-1 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.08em] outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
 			>
-				<span className="min-w-0 flex-1">Team agents</span>
+				<span className="min-w-0 flex-1">
+					{t("agentBuilderSidebar.teamAgents")}
+				</span>
 				<span className="shrink-0 font-mono">{agents.length}</span>
 			</Link>
 			{agents.map((agent) => {
@@ -228,6 +239,20 @@ function ConversationState({ state }: { state: Conversation["state"] }) {
 	}
 
 	return null;
+}
+
+function sidebarGroupLabel(
+	t: ReturnType<typeof useTranslations>,
+	label: ChatDateGroup,
+): string {
+	switch (label) {
+		case "Today":
+			return t("agentBuilderSidebar.today");
+		case "Yesterday":
+			return t("agentBuilderSidebar.yesterday");
+		case "Last 7 days":
+			return t("agentBuilderSidebar.last7Days");
+	}
 }
 
 function groupConversations(conversations: Conversation[], now: number) {

@@ -7,6 +7,7 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from "@crm/ui/components/sheet";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { AgentActivity, AgentRuns } from "./agent-history";
@@ -14,12 +15,7 @@ import { AgentActivity, AgentRuns } from "./agent-history";
 type Runs = RouterOutputs["agents"]["history"];
 type Activity = RouterOutputs["agents"]["activity"];
 
-const VIEWS = [
-	{ id: "runs", label: "Runs" },
-	{ id: "activity", label: "Activity" },
-] as const;
-
-type View = (typeof VIEWS)[number]["id"];
+type View = "runs" | "activity";
 
 export function AgentRunsDrawer({
 	activity,
@@ -41,6 +37,7 @@ export function AgentRunsDrawer({
 	retryingRunId?: string;
 	runs: Runs;
 }) {
+	const t = useTranslations("agent");
 	const [view, setView] = useState<View>("runs");
 	const [wasOpen, setWasOpen] = useState(open);
 
@@ -49,18 +46,23 @@ export function AgentRunsDrawer({
 		if (open) setView("runs");
 	}
 
+	const views: Array<{ id: View; label: string }> = [
+		{ id: "runs", label: t("agentRunsDrawer.viewRuns") },
+		{ id: "activity", label: t("agentRunsDrawer.viewActivity") },
+	];
+
 	return (
 		<Sheet onOpenChange={onOpenChange} open={open}>
 			<SheetContent className="flex flex-col gap-0 p-0" side="right" size="xl">
 				<SheetHeader className="gap-1 border-b px-5 py-4">
-					<SheetTitle>History</SheetTitle>
+					<SheetTitle>{t("agentRunsDrawer.title")}</SheetTitle>
 					<SheetDescription>
-						Every run and every change, newest first.
+						{t("agentRunsDrawer.description")}
 					</SheetDescription>
 				</SheetHeader>
 
 				<div className="flex h-9 shrink-0 items-end gap-5 border-b px-5">
-					{VIEWS.map((entry) => (
+					{views.map((entry) => (
 						<button
 							className={`-mb-px h-9 border-b-2 text-sm ${
 								view === entry.id

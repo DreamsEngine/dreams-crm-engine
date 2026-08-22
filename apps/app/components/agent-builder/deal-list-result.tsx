@@ -8,6 +8,7 @@ import {
 } from "@crm/ui/components/simple-table";
 import { TableCell } from "@crm/ui/components/table";
 import { formatMoney } from "@crm/ui/lib/format";
+import { useTranslations } from "next-intl";
 import { CompanyCell } from "@/components/crm/company-cell";
 import { DealStageIndicator } from "@/components/crm/deal-stage";
 import { OwnerCell } from "@/components/crm/owner-cell";
@@ -17,41 +18,62 @@ import { LocalDay } from "@/components/local-date-time";
 import type { DealListItem, DealListResult } from "@/lib/agent-transcript";
 import { DEAL_STAGE_OPTIONS } from "@/lib/deal-stage";
 
-const COLUMNS: SimpleTableColumn[] = [
-	{ id: "deal", header: "Deal", width: "w-[20%]" },
-	{ id: "company", header: "Company", width: "w-[18%]" },
-	{ id: "stage", header: "Stage", width: "w-[18%]" },
-	{
-		id: "amount",
-		header: "Amount",
-		width: "w-[12%]",
-		align: "right",
-	},
-	{ id: "owner", header: "Owner", width: "w-[14%]" },
-	{ id: "close", header: "Close date", width: "w-[12%]" },
-	{ id: "idle", header: "Idle", width: "w-[8%]", align: "right" },
-];
-
 export function DealListResultTable({ result }: { result: DealListResult }) {
+	const t = useTranslations("agent");
 	const openRecord = useOpenRecord();
 	const prefetchRecord = usePrefetchRecord();
 	const count = result.deals.length;
-	const title = tableTitle(result);
+	const title = tableTitle(t, result);
+	const columns: SimpleTableColumn[] = [
+		{ id: "deal", header: t("dealListResult.columnDeal"), width: "w-[20%]" },
+		{
+			id: "company",
+			header: t("dealListResult.columnCompany"),
+			width: "w-[18%]",
+		},
+		{
+			id: "stage",
+			header: t("dealListResult.columnStage"),
+			width: "w-[18%]",
+		},
+		{
+			id: "amount",
+			header: t("dealListResult.columnAmount"),
+			width: "w-[12%]",
+			align: "right",
+		},
+		{
+			id: "owner",
+			header: t("dealListResult.columnOwner"),
+			width: "w-[14%]",
+		},
+		{
+			id: "close",
+			header: t("dealListResult.columnClose"),
+			width: "w-[12%]",
+		},
+		{
+			id: "idle",
+			header: t("dealListResult.columnIdle"),
+			width: "w-[8%]",
+			align: "right",
+		},
+	];
 
 	return (
 		<section aria-label={title} className="flex w-full flex-col gap-3">
 			<SimpleTable
-				columns={COLUMNS}
+				columns={columns}
 				className="min-w-[56rem] table-fixed [&_td:first-child]:pl-4 [&_td:last-child]:pr-4 [&_th:first-child]:pl-4 [&_th:last-child]:pr-4"
 				headerHeight="h-11"
 			>
 				{count === 0 ? (
 					<SimpleTableRow>
 						<TableCell
-							colSpan={COLUMNS.length}
+							colSpan={columns.length}
 							className="h-32 whitespace-normal py-8 text-center align-middle text-muted-foreground"
 						>
-							No deals met these pipeline filters.
+							{t("dealListResult.empty")}
 						</TableCell>
 					</SimpleTableRow>
 				) : (
@@ -105,11 +127,13 @@ export function DealListResultTable({ result }: { result: DealListResult }) {
 									className="overflow-hidden px-3 py-3 text-right text-muted-foreground tabular-nums"
 									title={
 										deal.neverActive
-											? "No activity has ever been recorded"
+											? t("dealListResult.neverActive")
 											: undefined
 									}
 								>
-									{deal.daysSinceLastActivity}d
+									{t("dealListResult.daysSuffix", {
+										days: deal.daysSinceLastActivity,
+									})}
 								</TableCell>
 							</SimpleTableRow>
 						);
@@ -117,9 +141,9 @@ export function DealListResultTable({ result }: { result: DealListResult }) {
 				)}
 			</SimpleTable>
 			<div className="flex flex-wrap items-center justify-between gap-3 text-muted-foreground text-xs">
-				<span>{tableMeta(result)}</span>
+				<span>{tableMeta(t, result)}</span>
 				<span>
-					As of <LocalDay date={result.asOf} />
+					{t("dealListResult.asOfPrefix")} <LocalDay date={result.asOf} />
 				</span>
 			</div>
 		</section>
@@ -137,24 +161,34 @@ function Stage({ stage }: { stage: string }) {
 	);
 }
 
-function tableTitle(result: DealListResult): string {
+type T = ReturnType<typeof useTranslations>;
+
+function tableTitle(t: T, result: DealListResult): string {
 	const count = result.deals.length;
 	const status =
 		result.criteria.status === "all" ? "" : `${result.criteria.status} `;
-	const stale = result.criteria.inactiveForDays === null ? "" : "stale ";
+	const stale =
+		result.criteria.inactiveForDays === null
+			? ""
+			: `${t("dealListResult.stale")} `;
 	return count === 0
-		? "No matching deals"
-		: `${count} ${stale}${status}deal${count === 1 ? "" : "s"}`;
+		? t("dealListResult.tableTitleEmpty")
+		: t("dealListResult.tableTitle", {
+				count,
+				modifier: `${stale}${status}`,
+			});
 }
 
-function tableMeta(result: DealListResult): string {
+function tableMeta(t: T, result: DealListResult): string {
 	const details = [
-		`${result.deals.length} deal${result.deals.length === 1 ? "" : "s"}`,
-		pipelineTotal(result.deals),
+		t("dealListResult.metaDealCount", { count: result.deals.length }),
+		pipelineTotal(t, result.deals),
 		result.criteria.inactiveForDays === null
 			? null
-			: `${result.criteria.inactiveForDays}+ days inactive`,
-		result.hasMore ? "More results available" : null,
+			: t("dealListResult.metaInactiveDays", {
+					days: result.criteria.inactiveForDays,
+				}),
+		result.hasMore ? t("dealListResult.metaMoreResults") : null,
 	].filter((detail): detail is string => Boolean(detail));
 
 	return details.join(" · ");
@@ -168,7 +202,7 @@ function humaniseStage(stage: string): string {
 		.join(" ");
 }
 
-function pipelineTotal(deals: readonly DealListItem[]): string | null {
+function pipelineTotal(t: T, deals: readonly DealListItem[]): string | null {
 	const currencies = new Set(deals.map((deal) => deal.currency));
 	if (currencies.size !== 1) return null;
 
@@ -176,5 +210,7 @@ function pipelineTotal(deals: readonly DealListItem[]): string | null {
 	if (!currency) return null;
 
 	const amount = deals.reduce((sum, deal) => sum + (deal.amount ?? 0), 0);
-	return `${formatMoney(Math.round(amount * 100), currency)} pipeline`;
+	return t("dealListResult.metaPipeline", {
+		amount: formatMoney(Math.round(amount * 100), currency),
+	});
 }

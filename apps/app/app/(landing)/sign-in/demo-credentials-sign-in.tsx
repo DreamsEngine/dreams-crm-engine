@@ -4,17 +4,19 @@ import { authClient } from "@crm/auth/client";
 import { Button } from "@crm/ui/components/button";
 import { Input } from "@crm/ui/components/input";
 import { Label } from "@crm/ui/components/label";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function DemoCredentialsSignIn() {
+	const t = useTranslations("auth");
 	const [pending, setPending] = useState(false);
 
 	async function submit(formData: FormData) {
 		const email = String(formData.get("email") ?? "").trim();
 		const password = String(formData.get("password") ?? "");
 		if (!email || password.length < 8) {
-			toast.error("Enter an email and a password of at least 8 characters.");
+			toast.error(t("demoCredentialsSignIn.validationError"));
 			return;
 		}
 
@@ -34,7 +36,9 @@ export function DemoCredentialsSignIn() {
 		}
 
 		setPending(false);
-		toast.error(signedUp.error.message ?? "Could not sign in.");
+		toast.error(
+			signedUp.error.message ?? t("demoCredentialsSignIn.signInFailed"),
+		);
 	}
 
 	return (
@@ -44,49 +48,53 @@ export function DemoCredentialsSignIn() {
 				event.preventDefault();
 				submit(new FormData(event.currentTarget)).catch(() => {
 					setPending(false);
-					toast.error("Could not reach the sign-in service.");
+					toast.error(t("demoCredentialsSignIn.genericError"));
 				});
 			}}
 		>
 			<div className="flex items-center gap-3">
 				<div className="h-px flex-1 bg-border" />
 				<span className="font-mono text-muted-foreground text-xs/4 uppercase">
-					or with email
+					{t("demoCredentialsSignIn.orWithEmail")}
 				</span>
 				<div className="h-px flex-1 bg-border" />
 			</div>
 
 			<div className="flex flex-col gap-2">
-				<Label htmlFor="demo-email">Email</Label>
+				<Label htmlFor="demo-email">
+					{t("demoCredentialsSignIn.emailLabel")}
+				</Label>
 				<Input
 					id="demo-email"
 					name="email"
 					type="email"
 					autoComplete="email"
-					placeholder="you@company.com"
+					placeholder={t("demoCredentialsSignIn.emailPlaceholder")}
 					required
 				/>
 			</div>
 
 			<div className="flex flex-col gap-2">
-				<Label htmlFor="demo-password">Password</Label>
+				<Label htmlFor="demo-password">
+					{t("demoCredentialsSignIn.passwordLabel")}
+				</Label>
 				<Input
 					id="demo-password"
 					name="password"
 					type="password"
 					autoComplete="current-password"
 					minLength={8}
-					placeholder="At least 8 characters"
+					placeholder={t("demoCredentialsSignIn.passwordPlaceholder")}
 					required
 				/>
 			</div>
 
 			<Button type="submit" disabled={pending}>
-				Continue
+				{t("demoCredentialsSignIn.continue")}
 			</Button>
 
 			<p className="text-center text-muted-foreground text-xs/4">
-				First visit creates your demo account with that email and password.
+				{t("demoCredentialsSignIn.hint")}
 			</p>
 		</form>
 	);

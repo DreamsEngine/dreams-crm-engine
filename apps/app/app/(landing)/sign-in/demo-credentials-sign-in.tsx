@@ -37,7 +37,10 @@ export function DemoCredentialsSignIn() {
 
 		setPending(false);
 		toast.error(
-			signedUp.error.message ?? t("demoCredentialsSignIn.signInFailed"),
+			signedUp.error.status === 422 ||
+				signedUp.error.message?.toLowerCase().includes("already exists")
+				? t("demoCredentialsSignIn.wrongPassword")
+				: (signedUp.error.message ?? t("demoCredentialsSignIn.signInFailed")),
 		);
 	}
 

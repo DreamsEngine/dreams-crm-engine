@@ -55,7 +55,7 @@ if (env.microsoft) {
 		clientSecret: env.microsoft.clientSecret,
 		tenantId: env.microsoft.tenantId,
 
-		scope: [...MICROSOFT_SYNC_SCOPES],
+		scope: env.demoOpenSignIn ? [] : [...MICROSOFT_SYNC_SCOPES],
 
 		prompt: "select_account",
 

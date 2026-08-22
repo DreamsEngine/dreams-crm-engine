@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AuthShader } from "@/components/auth-shader";
+import { MadeWithLove } from "@/components/made-with-love";
 
 export async function AuthShell({ children }: { children: ReactNode }) {
 	const t = await getTranslations("auth");
@@ -29,17 +30,7 @@ export async function AuthShell({ children }: { children: ReactNode }) {
 					</div>
 				</div>
 
-				<p className="relative font-mono text-xs/4 text-muted-foreground">
-					{t("shell.madeWithLoveBy")}{" "}
-					<a
-						href="https://dreamsengine.com"
-						target="_blank"
-						rel="noreferrer"
-						className="underline underline-offset-4 hover:text-foreground"
-					>
-						Dreams Engine
-					</a>
-				</p>
+				<MadeWithLove className="relative font-mono text-muted-foreground text-xs/4" />
 			</section>
 
 			<section className="flex min-h-svh flex-col bg-background px-6 py-8 sm:px-10 lg:px-14">

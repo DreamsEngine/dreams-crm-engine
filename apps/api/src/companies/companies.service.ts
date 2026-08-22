@@ -1,4 +1,5 @@
 import {
+	CompanyRiskLevel,
 	type Db,
 	type EnrichmentStatus,
 	type Prisma,
@@ -50,6 +51,12 @@ const OWNER_SELECT = {
 	image: true,
 } as const;
 
+const AT_RISK_LEVELS = [
+	CompanyRiskLevel.DUE,
+	CompanyRiskLevel.OVERDUE,
+	CompanyRiskLevel.DORMANT,
+] as const;
+
 export type CompanyRow = {
 	id: string;
 	name: string;
@@ -73,6 +80,10 @@ export type CompanyRow = {
 	openDealCount: number;
 	lastActivityAt: string | null;
 	createdAt: string;
+	lastPurchaseAt: string | null;
+	purchaseCycleDays: number | null;
+	cycleOverdueDays: number | null;
+	riskLevel: CompanyRiskLevel;
 	fields: Record<string, string | number | boolean | null>;
 };
 
@@ -85,6 +96,9 @@ const SORTABLE: OrderByColumns<Prisma.CompanyOrderByWithRelationInput> = {
 	deals: (dir) => ({ deals: { _count: dir } }),
 	owner: (dir) => ({ owner: { name: dir } }),
 	lastActivity: (dir) => ({ lastActivityAt: { sort: dir, nulls: "last" } }),
+	risk: (dir) => ({ riskLevel: dir }),
+	lastPurchase: (dir) => ({ lastPurchaseAt: { sort: dir, nulls: "last" } }),
+	cycle: (dir) => ({ purchaseCycleDays: { sort: dir, nulls: "last" } }),
 };
 
 @Injectable()
@@ -134,6 +148,10 @@ export class CompaniesService {
 					},
 					lastActivityAt: true,
 					createdAt: true,
+					lastPurchaseAt: true,
+					purchaseCycleDays: true,
+					cycleOverdueDays: true,
+					riskLevel: true,
 				},
 			}),
 			this.db.company.count({ where }),
@@ -165,6 +183,10 @@ export class CompaniesService {
 				openDealCount: row._count.deals,
 				lastActivityAt: row.lastActivityAt?.toISOString() ?? null,
 				createdAt: row.createdAt.toISOString(),
+				lastPurchaseAt: row.lastPurchaseAt?.toISOString() ?? null,
+				purchaseCycleDays: row.purchaseCycleDays,
+				cycleOverdueDays: row.cycleOverdueDays,
+				riskLevel: row.riskLevel,
 				fields: tableFields.get(row.id) ?? {},
 			})),
 			total,
@@ -567,40 +589,50 @@ export class CompaniesService {
 			where.source = input.source as RecordSource;
 		}
 
+		if (input.risk !== FACET_ALL) {
+			where.riskLevel = { in: [...AT_RISK_LEVELS] };
+		}
+
 		return where;
 	}
 
 	private async facetCounts(input: CompanyListInput) {
 		const where = this.searchFilter(input.q);
 
-		const [owners, industries, enrichment, sources] = await Promise.all([
-			this.db.company.groupBy({
-				by: ["ownerId"],
-				where,
-				_count: { _all: true },
-			}),
-			this.db.company.groupBy({
-				by: ["industry"],
-				where,
-				_count: { _all: true },
-			}),
-			this.db.company.groupBy({
-				by: ["enrichmentStatus"],
-				where,
-				_count: { _all: true },
-			}),
-			this.db.company.groupBy({
-				by: ["source"],
-				where,
-				_count: { _all: true },
-			}),
-		]);
+		const [owners, industries, enrichment, sources, atRisk] = await Promise.all(
+			[
+				this.db.company.groupBy({
+					by: ["ownerId"],
+					where,
+					_count: { _all: true },
+				}),
+				this.db.company.groupBy({
+					by: ["industry"],
+					where,
+					_count: { _all: true },
+				}),
+				this.db.company.groupBy({
+					by: ["enrichmentStatus"],
+					where,
+					_count: { _all: true },
+				}),
+				this.db.company.groupBy({
+					by: ["source"],
+					where,
+					_count: { _all: true },
+				}),
+				this.db.company.count({
+					where: { ...where, riskLevel: { in: [...AT_RISK_LEVELS] } },
+				}),
+			],
+		);
 
 		return {
 			owner: countsByKey(owners, "ownerId", FACET_UNASSIGNED),
 			industry: countsByKey(industries, "industry"),
 			enrichment: countsByKey(enrichment, "enrichmentStatus"),
 			source: countsByKey(sources, "source"),
+			risk: { at_risk: atRisk },
 		};
 	}
 

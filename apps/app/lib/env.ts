@@ -8,3 +8,7 @@ export function isMarketing(): boolean {
 export function isDemoOpenSignIn(): boolean {
 	return process.env.DEMO_OPEN_SIGN_IN === "1";
 }
+
+export function isFollowUpEnabled(): boolean {
+	return process.env.FOLLOWUP === "1";
+}

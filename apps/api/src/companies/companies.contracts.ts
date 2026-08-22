@@ -8,6 +8,7 @@ export const companyListInput = listInput.extend({
 	industry: z.string().default("all"),
 	enrichment: z.string().default("all"),
 	source: z.string().default("all"),
+	risk: z.string().default("all"),
 });
 
 export type CompanyListInput = z.infer<typeof companyListInput>;

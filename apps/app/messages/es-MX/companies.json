@@ -3,6 +3,13 @@
 		"title": "Empresas",
 		"description": "Cada cuenta en el pipeline."
 	},
+	"riskLevels": {
+		"NEW": "Nuevo",
+		"STEADY": "Al corriente",
+		"DUE": "Por recomprar",
+		"OVERDUE": "Recompra vencida",
+		"DORMANT": "Inactivo"
+	},
 	"table": {
 		"columns": {
 			"company": "Empresa",
@@ -15,14 +22,20 @@
 			"createdLabel": "Fecha de creación",
 			"lastActivity": "Última actividad",
 			"enrichment": "Enriquecimiento",
-			"enrichmentLabel": "Estado del enriquecimiento"
+			"enrichmentLabel": "Estado del enriquecimiento",
+			"risk": "Salud",
+			"lastPurchase": "Última compra",
+			"cycle": "Ciclo"
 		},
+		"cycleValue": "{days} d",
 		"searchPlaceholder": "Buscar empresas por nombre o dominio…",
 		"facets": {
 			"owner": "Responsable",
 			"unassigned": "Sin asignar",
 			"industry": "Industria",
-			"enrichment": "Enriquecimiento"
+			"enrichment": "Enriquecimiento",
+			"risk": "Salud",
+			"atRisk": "En riesgo"
 		},
 		"empty": "Ninguna empresa coincide con esta vista."
 	},

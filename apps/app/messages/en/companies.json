@@ -3,6 +3,13 @@
 		"title": "Companies",
 		"description": "Every account in the pipeline."
 	},
+	"riskLevels": {
+		"NEW": "New",
+		"STEADY": "Steady",
+		"DUE": "Due",
+		"OVERDUE": "Overdue",
+		"DORMANT": "Dormant"
+	},
 	"table": {
 		"columns": {
 			"company": "Company",
@@ -15,14 +22,20 @@
 			"createdLabel": "Created date",
 			"lastActivity": "Last activity",
 			"enrichment": "Enrichment",
-			"enrichmentLabel": "Enrichment status"
+			"enrichmentLabel": "Enrichment status",
+			"risk": "Health",
+			"lastPurchase": "Last purchase",
+			"cycle": "Cycle"
 		},
+		"cycleValue": "{days} d",
 		"searchPlaceholder": "Search companies by name or domain…",
 		"facets": {
 			"owner": "Owner",
 			"unassigned": "Unassigned",
 			"industry": "Industry",
-			"enrichment": "Enrichment"
+			"enrichment": "Enrichment",
+			"risk": "Health",
+			"atRisk": "At risk"
 		},
 		"empty": "No companies match this view."
 	},

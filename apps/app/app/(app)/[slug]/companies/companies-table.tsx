@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@crm/ui/components/badge";
 import {
 	DataTable,
 	type DataTableColumn,
@@ -27,6 +28,7 @@ import {
 	ENRICHMENT_POLL_MS,
 	isEnriching,
 } from "@/lib/enrichment-status";
+import { RISK_LEVEL_BADGE_VARIANT } from "@/lib/risk-level";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { CompaniesBulkActions } from "./companies-bulk-actions";
@@ -36,7 +38,58 @@ type CompanyRow = RouterOutputs["companies"]["list"]["rows"][number];
 
 function columns(
 	t: ReturnType<typeof useTranslations>,
+	followUpEnabled: boolean,
 ): DataTableColumn<CompanyRow>[] {
+	const followUpColumns: DataTableColumn<CompanyRow>[] = followUpEnabled
+		? [
+				{
+					id: "risk",
+					header: t("table.columns.risk"),
+					sortable: true,
+					width: "w-[10%]",
+					hideBelow: "md",
+					cell: (row) => (
+						<Badge variant={RISK_LEVEL_BADGE_VARIANT[row.riskLevel]}>
+							{t(`riskLevels.${row.riskLevel}`)}
+						</Badge>
+					),
+				},
+				{
+					id: "lastPurchase",
+					header: t("table.columns.lastPurchase"),
+					sortable: true,
+					align: "right",
+					width: "w-[12%]",
+					hideBelow: "lg",
+					cell: (row) => (
+						<span className="text-muted-foreground">
+							{row.lastPurchaseAt ? (
+								<LocalRelativeTime date={row.lastPurchaseAt} />
+							) : (
+								<EmptyCellValue />
+							)}
+						</span>
+					),
+				},
+				{
+					id: "cycle",
+					header: t("table.columns.cycle"),
+					sortable: true,
+					align: "right",
+					width: "w-[8%]",
+					hideBelow: "lg",
+					cell: (row) =>
+						row.purchaseCycleDays !== null ? (
+							<span className="tabular-nums text-muted-foreground">
+								{t("table.cycleValue", { days: row.purchaseCycleDays })}
+							</span>
+						) : (
+							<EmptyCellValue />
+						),
+				},
+			]
+		: [];
+
 	return [
 		{
 			id: "name",
@@ -152,10 +205,15 @@ function columns(
 				/>
 			),
 		},
+		...followUpColumns,
 	];
 }
 
-export function CompaniesTable() {
+export function CompaniesTable({
+	followUpEnabled,
+}: {
+	followUpEnabled: boolean;
+}) {
 	const t = useTranslations("companies");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
@@ -207,12 +265,21 @@ export function CompaniesTable() {
 				(option) => (facetCounts?.enrichment?.[option.value] ?? 0) > 0,
 			),
 		},
+		...(followUpEnabled
+			? [
+					{
+						id: "risk",
+						label: t("table.facets.risk"),
+						options: [{ value: "at_risk", label: t("table.facets.atRisk") }],
+					},
+				]
+			: []),
 	];
 
 	const fieldColumns = useFieldColumns<CompanyRow>("COMPANY");
 	const tableColumns = useMemo(
-		() => [...columns(t), ...fieldColumns],
-		[t, fieldColumns],
+		() => [...columns(t, followUpEnabled), ...fieldColumns],
+		[t, followUpEnabled, fieldColumns],
 	);
 
 	return (

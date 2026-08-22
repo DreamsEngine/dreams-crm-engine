@@ -357,6 +357,52 @@ const DEALS: readonly SeedDeal[] = [
 	},
 ];
 
+type HistoricalPurchase = {
+	company: string;
+	product: string;
+	daysAgo: readonly number[];
+};
+
+const HISTORICAL_PURCHASES: readonly HistoricalPurchase[] = [
+	{
+		company: "OXXO",
+		product: "Japonés 13g",
+		daysAgo: [240, 210, 180, 150, 120, 45],
+	},
+	{
+		company: "Casa Ley",
+		product: "Cantinero",
+		daysAgo: [200, 160, 120, 60],
+	},
+	{
+		company: "HEB México",
+		product: "Crujientes 800g",
+		daysAgo: [240, 210, 180, 150],
+	},
+	{
+		company: "Chedraui",
+		product: "Pop's del Rey 470g",
+		daysAgo: [240, 206, 172, 138, 104, 40],
+	},
+	{
+		company: "Grupo Merza",
+		product: "Képulpa",
+		daysAgo: [240, 192, 144, 96, 53],
+	},
+	{
+		company: "Soriana",
+		product: "Frito con Sal 800g",
+		daysAgo: [245, 200, 155, 110, 65],
+	},
+	{
+		company: "Calimax",
+		product: "Frito con Chile y Especias 800g",
+		daysAgo: [245, 200, 155, 110, 65],
+	},
+];
+
+const MONTH_FORMATTER = new Intl.DateTimeFormat("es-MX", { month: "long" });
+
 const NOTE_BODIES = [
 	"Revisamos el catálogo 2026 completo. Les interesa el pouch re sellable de 800g como diferenciador de anaquel.",
 	"Piden ficha logística: caja de 24 bolsas de 800g, tarima de 6 camas con 45 cajas, 868.5 kg por tarima.",
@@ -588,7 +634,9 @@ async function seedContacts(
 					lastName,
 					email,
 					title: pick(TITLES),
-					phone: chance(0.5) ? `+52 55 ${integer(1000, 9999)} ${integer(1000, 9999)}` : null,
+					phone: chance(0.5)
+						? `+52 55 ${integer(1000, 9999)} ${integer(1000, 9999)}`
+						: null,
 					companyId: company.id,
 					ownerId: pick(ownerIds),
 					createdAt: daysFromNow(-integer(10, 300), 12),
@@ -659,8 +707,9 @@ async function seedDeals(
 				stage: seed.stage,
 				stageChangedAt,
 				...(() => {
-					const { amount, currency, baseAmount, baseCurrency, fxRate } =
-						money(seed.amountMxn);
+					const { amount, currency, baseAmount, baseCurrency, fxRate } = money(
+						seed.amountMxn,
+					);
 					return {
 						amount,
 						currency,
@@ -699,6 +748,58 @@ async function seedDeals(
 	}
 
 	return deals;
+}
+
+async function seedHistoricalPurchases(
+	companies: { id: string; name: string }[],
+	ownerIds: string[],
+): Promise<number> {
+	const byName = new Map(companies.map((company) => [company.name, company]));
+	let count = 0;
+
+	for (const purchase of HISTORICAL_PURCHASES) {
+		const company = byName.get(purchase.company);
+		if (!company) throw new Error(`Unknown company: ${purchase.company}`);
+
+		for (const [index, daysAgo] of purchase.daysAgo.entries()) {
+			const id = `delrey-hist-${slug(company.name)}-${index + 1}`;
+			const closedAt = daysFromNow(-daysAgo, 12);
+			const month = MONTH_FORMATTER.format(closedAt);
+
+			await db.deal.upsert({
+				where: { id },
+				create: {
+					id,
+					name: `Resurtido ${purchase.product} ${month}`,
+					description: `Pedido de resurtido de ${purchase.product} para ${company.name}.`,
+					companyId: company.id,
+					ownerId: pick(ownerIds),
+					stage: DealStage.CLOSED_WON,
+					stageChangedAt: closedAt,
+					closedAt,
+					...(() => {
+						const { amount, currency, baseAmount, baseCurrency, fxRate } =
+							money(integer(200, 900) * 1000);
+						return {
+							amount,
+							currency,
+							baseAmount,
+							baseCurrency,
+							fxRate,
+							fxRateAt: fxRate === null ? null : daysFromNow(-1),
+						};
+					})(),
+					expectedCloseDate: daysFromNow(-daysAgo + 5, 12),
+					createdAt: daysFromNow(-(daysAgo + integer(5, 15)), 12),
+				},
+				update: {},
+			});
+
+			count += 1;
+		}
+	}
+
+	return count;
 }
 
 async function seedActivities(
@@ -820,11 +921,16 @@ async function main() {
 	const companies = await seedCompanies(ownerIds);
 	const contacts = await seedContacts(companies, ownerIds);
 	const deals = await seedDeals(companies, contacts, ownerIds);
+	const historicalPurchases = await seedHistoricalPurchases(
+		companies,
+		ownerIds,
+	);
 	const activities = await seedActivities(companies, contacts, deals, ownerIds);
 
 	console.log(
 		`Seeded ${companies.length} companies, ${contacts.length} contacts, ` +
-			`${deals.length} deals, ${activities} activities for Cacahuates del Rey.`,
+			`${deals.length} deals, ${historicalPurchases} historical purchase deals, ` +
+			`${activities} activities for Cacahuates del Rey.`,
 	);
 }
 

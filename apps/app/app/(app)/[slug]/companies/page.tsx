@@ -11,6 +11,7 @@ import {
 	PageShellLoading,
 	PageShellTitle,
 } from "@/components/page-shell";
+import { isFollowUpEnabled } from "@/lib/env";
 import { requireSession } from "@/lib/session";
 import { HydrateClient } from "@/lib/trpc/hydrate";
 import { getServerQueryClient, getServerTrpc } from "@/lib/trpc/server";
@@ -68,7 +69,7 @@ async function Companies({
 
 	return (
 		<HydrateClient>
-			<CompaniesTable />
+			<CompaniesTable followUpEnabled={isFollowUpEnabled()} />
 		</HydrateClient>
 	);
 }

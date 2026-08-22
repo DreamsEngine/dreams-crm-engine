@@ -1,0 +1,22 @@
+{
+	"header": {
+		"openNavigation": "Open navigation",
+		"homepage": "Homepage",
+		"loading": "Loading workspace header…",
+		"accountMenu": "Account menu",
+		"lightMode": "Light mode",
+		"darkMode": "Dark mode",
+		"signOut": "Sign out",
+		"signOutFailed": "Could not sign out."
+	},
+	"signIn": {
+		"title": "Welcome back",
+		"description": "Sign in with your account to continue.",
+		"metaTitle": "Sign in"
+	},
+	"relativeTime": {
+		"justNow": "just now",
+		"ago": "{time} ago",
+		"in": "in {time}"
+	}
+}

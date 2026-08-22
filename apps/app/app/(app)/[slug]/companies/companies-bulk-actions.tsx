@@ -7,8 +7,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 } from "@crm/ui/components/dropdown-menu";
-import { formatCount } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -20,10 +20,6 @@ import {
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 
-function companies(count: number): string {
-	return formatCount(count, "company", "companies");
-}
-
 export function CompaniesBulkActions({
 	ids,
 	onDone,
@@ -31,6 +27,8 @@ export function CompaniesBulkActions({
 	ids: string[];
 	onDone: () => void;
 }) {
+	const t = useTranslations("companies");
+	const tRecord = useTranslations("record");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const users = useQuery(trpc.users.list.queryOptions());
@@ -42,7 +40,11 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkAssignOwner.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.company();
-				reportBulk(result, (count) => `${companies(count)} reassigned.`);
+				reportBulk(
+					result,
+					(count) => t("bulkActions.reassigned", { count }),
+					tRecord,
+				);
 				onDone();
 			},
 			onError,
@@ -55,7 +57,8 @@ export function CompaniesBulkActions({
 				await cache.company();
 				reportBulk(
 					result,
-					(count) => `Looking up ${companies(count)} — the table will update.`,
+					(count) => t("bulkActions.enriching", { count }),
+					tRecord,
 				);
 				onDone();
 			},
@@ -67,7 +70,11 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkDelete.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "company", ids: variables.ids });
-				reportBulk(result, (count) => `${companies(count)} deleted.`);
+				reportBulk(
+					result,
+					(count) => t("bulkActions.deleted", { count }),
+					tRecord,
+				);
 				setConfirming(false);
 				onDone();
 			},
@@ -82,13 +89,13 @@ export function CompaniesBulkActions({
 			<BulkActionsMenu pending={pending}>
 				<BulkOwnerMenu
 					users={users.data ?? []}
-					unassignedLabel="Nobody"
+					unassignedLabel={t("bulkActions.unassignedLabel")}
 					onSelect={(ownerId) => assignOwner.mutate({ ids, ownerId })}
 				/>
 				<DropdownMenuGroup>
 					<DropdownMenuItem onSelect={() => enrich.mutate({ ids })}>
 						<Renew />
-						Re-enrich
+						{t("bulkActions.reEnrich")}
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
@@ -98,7 +105,7 @@ export function CompaniesBulkActions({
 						onSelect={() => setConfirming(true)}
 					>
 						<TrashCan />
-						Delete
+						{t("bulkActions.delete")}
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</BulkActionsMenu>
@@ -106,8 +113,8 @@ export function CompaniesBulkActions({
 			<BulkDeleteDialog
 				open={confirming}
 				onOpenChange={setConfirming}
-				title={`Delete ${companies(ids.length)}?`}
-				description="Their contacts stay, with no company. Deals on these companies go with them, and none of it can be undone."
+				title={t("bulkActions.deleteTitle", { count: ids.length })}
+				description={t("bulkActions.deleteDescription")}
 				onConfirm={() => remove.mutate({ ids })}
 			/>
 		</>

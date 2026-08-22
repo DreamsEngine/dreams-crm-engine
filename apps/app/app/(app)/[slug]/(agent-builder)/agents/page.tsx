@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { TeamAgentsIndex } from "@/components/agent-builder/team-agents-index";
 import {
@@ -13,7 +14,10 @@ import {
 import { HydrateClient } from "@/lib/trpc/hydrate";
 import { getServerQueryClient, getServerTrpc } from "@/lib/trpc/server";
 
-export const metadata: Metadata = { title: "Agents" };
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("agent");
+	return { title: t("teamAgentsIndex.metaTitle") };
+}
 
 export default function AgentsPage() {
 	return (

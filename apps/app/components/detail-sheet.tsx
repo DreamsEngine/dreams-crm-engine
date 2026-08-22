@@ -27,6 +27,7 @@ import {
 	TooltipTrigger,
 } from "@crm/ui/components/tooltip";
 import { cn } from "@crm/ui/lib/utils";
+import { useTranslations } from "next-intl";
 import { type ReactNode, useRef, useState } from "react";
 import {
 	Sheet,
@@ -98,6 +99,8 @@ export function DetailSheetHeader({
 	onBack?: () => void;
 	onClose: () => void;
 }) {
+	const t = useTranslations("shared");
+
 	return (
 		<SheetHeader className={cn("gap-0 border-b py-3", GUTTER)}>
 			<div className="flex items-start gap-3">
@@ -106,10 +109,10 @@ export function DetailSheetHeader({
 						<TooltipTrigger asChild>
 							<Button variant="ghost" size="icon-sm" onClick={onBack}>
 								<Icon icon={ArrowLeft} />
-								<span className="sr-only">Back</span>
+								<span className="sr-only">{t("detailSheet.back")}</span>
 							</Button>
 						</TooltipTrigger>
-						<TooltipContent>Back</TooltipContent>
+						<TooltipContent>{t("detailSheet.back")}</TooltipContent>
 					</Tooltip>
 				) : null}
 
@@ -138,7 +141,7 @@ export function DetailSheetHeader({
 					) : null}
 					<Button variant="ghost" size="icon-sm" onClick={onClose}>
 						<Icon icon={Close} />
-						<span className="sr-only">Close</span>
+						<span className="sr-only">{t("detailSheet.close")}</span>
 					</Button>
 				</div>
 			</div>
@@ -306,6 +309,8 @@ export function DetailSheetPending({
 	fields: string[];
 	running: boolean;
 }) {
+	const t = useTranslations("shared");
+
 	if (fields.length === 0) return null;
 
 	return (
@@ -319,7 +324,9 @@ export function DetailSheetPending({
 					)}
 				/>
 				<span className="font-medium text-xs">
-					{running ? "Agent is researching" : "Not known yet"}
+					{running
+						? t("detailSheet.agentResearching")
+						: t("detailSheet.notKnownYet")}
 				</span>
 			</div>
 			<p className="text-pretty text-muted-foreground text-xs/5">

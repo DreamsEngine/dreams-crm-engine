@@ -1,0 +1,538 @@
+{
+	"common": {
+		"cancel": "Cancel",
+		"remove": "Remove",
+		"connect": "Connect",
+		"checking": "Checking…"
+	},
+	"nav": {
+		"ariaLabel": "Workspace settings",
+		"general": "General",
+		"tracking": "Tracking & Analytics",
+		"connections": "Connections",
+		"currencies": "Currencies",
+		"members": "Members",
+		"sso": "SSO"
+	},
+	"general": {
+		"metaTitle": "General",
+		"title": "General",
+		"description": "Who you are, and the model the research agent thinks with.",
+		"workspace": {
+			"title": "Workspace",
+			"description": "The name and website of the company using this CRM.",
+			"save": "Save",
+			"nameLabel": "Name",
+			"namePlaceholder": "Acme Inc.",
+			"nameDescription": "Shown wherever the CRM refers to your own company.",
+			"websiteLabel": "Website",
+			"websitePlaceholder": "acme.com",
+			"websiteDescription": "Your own company's website.",
+			"restricted": "Only an owner or an admin can change this.",
+			"saved": "Workspace saved."
+		},
+		"researchKey": {
+			"title": "Company research",
+			"description": "Enter your Context API key so our agents can research every company in the CRM.",
+			"replaceKey": "Replace key",
+			"saveKey": "Save key",
+			"fieldLabel": "Context API key",
+			"connected": "Connected",
+			"notConnected": "Not connected",
+			"placeholder": "Paste the key",
+			"signupPrompt": "Don't have a Context API key? <link>Sign up here</link>",
+			"saved": "Context API key saved."
+		},
+		"agentModel": {
+			"title": "Research agent",
+			"description": "The model the agent thinks with, routed through the Vercel AI Gateway.",
+			"modelAriaLabel": "Model",
+			"searchPlaceholder": "Search models…",
+			"noMatch": "No model matches that.",
+			"default": "Default — {name}",
+			"priceHint": "{input} in · {output} out per 1M",
+			"contextMillions": "{count}M context",
+			"contextThousands": "{count}K context",
+			"unavailable": "Could not reach the AI Gateway to list models. The agent is still running {model}.",
+			"saved": "The agent will use this model from its next session."
+		}
+	},
+	"connections": {
+		"metaTitle": "Connections",
+		"list": {
+			"title": "Connections",
+			"description": "Where your CRM gets its information, and what it is allowed to send on your behalf.",
+			"addConnection": "Add connection",
+			"manage": "Manage",
+			"bringsInLabel": "Brings in",
+			"sendsLabel": "Sends",
+			"connected": "Connected",
+			"connectedTo": "Connected to {workspace}",
+			"google": {
+				"bringsIn": "Emails, meetings and the people on them",
+				"sends": "Nothing yet"
+			},
+			"slack": {
+				"bringsIn": "Workspace members and channels the app has joined",
+				"sends": "Messages to approved channels and people"
+			},
+			"microsoft": {
+				"bringsIn": "Outlook email and the people on it",
+				"sends": "Nothing yet"
+			},
+			"emptyTitle": "Nothing is connected yet",
+			"emptyDescription": "Right now every deal, contact and note has to be typed in by hand. Connect a tool and the CRM starts filling itself in from the work your team already does.",
+			"starterGoogleDescription": "File email and meetings against the right company",
+			"starterSlackDescription": "Let deployed agents notify approved channels and people",
+			"starterMicrosoftDescription": "File Outlook email against the right company",
+			"browsePrompt": "Looking for something else? <link>Browse all connections</link>"
+		},
+		"addDialog": {
+			"title": "Add a connection",
+			"description": "Nothing moves until you finish setting one up.",
+			"googleDescription": "Bring in Gmail messages and Google Calendar meetings",
+			"slackDescription": "Let deployed agents notify approved channels and people",
+			"microsoftDescription": "Bring in Outlook email and the people on it",
+			"comingSoon": "Coming soon",
+			"otherName": "Anything else",
+			"otherDescription": "The intake API is not available yet",
+			"alreadyConnected": "{count, plural, one {{list} is already connected.} other {{list} are already connected.}}",
+			"noneConnected": "Nothing is connected yet."
+		},
+		"google": {
+			"metaTitle": "Google Workspace",
+			"unavailableDescription": "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the root .env file and restart.",
+			"notConfigured": "Not configured",
+			"notConnected": "Not connected",
+			"connectDescription": "Read-only Gmail and Calendar. Only conversations with companies in the CRM are stored.",
+			"connectFailed": "Could not reach Google.",
+			"connectErrorTitle": "Google did not finish connecting",
+			"connectErrorFallback": "Google returned an error before the connection was made. Try again.",
+			"connectErrorEmailMismatch": "That Google account has a different email address to the one you sign in with, so it cannot be attached to your account. Connect the Google account that matches your sign-in address.",
+			"connected": "Connected",
+			"needsAttention": "Needs attention",
+			"description": "Meetings and email threads land on the matching company as they happen.",
+			"checkNow": "Check now",
+			"noRefreshTokenTitle": "Google did not return a refresh token",
+			"noRefreshTokenDescription": "Sign out and back in.",
+			"syncFailedTitle": "{source} sync failed",
+			"resolve": "Resolve",
+			"waitingFirstCheck": "Waiting for the first check",
+			"lastChecked": "Last checked <time></time>",
+			"sources": {
+				"calendar": {
+					"label": "Meetings",
+					"autoCreate": "Add the company and contact when you meet someone new"
+				},
+				"gmail": {
+					"label": "Email",
+					"autoCreate": "Add the company and contact when you reply to someone new"
+				}
+			},
+			"deleteSyncedData": "Delete synced data",
+			"deleteSyncedDataTitle": "Delete synced data?",
+			"deleteSyncedDataDescription": "Every email and meeting brought in from Google is removed from the CRM. The next check starts from now, so nothing deleted here comes back.",
+			"deleteAction": "Delete",
+			"purgeSuccess": "{count, plural, one {Removed # synced item.} other {Removed # synced items.}}",
+			"revokeAccess": "Revoke Google access",
+			"revokeAccessTitle": "Revoke Google access?",
+			"revokeDescriptionRequired": "You will be signed out, and you cannot use the CRM again until you grant access.",
+			"revokeDescriptionOptional": "New email and meetings stop arriving. Everything already synced stays, and you can connect Google again from this page.",
+			"revokeAction": "Revoke",
+			"manageInGoogle": "Manage in your Google account"
+		},
+		"microsoft": {
+			"metaTitle": "Microsoft 365",
+			"unavailableDescription": "Set MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET in the root .env file and restart.",
+			"notConfigured": "Not configured",
+			"notConnected": "Not connected",
+			"connectDescription": "Read-only Outlook mail. Only conversations with companies in the CRM are stored.",
+			"connectFailed": "Could not reach Microsoft.",
+			"connectErrorTitle": "Microsoft did not finish connecting",
+			"connectErrorFallback": "Microsoft returned an error before the connection was made. Try again.",
+			"connectErrorEmailMismatch": "That Microsoft account has a different email address to the one you sign in with, so it cannot be attached to your account. Connect the Microsoft account that matches your sign-in address.",
+			"connected": "Connected",
+			"needsAttention": "Needs attention",
+			"description": "Email threads land on the matching company as they happen.",
+			"checkNow": "Check now",
+			"noRefreshTokenTitle": "Microsoft did not return a refresh token",
+			"noRefreshTokenDescription": "Sign out and back in.",
+			"emailSyncFailedTitle": "Email sync failed",
+			"waitingFirstCheck": "Waiting for the first check",
+			"lastChecked": "Last checked <time></time>",
+			"emailLabel": "Email",
+			"autoCreate": "Add the company and contact when you reply to someone new",
+			"deleteSyncedData": "Delete synced data",
+			"deleteSyncedDataTitle": "Delete synced data?",
+			"deleteSyncedDataDescription": "Every email brought in from Outlook is removed from the CRM. The next check starts from now, so nothing deleted here comes back.",
+			"deleteAction": "Delete",
+			"purgeSuccess": "{count, plural, one {Removed # synced item.} other {Removed # synced items.}}",
+			"disconnectButton": "Disconnect Microsoft",
+			"disconnectTitle": "Disconnect Microsoft?",
+			"disconnectDescriptionRequired": "You will be signed out, and you cannot use the CRM again until you grant access. Microsoft has no way for us to withdraw the consent itself — remove this app from your Microsoft account to do that.",
+			"disconnectDescriptionOptional": "New email stops arriving. Everything already synced stays, and you can connect Microsoft again from this page. Microsoft has no way for us to withdraw the consent itself — remove this app from your Microsoft account to do that.",
+			"disconnectAction": "Disconnect",
+			"manageInMicrosoft": "Manage in your Microsoft account"
+		},
+		"intake": {
+			"title": "Intake endpoint",
+			"description": "This connection is not available yet. No endpoint, API key, or intake activity has been created for this workspace.",
+			"back": "Back to connections"
+		},
+		"slack": {
+			"page": {
+				"notConnected": "Not connected",
+				"introDescription": "Connecting Slack gives the CRM a way in and a way out. What it actually does with that is up to you afterwards, one automation at a time.",
+				"handingOverTitle": "What you are handing over",
+				"grantedTitle": "What this workspace granted",
+				"neverTitle": "What it will never do",
+				"never": [
+					"Send anything at all until you build an automation and switch it on",
+					"Post anywhere except the destination approved in that automation",
+					"Read a direct message between two people"
+				],
+				"connectNote": "You approve the workspace in Slack. You can disconnect it here at any time.",
+				"suggestionsTitle": "Afterwards, most teams start with one of these",
+				"suggestionsDescription": "Suggestions, not settings. None of them exist until you pick one and switch it on.",
+				"suggestions": [
+					{
+						"title": "When a deal is created",
+						"description": "Post the deal to an approved sales channel."
+					},
+					{
+						"title": "When a deal is won",
+						"description": "Tell an approved channel that the deal closed."
+					},
+					{
+						"title": "When a deal reopens",
+						"description": "Notify one approved channel or teammate."
+					}
+				],
+				"connectedFallback": "Connected",
+				"canManageDescription": "Here is what Slack gave us. Agents only post where their automation says.",
+				"cannotManageDescription": "Here is what Slack gave us. Only an owner or an admin can disconnect it.",
+				"agentsTitle": "Agents that use Slack",
+				"agentsDescription": "Built in chat, not here. Open one to change it.",
+				"newAgent": "New agent",
+				"noAgents": "No deployed agents use Slack yet.",
+				"agentRunning": "Running",
+				"agentPaused": "Paused",
+				"describeInChat": "Describe another agent in chat",
+				"peopleNoneReviewed": "No workspace people have been reviewed yet.",
+				"peopleReviewedSummary": "{matched} of {reviewed} reviewed people are matched.",
+				"review": "Review",
+				"cannotReachPrivate": "Comp AI cannot reach private channels",
+				"heldBackPermissions": "{count, plural, one {Slack held back # permission} other {Slack held back # permissions}}",
+				"reconnectPrompt": "Reconnect to ask again. You lose nothing."
+			},
+			"scopeGroups": {
+				"description": "Broad means the whole workspace, not one channel. Open a group to see the details.",
+				"broadOfTotal": "{broad} broad of {total}",
+				"heldBackNote": "Slack held this one back, so it is off.",
+				"notGranted": "Not granted"
+			},
+			"connectButton": {
+				"errors": {
+					"accessDenied": "Slack installation was cancelled before access was granted.",
+					"alreadyLinked": "That Slack installer is already linked to another CRM account.",
+					"emailMismatch": "The Slack installer's email must match the CRM account you are signed in with.",
+					"oauthVerificationFailed": "Slack rejected the app credentials or redirect URL. Check the client ID, client secret, and OAuth redirect URL, then try again.",
+					"userInfoMissing": "Slack did not return the installer's profile. Confirm the app has users:read and users:read.email, reinstall it, then try again."
+				},
+				"connectFailedDefault": "Could not connect Slack.",
+				"openingSlack": "Opening Slack…",
+				"reconnect": "Reconnect",
+				"connectSlack": "Connect Slack",
+				"notConfigured": "Slack is not configured",
+				"connectErrorFallback": "Slack could not be connected ({code})."
+			},
+			"disconnectButton": {
+				"disconnect": "Disconnect",
+				"confirmTitle": "Disconnect {workspace}?",
+				"confirmDescription": "Agents stop sending to Slack immediately, and the cached channel list is cleared so a new app re-reads it. Who is matched to which Slack account is kept, so reconnecting the same workspace does not ask you to match everyone again.",
+				"disconnected": "Slack disconnected.",
+				"disconnecting": "Disconnecting…"
+			},
+			"channels": {
+				"title": "Channels Comp AI can reach",
+				"description": "Agents pick from this list.",
+				"refresh": "Refresh",
+				"refreshing": "Refreshing…",
+				"stalled": "Comp AI is not reading Slack right now. The list can be out of date.",
+				"searchPlaceholder": "Search channels",
+				"emptyReading": "Reading the channel list from Slack…",
+				"emptySearch": "No channel matches “{query}”.",
+				"emptyNoChannels": "No channels yet. Comp AI reads the list from Slack after it connects.",
+				"loadMore": "Load more",
+				"loading": "Loading…",
+				"joinAlreadyJoined": "Comp AI is already in there.",
+				"joinQueued": "Comp AI is joining.",
+				"joinAskInside": "Ask someone inside to invite Comp AI.",
+				"readingChannelList": "Reading the channel list from Slack.",
+				"addTitle": "Add Comp AI to #{channel}?",
+				"askSomeoneTitle": "Ask someone to add Comp AI",
+				"addDescription": "It is a private channel, so Comp AI joins as you. Same as typing the invite yourself. Everyone in the channel sees it join. It reads nothing until you turn a permission on.",
+				"askDescription": "We cannot add Comp AI to a private channel yet. Someone already in #{channel} has to run this.",
+				"copyFailed": "Copying failed. Copy the command above by hand.",
+				"commandCopied": "Command copied.",
+				"addAction": "Add Comp AI",
+				"copyAndAsk": "Copy and mark as asked",
+				"adding": "Adding…"
+			},
+			"people": {
+				"connectedTitle": "Slack is connected",
+				"description": "Match your CRM people to Slack once. Agents use these exact accounts later instead of guessing from a similar name.",
+				"matchedSummary": "{matched} of {total} matched",
+				"refresh": "Refresh from Slack",
+				"stalled": "Comp AI is not reading Slack right now. These matches can be out of date.",
+				"noneAvailable": "No CRM teammates are available to match.",
+				"noExactMatch": "No exact email match",
+				"footerNote": "Refresh after a Slack email changes. The CRM matches exact email addresses only. Someone with no exact match stays unmatched, and an agent stops instead of guessing at a similar name.",
+				"continue": "Continue"
+			}
+		}
+	},
+	"currencies": {
+		"metaTitle": "Currencies",
+		"title": "Currencies",
+		"description": "What your numbers are reported in, and how the other currencies get there.",
+		"columns": {
+			"currency": "Currency",
+			"rate": "Rate",
+			"source": "Source",
+			"asOf": "As of",
+			"actions": "Actions",
+			"deals": "Deals",
+			"convertible": "Convertible"
+		},
+		"reporting": {
+			"title": "Reporting currency",
+			"description": "Every total, chart and average in the CRM is expressed in this currency. Each deal keeps the currency it was sold in.",
+			"fieldLabel": "Report totals in",
+			"hintManage": "Changing this re-converts every deal at today's rates. Figures already reported will move.",
+			"hintRestricted": "Only an owner or an admin can change how money is reported.",
+			"saved": "Every total is now reported in {currency}."
+		},
+		"rates": {
+			"title": "Exchange rates",
+			"description": "How many {currency} one unit of each currency buys. Fetched daily from open.er-api.com; a rate you enter here wins.",
+			"refresh": "Refresh",
+			"currencyLabel": "Currency",
+			"currencyPlaceholder": "Pick one",
+			"valueLabel": "1 {currency} = ? {reporting}",
+			"valueUnit": "unit",
+			"ratePlaceholder": "1.09",
+			"saveRate": "Save rate",
+			"saved": "Rate saved.",
+			"removed": "Rate removed.",
+			"refreshed": "Rates refreshed.",
+			"invalidRate": "A rate has to be a number greater than zero.",
+			"empty": "No rates yet. Refresh to fetch them, or enter one by hand.",
+			"sourceManual": "By hand",
+			"sourceFetched": "Fetched"
+		},
+		"inUse": {
+			"title": "Currencies in use",
+			"allConvertible": "Every deal with an amount can be converted into the reporting currency.",
+			"someUnconvertible": "{count, plural, one {{deals} cannot be converted, so it is left out of every total.} other {{deals} cannot be converted, so they are left out of every total.}}",
+			"dealsCount": "{count, plural, one {# deal} other {# deals}}",
+			"ratesLastFetched": "Rates last fetched <time></time>.",
+			"noDeals": "No deals have an amount yet.",
+			"reportingCurrencyNote": "reporting currency",
+			"yes": "Yes",
+			"noRate": "No rate"
+		}
+	},
+	"members": {
+		"metaTitle": "Members",
+		"title": "Members",
+		"description": "Everyone who has access to your CRM.",
+		"columns": {
+			"name": "Name",
+			"email": "Email",
+			"role": "Role",
+			"joined": "Joined",
+			"joinedLabel": "Joined date",
+			"actions": "Actions"
+		},
+		"you": "You",
+		"changeRole": "Change {name}'s role",
+		"roles": {
+			"owner": "Owner",
+			"admin": "Admin",
+			"member": "Member"
+		},
+		"searchPlaceholder": "Search by name or email…",
+		"empty": "Nobody matches this view.",
+		"roleChanged": "Role changed."
+	},
+	"sso": {
+		"metaTitle": "SSO",
+		"title": "SSO",
+		"description": "Let your people sign in through your own identity provider. While one is configured, the sign-in page offers it instead of Google.",
+		"table": {
+			"columns": {
+				"provider": "Provider",
+				"domain": "Email domain",
+				"issuer": "Issuer",
+				"redirectUri": "Redirect URI",
+				"actions": "Actions"
+			},
+			"clientSuffix": " · client …{last4}",
+			"removeSr": "Remove {name}",
+			"removeTitle": "Remove {name}?",
+			"removeDescription": "Nobody can sign in through it again. If this is the only provider, the sign-in page goes back to Google.",
+			"removed": "Identity provider removed.",
+			"searchPlaceholder": "Search by name, domain or issuer…",
+			"empty": "No identity provider yet — everyone signs in with Google."
+		},
+		"add": {
+			"addProvider": "Add provider",
+			"title": "Add an identity provider",
+			"description": "Configure an OpenID Connect provider.",
+			"nameLabel": "Name",
+			"namePlaceholder": "okta",
+			"nameHint": "Names the sign-in button. Cannot be changed later.",
+			"issuerLabel": "Issuer URL",
+			"issuerPlaceholder": "https://acme.okta.com",
+			"issuerHint": "Where discovery lives.",
+			"domainLabel": "Email domain",
+			"domainPlaceholder": "acme.com",
+			"domainHint": "Comma-separate several.",
+			"clientIdLabel": "Client ID",
+			"clientSecretLabel": "Client secret",
+			"clientSecretHint": "Never shown again.",
+			"redirectHint": "Add this at your provider before saving.",
+			"saved": "{name} saved."
+		},
+		"copyValue": {
+			"copyFailed": "Could not copy the {label}. Select it instead.",
+			"copied": "{label} copied.",
+			"srCopy": "Copy {label}"
+		}
+	},
+	"tracking": {
+		"metaTitle": "Tracking & Analytics",
+		"title": "Tracking & Analytics",
+		"description": "Track website visitors and automatically add contacts when a form is submitted.",
+		"script": {
+			"title": "Tracking script",
+			"statusPaused": "Paused",
+			"statusReceiving": "Receiving page views",
+			"statusNone": "No page views yet",
+			"description": "One tag, 4 KB, in the head of every page you measure.",
+			"copy": "Copy",
+			"copyFailedSelect": "Could not copy the script. Select it instead.",
+			"copied": "Script copied.",
+			"copyFailed": "Could not copy the script.",
+			"htmlTab": "Paste it into your HTML",
+			"siteIdNote": "Site ID <code>{siteId}</code> · Rotating it stops every copy of the old script at once.",
+			"gtmTab": "Add it through Google Tag Manager",
+			"gtmStep1": "In Tag Manager, add a new Custom HTML tag.",
+			"gtmStep2": "Paste this snippet — not the one above — as the tag's HTML.",
+			"gtmStep3": "Trigger it on All Pages, then publish the container. Keep <code>{scriptUrl}</code> off any consent-blocked category you do not need.",
+			"gtmNote": "Tag Manager drops a <code>data-site</code> attribute when it injects a script, so this form carries the site ID in the URL instead.",
+			"pauseLabel": "Pause tracking",
+			"pauseHint": "The script keeps loading and records nothing. Your domains and settings are kept",
+			"rotateButton": "Rotate site ID",
+			"rotateTitle": "Rotate the site ID?",
+			"rotateDescription": "Every copy of the old script stops recording at once, including any you have forgotten about. You will need to paste the new tag on every page that carries the old one. Nothing already collected is lost.",
+			"rotateAction": "Rotate",
+			"pausedToast": "Tracking paused. The script stops recording within five minutes.",
+			"resumedToast": "Tracking resumed.",
+			"rotatedToast": "Site ID rotated. Paste the new tag on your website."
+		},
+		"verify": {
+			"title": "Verify installation",
+			"description": "We load one page and look for the script, then read your Tag Manager container if it is not in the HTML.",
+			"checkNow": "Check now",
+			"pageLabel": "Page to check",
+			"pagePlaceholder": "acme.com/pricing",
+			"pageHint": "The page has to be public. A page behind a login always fails this check.",
+			"verifiedJustNow": "Verified just now",
+			"tagManagerNeedsFix": "Tag Manager needs a fix",
+			"noPageViewYet": "No page view yet",
+			"notDetected": "Not detected",
+			"unreachableTitle": "Could not open {host}",
+			"unreachableDescription": "{detail} We only follow public pages, and we never follow a redirect to a private address.",
+			"missingTitle": "No script on {host}",
+			"missingDescription": "The page answered in {ms} ms, but the tag was not in the HTML. Check that it sits in the head, above anything that rewrites the page.",
+			"missingContainersNote": " We also read Tag Manager container {containers}, and the tag is not in there either.",
+			"dropTitle": "Tag Manager will drop the site ID",
+			"dropDescription": "Container {containerId} carries the tag, but the site ID is not in the script URL. Tag Manager keeps only the URL when it injects a script, so a data-site attribute never reaches the page and the tracker never starts. Copy the Tag Manager snippet above and replace the tag's HTML.",
+			"dropPageViewNote": " A page view did arrive in the last five minutes, so something on this site is still recording.",
+			"foundInContainer": "Script found in container {containerId}",
+			"foundOnHost": "Script found on {host}",
+			"answeredIn": "It answered in {ms} ms. Site ID {siteId} matched, and {allowedClause}.",
+			"allowedYes": "this domain is on the allow list",
+			"allowedNo": "this domain is not on the allow list",
+			"tagNotInHtmlNote": " The tag is not in the HTML, so it only runs once Tag Manager fires it — a page view is the proof.",
+			"pageViewArrivedNote": " A page view arrived in the last five minutes.",
+			"noPageViewYetNote": " No page view has arrived yet — open the page in a browser to send one."
+		},
+		"domains": {
+			"title": "Allowed domains",
+			"description": "The script records page views on these hosts only.",
+			"addButton": "Add domain",
+			"empty": "Add the domain your website runs on to get your tracking script.",
+			"columns": {
+				"domain": "Domain",
+				"scope": "Scope",
+				"pageViews": "Page views",
+				"lastSeen": "Last seen",
+				"actions": "Actions"
+			},
+			"scopeSiteAndSubdomains": "Site + subdomains",
+			"scopeExactHost": "Exact host",
+			"removed": "Domain removed.",
+			"added": "Domain added.",
+			"hostLabel": "Domain",
+			"hostPlaceholder": "acme.com",
+			"scopeLabel": "Scope"
+		},
+		"cookies": {
+			"title": "Cookies",
+			"description": "How a returning visitor is recognised.",
+			"toggles": {
+				"subdomains": {
+					"label": "Limit cookies to subdomains",
+					"hint": "Set the cookie on the exact host that served the page, never on the parent domain"
+				},
+				"secure": {
+					"label": "Use secure cookies only",
+					"hint": "Send the cookie over HTTPS and drop it on plain HTTP"
+				},
+				"dnt": {
+					"label": "Honour Do Not Track",
+					"hint": "Record nothing at all when the browser asks not to be tracked"
+				}
+			},
+			"lifetimeLabel": "Cookie lifetime",
+			"lifetimeHint": "After this a returning visitor counts as somebody new. Shorten it if your policy asks you to.",
+			"saved": "Cookie lifetime saved."
+		},
+		"rules": {
+			"title": "Tracking rules",
+			"description": "Where the script may run, and how it follows a visitor.",
+			"crossDomain": {
+				"label": "Automatic cross-domain linking",
+				"hint": "Carry the visitor between the domains below, so one journey is not counted as two people"
+			},
+			"limitToDomains": {
+				"label": "Limit tracking to the domains below",
+				"hint": "On any other domain the script loads and then does nothing"
+			}
+		},
+		"sources": {
+			"title": "Traffic sources",
+			"description": "Where your visitors come from. Only people who have submitted a form are attributed to a record.",
+			"empty": "No sources yet. They appear once the script records its first page view.",
+			"columns": {
+				"source": "Source",
+				"medium": "Medium",
+				"views": "Page views",
+				"contacts": "Contacts"
+			}
+		}
+	}
+}

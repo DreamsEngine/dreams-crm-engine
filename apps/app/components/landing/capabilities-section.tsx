@@ -3,6 +3,7 @@ import GitHubLogo from "@crm/ui/components/brand-logos/github";
 import StripeLogo from "@crm/ui/components/brand-logos/stripe";
 import VercelLogo from "@crm/ui/components/brand-logos/vercel";
 import { cn } from "@crm/ui/lib/utils";
+import { useTranslations } from "next-intl";
 import type * as React from "react";
 import { AskCard } from "./ask-card";
 import {
@@ -35,23 +36,25 @@ const ENRICHMENT_ROWS = [
 	},
 ];
 
-const SUGGESTED_AGENTS = [
-	"Brief every deal owner before a renewal call",
-	"Flag deals with no activity for 14 days",
-	"Hand new customers from Sales to Onboarding",
-];
+const SUGGESTED_AGENT_IDS = [
+	"renewalBrief",
+	"flagInactive",
+	"handOff",
+] as const;
 
 const FOLLOW_UPS = [
-	{ label: "Recheck Paula Marchetti", due: "14d", next: true },
-	{ label: "Brief owner before renewal", due: "2d", next: false },
-	{ label: "Re-enrich Northwind", due: "90d", next: false },
-];
+	{ id: "recheck", due: "14d", next: true },
+	{ id: "brief", due: "2d", next: false },
+	{ id: "reEnrich", due: "90d", next: false },
+] as const;
 
 export function CapabilitiesSection() {
+	const t = useTranslations("shared");
+
 	return (
 		<section className="relative flex w-full shrink-0 flex-col items-center px-6 pt-20 pb-20 md:pb-30">
 			<div className="flex w-full max-w-6xl flex-col gap-12 md:gap-[72px]">
-				<SectionHeading title="What it actually does" />
+				<SectionHeading title={t("landing.capabilities.title")} />
 
 				<div className="flex flex-col gap-4 lg:flex-row">
 					<div className="flex min-w-0 grow flex-col gap-4">
@@ -72,11 +75,13 @@ export function CapabilitiesSection() {
 }
 
 function EnrichmentCard() {
+	const t = useTranslations("shared");
+
 	return (
 		<BentoCard className="gap-6">
 			<CardHeading
-				title="Records fill themselves in"
-				body="A new person on a thread becomes a contact, and their company arrives with its logo, industry and last activity already on it."
+				title={t("landing.capabilities.enrichment.title")}
+				body={t("landing.capabilities.enrichment.body")}
 			/>
 
 			<div className="flex select-none flex-col">
@@ -97,11 +102,11 @@ function EnrichmentCard() {
 						{row.researching ? (
 							<StatusBadge className="gap-1 bg-border text-muted-foreground">
 								<ResearchingSpinner />
-								Researching
+								{t("landing.capabilities.enrichment.researching")}
 							</StatusBadge>
 						) : (
 							<StatusBadge className="bg-primary text-primary-foreground">
-								Enriched
+								{t("landing.capabilities.enrichment.enriched")}
 							</StatusBadge>
 						)}
 					</div>
@@ -112,23 +117,24 @@ function EnrichmentCard() {
 }
 
 function AgentBuilderCard() {
+	const t = useTranslations("shared");
+
 	return (
 		<BentoCard className="min-w-0 grow gap-5">
-			<CardTitle>Agents that build agents</CardTitle>
-			<CardBody>
-				Describe a process in a sentence and the agent writes another agent to
-				run it — on its own queue, on its own schedule.
-			</CardBody>
+			<CardTitle>{t("landing.capabilities.agentBuilder.title")}</CardTitle>
+			<CardBody>{t("landing.capabilities.agentBuilder.body")}</CardBody>
 
 			<div className="flex select-none flex-col">
-				<MonoLabel className="h-[26px] shrink-0">SUGGESTED AGENTS</MonoLabel>
-				{SUGGESTED_AGENTS.map((agent) => (
+				<MonoLabel className="h-[26px] shrink-0">
+					{t("landing.capabilities.agentBuilder.suggestedLabel")}
+				</MonoLabel>
+				{SUGGESTED_AGENT_IDS.map((id) => (
 					<div
-						key={agent}
+						key={id}
 						className="flex h-11 shrink-0 items-center gap-3 border-border border-t"
 					>
 						<span className="min-w-0 grow font-medium text-[13px]/[18px]">
-							{agent}
+							{t(`landing.capabilities.agentBuilder.agents.${id}`)}
 						</span>
 						<ArrowRight size={14} className="shrink-0 text-muted-foreground" />
 					</div>
@@ -139,13 +145,15 @@ function AgentBuilderCard() {
 }
 
 function FollowUpCard() {
+	const t = useTranslations("shared");
+
 	return (
 		<BentoCard className="min-w-0 grow gap-5">
-			<CardTitle>It books its own follow-ups</CardTitle>
+			<CardTitle>{t("landing.capabilities.followUps.title")}</CardTitle>
 
 			<ul className="flex select-none flex-col gap-[14px]">
 				{FOLLOW_UPS.map((item) => (
-					<li key={item.label} className="flex items-center gap-2.5">
+					<li key={item.id} className="flex items-center gap-2.5">
 						<span
 							className={cn(
 								"size-[7px] shrink-0 rounded-full",
@@ -158,7 +166,7 @@ function FollowUpCard() {
 								item.next ? "text-foreground" : "text-muted-foreground",
 							)}
 						>
-							{item.label}
+							{t(`landing.capabilities.followUps.items.${item.id}`)}
 						</span>
 						<span className="shrink-0 font-mono text-[11px]/[18px] text-[#6E6E6E]">
 							{item.due}
@@ -168,10 +176,9 @@ function FollowUpCard() {
 			</ul>
 
 			<div className="flex flex-col gap-2 pt-1">
-				<MonoLabel>WHY</MonoLabel>
+				<MonoLabel>{t("landing.capabilities.followUps.whyLabel")}</MonoLabel>
 				<p className="text-[13px]/[21px] text-muted-foreground">
-					An agent that cannot say why it will be back in fourteen days does not
-					have a reason, it has a default.
+					{t("landing.capabilities.followUps.whyBody")}
 				</p>
 			</div>
 		</BentoCard>

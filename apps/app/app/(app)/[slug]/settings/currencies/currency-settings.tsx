@@ -28,8 +28,8 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { StatusIndicator } from "@crm/ui/components/status-indicator";
 import { TableCell } from "@crm/ui/components/table";
-import { formatCount } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { LocalRelativeTime } from "@/components/local-date-time";
@@ -38,21 +38,43 @@ import { useTRPC } from "@/lib/trpc/client";
 
 const CELL = "px-3 py-2.5 align-middle";
 
-const RATE_COLUMNS: SimpleTableColumn[] = [
-	{ id: "currency", header: "Currency" },
-	{ id: "rate", header: "Rate", width: "w-32", align: "right" },
-	{ id: "source", header: "Source", width: "w-28" },
-	{ id: "asOf", header: "As of", width: "w-24", align: "right" },
-	{ id: "actions", srLabel: "Actions", width: "w-20" },
-];
-
-const USAGE_COLUMNS: SimpleTableColumn[] = [
-	{ id: "currency", header: "Currency" },
-	{ id: "deals", header: "Deals", width: "w-20", align: "right" },
-	{ id: "convertible", header: "Convertible", width: "w-32", align: "right" },
-];
-
 export function CurrencySettings() {
+	const t = useTranslations("settings");
+
+	const RATE_COLUMNS: SimpleTableColumn[] = [
+		{ id: "currency", header: t("currencies.columns.currency") },
+		{
+			id: "rate",
+			header: t("currencies.columns.rate"),
+			width: "w-32",
+			align: "right",
+		},
+		{ id: "source", header: t("currencies.columns.source"), width: "w-28" },
+		{
+			id: "asOf",
+			header: t("currencies.columns.asOf"),
+			width: "w-24",
+			align: "right",
+		},
+		{ id: "actions", srLabel: t("currencies.columns.actions"), width: "w-20" },
+	];
+
+	const USAGE_COLUMNS: SimpleTableColumn[] = [
+		{ id: "currency", header: t("currencies.columns.currency") },
+		{
+			id: "deals",
+			header: t("currencies.columns.deals"),
+			width: "w-20",
+			align: "right",
+		},
+		{
+			id: "convertible",
+			header: t("currencies.columns.convertible"),
+			width: "w-32",
+			align: "right",
+		},
+	];
+
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -72,7 +94,9 @@ export function CurrencySettings() {
 			onSuccess: async (next) => {
 				await invalidate();
 				toast.success(
-					`Every total is now reported in ${next.reportingCurrency}.`,
+					t("currencies.reporting.saved", {
+						currency: next.reportingCurrency,
+					}),
 				);
 			},
 			onError: (error) => toast.error(error.message),
@@ -85,7 +109,7 @@ export function CurrencySettings() {
 				await invalidate();
 				setDraftCurrency("");
 				setDraftRate("");
-				toast.success("Rate saved.");
+				toast.success(t("currencies.rates.saved"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -95,7 +119,7 @@ export function CurrencySettings() {
 		trpc.currency.removeManualRate.mutationOptions({
 			onSuccess: async () => {
 				await invalidate();
-				toast.success("Rate removed.");
+				toast.success(t("currencies.rates.removed"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -105,7 +129,7 @@ export function CurrencySettings() {
 		trpc.currency.refreshRates.mutationOptions({
 			onSuccess: async () => {
 				await invalidate();
-				toast.success("Rates refreshed.");
+				toast.success(t("currencies.rates.refreshed"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -133,16 +157,17 @@ export function CurrencySettings() {
 		<div className="flex flex-col gap-6">
 			<Card>
 				<CardHeader>
-					<CardTitle>Reporting currency</CardTitle>
+					<CardTitle>{t("currencies.reporting.title")}</CardTitle>
 					<CardDescription>
-						Every total, chart and average in the CRM is expressed in this
-						currency. Each deal keeps the currency it was sold in.
+						{t("currencies.reporting.description")}
 					</CardDescription>
 				</CardHeader>
 
 				<CardContent>
 					<Field>
-						<FieldLabel htmlFor={baseId}>Report totals in</FieldLabel>
+						<FieldLabel htmlFor={baseId}>
+							{t("currencies.reporting.fieldLabel")}
+						</FieldLabel>
 						<Select
 							value={reportingCurrency}
 							disabled={busy}
@@ -161,8 +186,8 @@ export function CurrencySettings() {
 						</Select>
 						<FieldDescription>
 							{canManage
-								? "Changing this re-converts every deal at today's rates. Figures already reported will move."
-								: "Only an owner or an admin can change how money is reported."}
+								? t("currencies.reporting.hintManage")
+								: t("currencies.reporting.hintRestricted")}
 						</FieldDescription>
 					</Field>
 				</CardContent>
@@ -170,10 +195,9 @@ export function CurrencySettings() {
 
 			<Card>
 				<CardHeader>
-					<CardTitle>Exchange rates</CardTitle>
+					<CardTitle>{t("currencies.rates.title")}</CardTitle>
 					<CardDescription>
-						How many {reportingCurrency} one unit of each currency buys. Fetched
-						daily from open.er-api.com; a rate you enter here wins.
+						{t("currencies.rates.description", { currency: reportingCurrency })}
 					</CardDescription>
 					<CardAction>
 						<Button
@@ -183,7 +207,7 @@ export function CurrencySettings() {
 							onClick={() => refresh.mutate()}
 						>
 							{refresh.isPending ? <Spinner data-icon="inline-start" /> : null}
-							Refresh
+							{t("currencies.rates.refresh")}
 						</Button>
 					</CardAction>
 				</CardHeader>
@@ -195,21 +219,25 @@ export function CurrencySettings() {
 							event.preventDefault();
 							const rate = Number.parseFloat(draftRate);
 							if (!Number.isFinite(rate) || rate <= 0) {
-								toast.error("A rate has to be a number greater than zero.");
+								toast.error(t("currencies.rates.invalidRate"));
 								return;
 							}
 							setRate.mutate({ currency: draftCurrency, rate });
 						}}
 					>
 						<Field className="w-48">
-							<FieldLabel htmlFor={rateCurrencyId}>Currency</FieldLabel>
+							<FieldLabel htmlFor={rateCurrencyId}>
+								{t("currencies.rates.currencyLabel")}
+							</FieldLabel>
 							<Select
 								value={draftCurrency}
 								disabled={busy}
 								onValueChange={setDraftCurrency}
 							>
 								<SelectTrigger id={rateCurrencyId} className="w-full">
-									<SelectValue placeholder="Pick one" />
+									<SelectValue
+										placeholder={t("currencies.rates.currencyPlaceholder")}
+									/>
 								</SelectTrigger>
 								<SelectContent>
 									{CURRENCIES.filter(
@@ -225,13 +253,16 @@ export function CurrencySettings() {
 
 						<Field className="w-48">
 							<FieldLabel htmlFor={rateValueId}>
-								1 {draftCurrency || "unit"} = ? {reportingCurrency}
+								{t("currencies.rates.valueLabel", {
+									currency: draftCurrency || t("currencies.rates.valueUnit"),
+									reporting: reportingCurrency,
+								})}
 							</FieldLabel>
 							<Input
 								id={rateValueId}
 								value={draftRate}
 								inputMode="decimal"
-								placeholder="1.09"
+								placeholder={t("currencies.rates.ratePlaceholder")}
 								disabled={busy}
 								onChange={(event) => setDraftRate(event.target.value)}
 							/>
@@ -242,15 +273,13 @@ export function CurrencySettings() {
 							disabled={busy || draftCurrency === "" || draftRate.trim() === ""}
 						>
 							{setRate.isPending ? <Spinner data-icon="inline-start" /> : null}
-							Save rate
+							{t("currencies.rates.saveRate")}
 						</Button>
 					</form>
 				</CardContent>
 
 				{rates.length === 0 ? (
-					<CardTableEmpty>
-						No rates yet. Refresh to fetch them, or enter one by hand.
-					</CardTableEmpty>
+					<CardTableEmpty>{t("currencies.rates.empty")}</CardTableEmpty>
 				) : (
 					<SimpleTable columns={RATE_COLUMNS}>
 						{rates.map((rate) => (
@@ -268,7 +297,11 @@ export function CurrencySettings() {
 									<StatusIndicator
 										size="sm"
 										tone={rate.source === "MANUAL" ? "warning" : "success"}
-										label={rate.source === "MANUAL" ? "By hand" : "Fetched"}
+										label={
+											rate.source === "MANUAL"
+												? t("currencies.rates.sourceManual")
+												: t("currencies.rates.sourceFetched")
+										}
 									/>
 								</TableCell>
 								<TableCell
@@ -286,7 +319,7 @@ export function CurrencySettings() {
 												removeRate.mutate({ currency: rate.currency })
 											}
 										>
-											Remove
+											{t("common.remove")}
 										</Button>
 									) : null}
 								</TableCell>
@@ -298,22 +331,29 @@ export function CurrencySettings() {
 
 			<Card>
 				<CardHeader>
-					<CardTitle>Currencies in use</CardTitle>
+					<CardTitle>{t("currencies.inUse.title")}</CardTitle>
 					<CardDescription>
 						{unconverted.count === 0
-							? "Every deal with an amount can be converted into the reporting currency."
-							: `${formatCount(unconverted.count, "deal")} cannot be converted, so ${unconverted.count === 1 ? "it is" : "they are"} left out of every total.`}
+							? t("currencies.inUse.allConvertible")
+							: t("currencies.inUse.someUnconvertible", {
+									count: unconverted.count,
+									deals: t("currencies.inUse.dealsCount", {
+										count: unconverted.count,
+									}),
+								})}
 						{refreshedAt ? (
 							<>
 								{" "}
-								Rates last fetched <LocalRelativeTime date={refreshedAt} />.
+								{t.rich("currencies.inUse.ratesLastFetched", {
+									time: () => <LocalRelativeTime date={refreshedAt} />,
+								})}
 							</>
 						) : null}
 					</CardDescription>
 				</CardHeader>
 
 				{inUse.length === 0 ? (
-					<CardTableEmpty>No deals have an amount yet.</CardTableEmpty>
+					<CardTableEmpty>{t("currencies.inUse.noDeals")}</CardTableEmpty>
 				) : (
 					<SimpleTable columns={USAGE_COLUMNS}>
 						{inUse.map((row) => (
@@ -325,8 +365,8 @@ export function CurrencySettings() {
 									</span>
 									{row.currency === reportingCurrency ? (
 										<span className="text-muted-foreground">
-											{" "}
-											· reporting currency
+											{" · "}
+											{t("currencies.inUse.reportingCurrencyNote")}
 										</span>
 									) : null}
 								</TableCell>
@@ -335,9 +375,17 @@ export function CurrencySettings() {
 								</TableCell>
 								<TableCell className={`${CELL} text-right`}>
 									{row.convertible ? (
-										<StatusIndicator size="sm" tone="success" label="Yes" />
+										<StatusIndicator
+											size="sm"
+											tone="success"
+											label={t("currencies.inUse.yes")}
+										/>
 									) : (
-										<StatusIndicator size="sm" tone="error" label="No rate" />
+										<StatusIndicator
+											size="sm"
+											tone="error"
+											label={t("currencies.inUse.noRate")}
+										/>
 									)}
 								</TableCell>
 							</SimpleTableRow>

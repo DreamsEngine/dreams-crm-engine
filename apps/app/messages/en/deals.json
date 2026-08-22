@@ -1,0 +1,84 @@
+{
+	"page": {
+		"title": "Deals",
+		"description": "The pipeline, and everything that has already closed."
+	},
+	"stages": {
+		"DEMO_BOOKED": "Demo booked",
+		"QUALIFIED_TO_BUY": "Qualified to buy",
+		"DECISION_MAKER_BOUGHT_IN": "Decision maker in",
+		"CONTRACT_SENT": "Contract sent",
+		"CLOSED_WON": "Closed won",
+		"CLOSED_LOST": "Closed lost",
+		"UNQUALIFIED_TO_BUY": "Unqualified"
+	},
+	"table": {
+		"columns": {
+			"deal": "Deal",
+			"company": "Company",
+			"stage": "Stage",
+			"amount": "Amount",
+			"owner": "Owner",
+			"closeDate": "Close date",
+			"created": "Created",
+			"createdLabel": "Created date",
+			"lastActivity": "Last activity"
+		},
+		"searchPlaceholder": "Search deals by name or company…",
+		"facets": {
+			"owner": "Owner",
+			"stage": "Stage",
+			"closing": "Closing"
+		},
+		"closingOptions": {
+			"overdue": "Overdue",
+			"this-month": "Closing this month",
+			"next-month": "Closing next month",
+			"later": "Later",
+			"none": "No close date"
+		},
+		"tabs": {
+			"all": "All deals",
+			"open": "Open",
+			"closed": "Closed"
+		},
+		"empty": "No deals match this view.",
+		"meta": "{count, plural, one {# deal} other {# deals}} · <money>{amount}</money> open pipeline",
+		"metaUnconverted": " · {count, plural, one {# deal} other {# deals}} not counted (no {currencies} rate)"
+	},
+	"bulkActions": {
+		"changeStage": "Change stage",
+		"delete": "Delete",
+		"reassigned": "{count, plural, one {# deal} other {# deals}} reassigned.",
+		"moved": "{count, plural, one {# deal} other {# deals}} moved.",
+		"deleted": "{count, plural, one {# deal} other {# deals}} deleted.",
+		"closeAsLost": "Close {count, plural, one {# deal} other {# deals}} as lost",
+		"markUnqualified": "Mark {count, plural, one {# deal} other {# deals}} as unqualified",
+		"closeReasonDescription": "The same reason goes on every one of them, so keep it to what they have in common.",
+		"reasonLabel": "Reason",
+		"reasonPlaceholder": "Budget pulled for the quarter",
+		"save": "Save",
+		"cancel": "Cancel",
+		"deleteTitle": "Delete {count, plural, one {# deal} other {# deals}}?",
+		"deleteDescription": "Everything filed against them — activity, notes, the amounts in your pipeline — goes too. This cannot be undone."
+	},
+	"createSheet": {
+		"newDeal": "New deal",
+		"description": "Every deal belongs to a company and has someone's name against it.",
+		"nameLabel": "Name",
+		"namePlaceholder": "Stripe — Comp AI",
+		"companyLabel": "Company",
+		"ownerLabel": "Owner",
+		"ownerPlaceholder": "Choose an owner",
+		"stageLabel": "Stage",
+		"stageDescription": "A new deal is an open deal — close it from the pipeline once there is an outcome to record.",
+		"amountLabel": "Amount",
+		"amountPlaceholder": "24000",
+		"currencyLabel": "Currency",
+		"closeDateLabel": "Expected close date",
+		"closeDatePlaceholder": "No date yet",
+		"submit": "Add deal",
+		"cancel": "Cancel",
+		"added": "{name} added."
+	}
+}

@@ -27,6 +27,7 @@ import {
 } from "@crm/ui/components/sheet";
 import { Spinner } from "@crm/ui/components/spinner";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { type ComponentProps, Suspense, useId, useState } from "react";
 import { toast } from "sonner";
@@ -45,10 +46,12 @@ const EMPTY = {
 };
 
 function AddButton(props: ComponentProps<typeof Button>) {
+	const t = useTranslations("settings");
+
 	return (
 		<Button {...props}>
 			<Icon icon={Add} data-icon="inline-start" />
-			Add provider
+			{t("sso.add.addProvider")}
 		</Button>
 	);
 }
@@ -62,6 +65,7 @@ export function AddSsoProviderSheet() {
 }
 
 function AddSsoProviderForm() {
+	const t = useTranslations("settings");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -84,7 +88,7 @@ function AddSsoProviderForm() {
 		trpc.sso.register.mutationOptions({
 			onSuccess: async (provider) => {
 				await cache.sso();
-				toast.success(`${provider.name} saved.`);
+				toast.success(t("sso.add.saved", { name: provider.name }));
 				await setOpen(null);
 				setValues(EMPTY);
 			},
@@ -111,10 +115,8 @@ function AddSsoProviderForm() {
 
 			<SheetContent side="right">
 				<SheetHeader>
-					<SheetTitle>Add an identity provider</SheetTitle>
-					<SheetDescription>
-						Configure an OpenID Connect provider.
-					</SheetDescription>
+					<SheetTitle>{t("sso.add.title")}</SheetTitle>
+					<SheetDescription>{t("sso.add.description")}</SheetDescription>
 				</SheetHeader>
 
 				<form
@@ -133,31 +135,33 @@ function AddSsoProviderForm() {
 				>
 					<FieldGroup>
 						<Field>
-							<FieldLabel htmlFor={providerIdId}>Name</FieldLabel>
+							<FieldLabel htmlFor={providerIdId}>
+								{t("sso.add.nameLabel")}
+							</FieldLabel>
 							<Input
 								id={providerIdId}
 								value={values.providerId}
 								onChange={(event) => edit({ providerId: event.target.value })}
-								placeholder="okta"
+								placeholder={t("sso.add.namePlaceholder")}
 								autoComplete="off"
 								autoCapitalize="off"
 								autoCorrect="off"
 								spellCheck={false}
 								required
 							/>
-							<FieldDescription>
-								Names the sign-in button. Cannot be changed later.
-							</FieldDescription>
+							<FieldDescription>{t("sso.add.nameHint")}</FieldDescription>
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor={issuerId}>Issuer URL</FieldLabel>
+							<FieldLabel htmlFor={issuerId}>
+								{t("sso.add.issuerLabel")}
+							</FieldLabel>
 							<Input
 								id={issuerId}
 								type="url"
 								value={values.issuer}
 								onChange={(event) => edit({ issuer: event.target.value })}
-								placeholder="https://acme.okta.com"
+								placeholder={t("sso.add.issuerPlaceholder")}
 								autoComplete="off"
 								autoCapitalize="off"
 								autoCorrect="off"
@@ -165,27 +169,31 @@ function AddSsoProviderForm() {
 								inputMode="url"
 								required
 							/>
-							<FieldDescription>Where discovery lives.</FieldDescription>
+							<FieldDescription>{t("sso.add.issuerHint")}</FieldDescription>
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor={domainId}>Email domain</FieldLabel>
+							<FieldLabel htmlFor={domainId}>
+								{t("sso.add.domainLabel")}
+							</FieldLabel>
 							<Input
 								id={domainId}
 								value={values.domain}
 								onChange={(event) => edit({ domain: event.target.value })}
-								placeholder="acme.com"
+								placeholder={t("sso.add.domainPlaceholder")}
 								autoComplete="off"
 								autoCapitalize="off"
 								autoCorrect="off"
 								spellCheck={false}
 								required
 							/>
-							<FieldDescription>Comma-separate several.</FieldDescription>
+							<FieldDescription>{t("sso.add.domainHint")}</FieldDescription>
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor={clientIdId}>Client ID</FieldLabel>
+							<FieldLabel htmlFor={clientIdId}>
+								{t("sso.add.clientIdLabel")}
+							</FieldLabel>
 							<Input
 								id={clientIdId}
 								value={values.clientId}
@@ -199,7 +207,9 @@ function AddSsoProviderForm() {
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor={clientSecretId}>Client secret</FieldLabel>
+							<FieldLabel htmlFor={clientSecretId}>
+								{t("sso.add.clientSecretLabel")}
+							</FieldLabel>
 							<Input
 								id={clientSecretId}
 								type="password"
@@ -208,20 +218,25 @@ function AddSsoProviderForm() {
 								autoComplete="off"
 								required
 							/>
-							<FieldDescription>Never shown again.</FieldDescription>
+							<FieldDescription>
+								{t("sso.add.clientSecretHint")}
+							</FieldDescription>
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor={redirectId}>Redirect URI</FieldLabel>
+							<FieldLabel htmlFor={redirectId}>
+								{t("sso.table.columns.redirectUri")}
+							</FieldLabel>
 							<InputGroup>
 								<InputGroupInput id={redirectId} value={callbackURL} readOnly />
 								<InputGroupAddon align="inline-end">
-									<CopyValue value={callbackURL} label="Redirect URI" />
+									<CopyValue
+										value={callbackURL}
+										label={t("sso.table.columns.redirectUri")}
+									/>
 								</InputGroupAddon>
 							</InputGroup>
-							<FieldDescription>
-								Add this at your provider before saving.
-							</FieldDescription>
+							<FieldDescription>{t("sso.add.redirectHint")}</FieldDescription>
 						</Field>
 					</FieldGroup>
 				</form>
@@ -233,10 +248,10 @@ function AddSsoProviderForm() {
 						disabled={!complete || register.isPending}
 					>
 						{register.isPending ? <Spinner /> : null}
-						Add provider
+						{t("sso.add.addProvider")}
 					</Button>
 					<SheetClose asChild>
-						<Button variant="outline">Cancel</Button>
+						<Button variant="outline">{t("common.cancel")}</Button>
 					</SheetClose>
 				</SheetFooter>
 			</SheetContent>

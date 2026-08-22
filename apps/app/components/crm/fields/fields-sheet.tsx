@@ -3,6 +3,7 @@
 import { Spinner } from "@crm/ui/components/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@crm/ui/components/tabs";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
 	type RecordKind,
 	useFieldsSheet,
@@ -10,14 +11,14 @@ import {
 import { DetailSheet, DetailSheetHeader } from "@/components/detail-sheet";
 import { useTRPC } from "@/lib/trpc/client";
 import { FieldEditor } from "./field-editor";
-import {
-	ENTITY_TABS,
-	NEW_FIELD,
-	SHEET_TITLE,
-	subtitleFor,
-} from "./fields-copy";
 import { entityOf } from "./fields-entity";
 import { FieldsList } from "./fields-list";
+
+const ENTITY_TABS = [
+	{ kind: "company", labelKey: "quickSwitcher.companies" },
+	{ kind: "contact", labelKey: "quickSwitcher.contacts" },
+	{ kind: "deal", labelKey: "quickSwitcher.deals" },
+] as const satisfies readonly { kind: RecordKind; labelKey: string }[];
 
 function FieldsSheetBody({
 	kind,
@@ -32,6 +33,7 @@ function FieldsSheetBody({
 	onEdit: (key: string | null) => void;
 	onClose: () => void;
 }) {
+	const t = useTranslations("record");
 	const trpc = useTRPC();
 	const entity = entityOf(kind);
 
@@ -50,16 +52,21 @@ function FieldsSheetBody({
 	});
 
 	if (field) {
-		const entityLabel = ENTITY_TABS.find((tab) => tab.kind === kind)?.label;
+		const tab = ENTITY_TABS.find((tab) => tab.kind === kind);
+		const entityLabel = tab ? t(tab.labelKey) : undefined;
 		const filled = coverage.data;
 
 		return (
 			<>
 				<DetailSheetHeader
-					title={editing?.label ?? (editingKey ? "" : NEW_FIELD)}
+					title={editing?.label ?? (editingKey ? "" : t("fields.newField"))}
 					description={
 						filled
-							? `${entityLabel} · ${filled.filled} of ${filled.total} filled`
+							? t("fields.coverageDescription", {
+									entity: entityLabel ?? "",
+									filled: filled.filled,
+									total: filled.total,
+								})
 							: entityLabel
 					}
 					onBack={() => onEdit(null)}
@@ -84,8 +91,8 @@ function FieldsSheetBody({
 	return (
 		<>
 			<DetailSheetHeader
-				title={SHEET_TITLE}
-				description={subtitleFor(kind)}
+				title={t("fields.sheetTitle")}
+				description={t("fields.subtitle", { kind })}
 				onClose={onClose}
 				note={
 					<Tabs
@@ -95,7 +102,7 @@ function FieldsSheetBody({
 						<TabsList>
 							{ENTITY_TABS.map((tab) => (
 								<TabsTrigger key={tab.kind} value={tab.kind}>
-									{tab.label}
+									{t(tab.labelKey)}
 								</TabsTrigger>
 							))}
 						</TabsList>

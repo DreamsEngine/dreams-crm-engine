@@ -1,0 +1,185 @@
+{
+	"nav": {
+		"primary": "Principal",
+		"overview": "Resumen",
+		"chat": "Chat",
+		"companies": "Empresas",
+		"contacts": "Contactos",
+		"deals": "Negocios",
+		"settings": "Configuración",
+		"navAndChats": "Navegación y chats de agentes",
+		"closeNavigation": "Cerrar la navegación",
+		"navigation": "Navegación"
+	},
+	"detailSheet": {
+		"back": "Atrás",
+		"close": "Cerrar",
+		"agentResearching": "El agente está investigando",
+		"notKnownYet": "Aún no se sabe"
+	},
+	"enrichment": {
+		"enrichingCount": "Enriqueciendo {count}",
+		"enriching": "Enriqueciendo",
+		"enrichingNow": "Enriqueciendo ahora",
+		"nothingRightNow": "Nada por ahora",
+		"nothingDescription": "Las empresas y los contactos nuevos aparecen aquí mientras sus agentes los investigan.",
+		"moreQueued": "{count} más en cola",
+		"showAll": "Mostrar todo",
+		"loadMore": "Cargar más",
+		"scheduledCount": "{count, plural, one {1 registro está agendado para revisarse después} other {# registros están agendados para revisarse después}}",
+		"hide": "Ocultar",
+		"show": "Mostrar",
+		"moreScheduled": "{count} más están agendados pero no aparecen aquí"
+	},
+	"slack": {
+		"choose": "Elegir #{name}",
+		"askAgain": "Pedir de nuevo",
+		"request": "Solicitar",
+		"add": "Agregar",
+		"peopleCount": "{count, plural, one {1 persona} other {# personas}}",
+		"statusMember": "Comp AI está en{people}",
+		"statusUnclassified": "Aún no se ha leído desde Slack{people}",
+		"statusCanJoin": "Comp AI puede unirse a este{people}",
+		"statusCanInviteItself": "Privado. Comp AI se une como usted{people}",
+		"statusRequested": "Privado. Esperando una invitación{people}",
+		"statusNeedsInvite": "Privado. Alguien de adentro debe invitar a Comp AI{people}"
+	},
+	"pageShell": {
+		"loadingPage": "Cargando la página…"
+	},
+	"landing": {
+		"metaTitle": "El CRM para agentes",
+		"metaDescription": "La primera experiencia de CRM agéntico: agentes de investigación permanentes que leen su correo, mantienen cada registro al día y agendan sus propios seguimientos.",
+		"nav": {
+			"homepage": "Inicio"
+		},
+		"hero": {
+			"title": "El CRM hecho para agentes",
+			"description": "Nadie debería mover el pipeline a mano. La primera experiencia de CRM agéntico: agentes de investigación permanentes que leen el correo de su equipo, enriquecen empresas y contactos, y crean flujos de trabajo agénticos."
+		},
+		"agentSection": {
+			"title": "Agentes que automatizan su CRM.",
+			"lede": "Describa cómo debe actuar su CRM. Cree agentes para automatizar cada proceso.",
+			"prompt": "¿Qué hacemos hoy, Lewis?",
+			"createAgentCommand": "/Crear agente",
+			"composerBody": "Enviar un mensaje nuevo a <slack>Slack</slack> y avisar a <person>Dan</person> cuando una empresa no cumpla la fecha límite de una factura",
+			"suggestedActionsLabel": "Acciones sugeridas",
+			"actions": {
+				"slackChannel": "Crear un canal de <slack>Slack</slack> e invitar al responsable cuando un negocio llegue a <stage>Ganado</stage>",
+				"contractUnsigned": "Avisar a <person>Dan</person> cuando un contrato lleve cinco días sin firmar",
+				"reEnrich": "Cada lunes, <action>volver a enriquecer contactos</action> que no se han contactado en <weeks>4 semanas</weeks>"
+			}
+		},
+		"askCard": {
+			"title": "Pregúntele algo a cualquier registro",
+			"body": "Lee su sitio y nuestro historial con ellos, y muestra cómo llegó a la respuesta.",
+			"suggested": "SUGERIDO",
+			"placeholder": "¿Qué venden?",
+			"questions": {
+				"what": "¿A qué se dedican?",
+				"who": "¿A quién conocemos aquí?",
+				"changed": "¿Qué ha cambiado recientemente?"
+			}
+		},
+		"builtWith": {
+			"label": "HECHO CON"
+		},
+		"capabilities": {
+			"title": "Lo que realmente hace",
+			"enrichment": {
+				"title": "Los registros se completan solos",
+				"body": "Una persona nueva en un hilo se vuelve un contacto, y su empresa llega con el logotipo, la industria y la última actividad ya puestos.",
+				"researching": "Investigando",
+				"enriched": "Enriquecido"
+			},
+			"agentBuilder": {
+				"title": "Agentes que crean agentes",
+				"body": "Describa un proceso en una frase y el agente escribe otro agente para ejecutarlo, con su propia cola y su propio horario.",
+				"suggestedLabel": "AGENTES SUGERIDOS",
+				"agents": {
+					"renewalBrief": "Dar un resumen a cada responsable de negocio antes de una llamada de renovación",
+					"flagInactive": "Marcar los negocios sin actividad durante 14 días",
+					"handOff": "Pasar los clientes nuevos de Ventas a Incorporación"
+				}
+			},
+			"followUps": {
+				"title": "Agenda sus propios seguimientos",
+				"whyLabel": "POR QUÉ",
+				"whyBody": "Un agente que no puede decir por qué volverá en catorce días no tiene una razón, tiene un valor predeterminado.",
+				"items": {
+					"recheck": "Revisar de nuevo a Paula Marchetti",
+					"brief": "Dar un resumen al responsable antes de la renovación",
+					"reEnrich": "Volver a enriquecer a Northwind"
+				}
+			}
+		},
+		"closingCta": {
+			"title": "Haga un fork. Es suyo."
+		},
+		"githubStar": {
+			"starOnGithub": "Dar una estrella en GitHub"
+		},
+		"setupPrompt": {
+			"copyLabel": "Copiar el prompt de instalación",
+			"copiedLabel": "Copiado al portapapeles"
+		},
+		"footer": {
+			"tagline": "El CRM agéntico de código abierto.",
+			"projectLabel": "PROYECTO",
+			"builtWithLoveBy": "Hecho con cariño por",
+			"allSystemsNormal": "Todos los sistemas funcionan bien",
+			"links": {
+				"github": "GitHub",
+				"issues": "Issues",
+				"pullRequests": "Pull requests",
+				"contributing": "Cómo contribuir",
+				"license": "Licencia"
+			}
+		},
+		"productShot": {
+			"screenshotLabel": "La lista de empresas con una cuenta abierta en su pestaña de Agente",
+			"labels": {
+				"owner": "Responsable",
+				"industry": "Industria",
+				"enrichment": "Enriquecimiento",
+				"company": "Empresa",
+				"domain": "Dominio",
+				"contacts": "Contactos",
+				"deals": "Negocios",
+				"lastActivity": "Última actividad"
+			},
+			"companiesPage": {
+				"title": "Empresas",
+				"description": "Cada cuenta en el pipeline.",
+				"newCompany": "Nueva empresa",
+				"searchMobile": "Buscar empresas…",
+				"searchDesktop": "Buscar empresas por nombre o dominio…",
+				"sort": "Ordenar",
+				"columns": "Columnas",
+				"pagination": {
+					"showing": "Mostrando 1–25 de 48",
+					"previous": "Anterior",
+					"pageOf": "1 / 2",
+					"next": "Siguiente"
+				}
+			},
+			"companySheet": {
+				"reEnrich": "Volver a enriquecer",
+				"research": "Investigar",
+				"askTitle": "Preguntar sobre esta empresa",
+				"tabs": {
+					"overview": "Resumen",
+					"contacts": "Contactos",
+					"deals": "Negocios",
+					"activity": "Actividad",
+					"agent": "Agente"
+				},
+				"stats": {
+					"openPipeline": "Pipeline abierto",
+					"openDeals": "Negocios abiertos",
+					"nextClose": "Próximo cierre"
+				}
+			}
+		}
+	}
+}

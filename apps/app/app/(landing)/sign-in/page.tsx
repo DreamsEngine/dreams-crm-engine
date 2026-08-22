@@ -1,6 +1,7 @@
 import type { MailboxProviderId } from "@crm/auth/scopes";
 import type { Metadata } from "next";
 import { redirect, unstable_rethrow } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { AuthHeading, AuthShell } from "@/components/auth-shell";
 import { isDemoOpenSignIn } from "@/lib/env";
@@ -10,9 +11,10 @@ import { DemoCredentialsSignIn } from "./demo-credentials-sign-in";
 import { SocialSignIn } from "./social-sign-in";
 import { type SsoProvider, SsoSignIn } from "./sso-sign-in";
 
-export const metadata: Metadata = {
-	title: "Sign in",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("common");
+	return { title: t("signIn.metaTitle") };
+}
 
 type SignInOptions = {
 	google: boolean;
@@ -42,14 +44,18 @@ async function currentSession() {
 	}
 }
 
-export default function SignInPage({ searchParams }: PageProps<"/sign-in">) {
+export default async function SignInPage({
+	searchParams,
+}: PageProps<"/sign-in">) {
+	const t = await getTranslations("common");
+
 	return (
 		<AuthShell>
 			<Suspense
 				fallback={
 					<AuthHeading
-						title="Welcome back"
-						description="Sign in with your account to continue."
+						title={t("signIn.title")}
+						description={t("signIn.description")}
 					/>
 				}
 			>
@@ -62,10 +68,12 @@ export default function SignInPage({ searchParams }: PageProps<"/sign-in">) {
 async function SignIn({
 	searchParams,
 }: Pick<PageProps<"/sign-in">, "searchParams">) {
-	const [session, options, { method }] = await Promise.all([
+	const [session, options, { method }, t, tAuth] = await Promise.all([
 		currentSession(),
 		signInOptions(),
 		searchParams,
+		getTranslations("common"),
+		getTranslations("auth"),
 	]);
 
 	if (session) {
@@ -91,15 +99,12 @@ async function SignIn({
 		return (
 			<>
 				<AuthHeading
-					title="No way in yet"
-					description="This CRM has no sign-in method configured, so nobody can get in — including you."
+					title={tAuth("noSignInMethod.title")}
+					description={tAuth("noSignInMethod.description")}
 				/>
 
 				<p className="text-center text-muted-foreground text-sm/5">
-					Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET — or MICROSOFT_CLIENT_ID
-					and MICROSOFT_CLIENT_SECRET — in the root .env file and restart. Your
-					own identity provider can be added from Settings once somebody is
-					signed in.
+					{tAuth("noSignInMethod.instructions")}
 				</p>
 			</>
 		);
@@ -108,8 +113,8 @@ async function SignIn({
 	return (
 		<>
 			<AuthHeading
-				title="Welcome back"
-				description="Sign in with your account to continue."
+				title={t("signIn.title")}
+				description={t("signIn.description")}
 			/>
 
 			{showSso ? <SsoSignIn providers={providers} /> : null}

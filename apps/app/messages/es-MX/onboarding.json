@@ -1,0 +1,28 @@
+{
+	"page": {
+		"metaTitle": "Configurar",
+		"title": "Cuéntenos sobre su empresa",
+		"description": "Dos datos, una sola vez. El nombre es el que usa el CRM para referirse a usted; el sitio web es la forma en que el agente aprende qué vende."
+	},
+	"form": {
+		"companyNameLabel": "Nombre de la empresa",
+		"workspaceUrlLabel": "URL del espacio de trabajo",
+		"workspaceUrlDescription": "Su equipo usará esta dirección para abrir el CRM.",
+		"websiteLabel": "Sitio web",
+		"websitePlaceholder": "acme.com",
+		"websiteDescription": "Se lee una vez, para que cada respuesta después sepa qué vende.",
+		"continue": "Continuar"
+	},
+	"researchPage": {
+		"metaTitle": "Clave de investigación",
+		"title": "Lleve sus datos del CRM al siguiente nivel",
+		"description": "Potencie su agente de investigación con Context para investigar cada empresa agregada a su CRM."
+	},
+	"researchForm": {
+		"apiKeyLabel": "Clave de la API de Context",
+		"apiKeyPlaceholder": "Pegue la clave",
+		"noKeyPrompt": "¿No tiene una clave de la API de Context?",
+		"signUpLink": "Regístrese aquí",
+		"continue": "Continuar"
+	}
+}

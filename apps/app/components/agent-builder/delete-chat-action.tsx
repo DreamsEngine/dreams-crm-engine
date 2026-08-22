@@ -25,6 +25,7 @@ import {
 } from "@crm/ui/components/dropdown-menu";
 import { Icon } from "@crm/ui/components/icon";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -47,6 +48,7 @@ export function DeleteChatAction({
 	returnToChatList?: boolean;
 	onDeleted?: () => void;
 }) {
+	const t = useTranslations("agent");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const router = useRouter();
@@ -57,7 +59,7 @@ export function DeleteChatAction({
 			onSuccess: async () => {
 				await cache.conversationRemoved(conversationId);
 				setConfirming(false);
-				toast.success("Chat deleted.");
+				toast.success(t("deleteChatAction.deletedToast"));
 				onDeleted?.();
 
 				if (returnToChatList) {
@@ -79,7 +81,7 @@ export function DeleteChatAction({
 					size="icon-xs"
 					className={className}
 					disabled={removeAction.pending}
-					aria-label={`Delete ${title}`}
+					aria-label={t("deleteChatAction.deleteAriaLabel", { title })}
 					onClick={() => setConfirming(true)}
 				>
 					<Icon icon={Close} />
@@ -93,7 +95,9 @@ export function DeleteChatAction({
 							disabled={removeAction.pending}
 						>
 							<Icon icon={OverflowMenuVertical} />
-							<span className="sr-only">More chat actions</span>
+							<span className="sr-only">
+								{t("deleteChatAction.moreActions")}
+							</span>
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
@@ -102,7 +106,7 @@ export function DeleteChatAction({
 							onSelect={() => setConfirming(true)}
 						>
 							<Icon icon={TrashCan} />
-							Delete chat
+							{t("deleteChatAction.deleteChat")}
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
@@ -116,15 +120,16 @@ export function DeleteChatAction({
 			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Delete {title}?</AlertDialogTitle>
+						<AlertDialogTitle>
+							{t("deleteChatAction.confirmTitle", { title })}
+						</AlertDialogTitle>
 						<AlertDialogDescription>
-							This permanently deletes the chat, its messages, attachments, and
-							shared link. Any agent created from it stays available.
+							{t("deleteChatAction.confirmDescription")}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel disabled={removeAction.pending}>
-							Cancel
+							{t("deleteChatAction.cancel")}
 						</AlertDialogCancel>
 						<Button
 							variant="destructive"
@@ -134,11 +139,11 @@ export function DeleteChatAction({
 						>
 							<AsyncButtonContent
 								status={removeAction.status}
-								pendingLabel="Deleting"
-								successLabel="Deleted"
-								errorLabel="Try again"
+								pendingLabel={t("deleteChatAction.deleting")}
+								successLabel={t("deleteChatAction.deleted")}
+								errorLabel={t("deleteChatAction.tryAgain")}
 							>
-								Delete chat
+								{t("deleteChatAction.deleteChat")}
 							</AsyncButtonContent>
 						</Button>
 					</AlertDialogFooter>

@@ -1,5 +1,6 @@
 import { loadRootEnv } from "@crm/env";
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 loadRootEnv();
 
@@ -39,4 +40,6 @@ const nextConfig: NextConfig = {
 	partialPrefetching: true,
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+
+export default withNextIntl(nextConfig);

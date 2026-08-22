@@ -21,23 +21,16 @@ import {
 } from "@crm/ui/components/dropdown-menu";
 import { Icon } from "@crm/ui/components/icon";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
-import {
-	type RecordKind,
-	type RecordRef,
-	useRecordStack,
-} from "./record-stack";
+import { type RecordRef, useRecordStack } from "./record-stack";
 
-const NOUN = {
-	company: "company",
-	contact: "contact",
-	deal: "deal",
-} satisfies Record<RecordKind, string>;
+type Translate = (key: string, values?: Record<string, string>) => string;
 
-function useDeleteRecord(record: RecordRef) {
+function useDeleteRecord(record: RecordRef, t: Translate) {
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const { close } = useRecordStack();
@@ -45,7 +38,9 @@ function useDeleteRecord(record: RecordRef) {
 	const handlers = {
 		onSuccess: (deleted: { name: string }) => {
 			toast.success(
-				`${deleted.name || `The ${NOUN[record.kind]}`} was deleted.`,
+				deleted.name
+					? t("sheet.recordDeletedNamed", { name: deleted.name })
+					: t("sheet.recordDeletedGeneric", { kind: record.kind }),
 			);
 			void cache.removed(record);
 			close();
@@ -72,8 +67,9 @@ export function RecordActions({
 	name: string;
 	consequence: string;
 }) {
+	const t = useTranslations("record");
 	const [confirming, setConfirming] = useState(false);
-	const remove = useDeleteRecord(record);
+	const remove = useDeleteRecord(record, t);
 
 	return (
 		<>
@@ -81,7 +77,7 @@ export function RecordActions({
 				<DropdownMenuTrigger asChild>
 					<Button variant="ghost" size="icon-sm" disabled={remove.isPending}>
 						<Icon icon={OverflowMenuVertical} />
-						<span className="sr-only">More actions</span>
+						<span className="sr-only">{t("sheet.moreActions")}</span>
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="min-w-44">
@@ -90,7 +86,7 @@ export function RecordActions({
 						onSelect={() => setConfirming(true)}
 					>
 						<Icon icon={TrashCan} />
-						Delete {NOUN[record.kind]}
+						{t("sheet.deleteKind", { kind: record.kind })}
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
@@ -98,17 +94,19 @@ export function RecordActions({
 			<AlertDialog open={confirming} onOpenChange={setConfirming}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Delete {name}?</AlertDialogTitle>
+						<AlertDialogTitle>
+							{t("sheet.deleteDialogTitle", { name })}
+						</AlertDialogTitle>
 						<AlertDialogDescription>{consequence}</AlertDialogDescription>
 					</AlertDialogHeader>
 
 					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
 						<AlertDialogAction
 							variant="destructive"
 							onClick={() => remove.mutate({ id: record.id })}
 						>
-							Delete
+							{t("common.delete")}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

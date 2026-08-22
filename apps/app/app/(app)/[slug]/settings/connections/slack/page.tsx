@@ -17,6 +17,7 @@ import {
 import SlackLogo from "@crm/ui/components/brand-logos/slack";
 import { Button } from "@crm/ui/components/button";
 import { Icon } from "@crm/ui/components/icon";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Suspense } from "react";
 import { NewAgentDialog } from "@/components/agent-builder/new-agent-dialog";
@@ -32,22 +33,14 @@ import {
 import { SlackDisconnectButton } from "./slack-disconnect-button";
 import { SlackScopeGroups } from "./slack-scope-groups";
 
+type SettingsTranslator = Awaited<
+	ReturnType<typeof getTranslations<"settings">>
+>;
+
 const PRIVATE_CHANNEL_SCOPES = [
 	"groups:read",
 	"groups:history",
 	SLACK_USER_GRANT.scope,
-];
-
-const never = [
-	"Send anything at all until you build an automation and switch it on",
-	"Post anywhere except the destination approved in that automation",
-	"Read a direct message between two people",
-];
-
-const suggestions = [
-	["When a deal is created", "Post the deal to an approved sales channel."],
-	["When a deal is won", "Tell an approved channel that the deal closed."],
-	["When a deal reopens", "Notify one approved channel or teammate."],
 ];
 
 type SlackConnectionPageProps = {
@@ -68,13 +61,25 @@ async function SlackConnectionPageContent({
 	searchParams,
 }: SlackConnectionPageProps) {
 	await requireSession();
-	const [{ slug }, query] = await Promise.all([params, searchParams]);
+	const [{ slug }, query, t] = await Promise.all([
+		params,
+		searchParams,
+		getTranslations("settings"),
+	]);
 	const queryClient = getServerQueryClient();
 	const status = await queryClient.fetchQuery(
 		getServerTrpc().slack.status.queryOptions(),
 	);
+
+	const never = t.raw("connections.slack.page.never") as string[];
+
+	const suggestions = t.raw("connections.slack.page.suggestions") as {
+		title: string;
+		description: string;
+	}[];
+
 	return status.connected ? (
-		<ConnectedSlack slug={slug} status={status} />
+		<ConnectedSlack slug={slug} status={status} t={t} />
 	) : (
 		<ConnectionPage centered className="max-w-(--container-page)">
 			<header className="flex flex-col gap-3 px-(--spacing-block-inline)">
@@ -82,22 +87,20 @@ async function SlackConnectionPageContent({
 					<SlackLogo className="size-6" />
 					<h1 className="font-medium text-xl">Slack</h1>
 					<span className="ml-auto text-muted-foreground text-sm">
-						Not connected
+						{t("connections.slack.page.notConnected")}
 					</span>
 				</div>
 				<p className="text-muted-foreground text-sm leading-relaxed">
-					Connecting Slack gives the CRM a way in and a way out. What it
-					actually does with that is up to you afterwards, one automation at a
-					time.
+					{t("connections.slack.page.introDescription")}
 				</p>
 			</header>
 			<SlackScopeGroups
 				groups={groupScopes([...SLACK_REQUESTED_SCOPES])}
-				title="What you are handing over"
+				title={t("connections.slack.page.handingOverTitle")}
 				withheld={[]}
 			/>
 			<PlainList
-				title="What it will never do"
+				title={t("connections.slack.page.neverTitle")}
 				items={never}
 				icon={Close}
 				tone="text-muted-foreground"
@@ -109,26 +112,24 @@ async function SlackConnectionPageContent({
 					connectError={connectErrorOf(query, "slack")}
 				/>
 				<p className="text-muted-foreground text-xs">
-					You approve the workspace in Slack. You can disconnect it here at any
-					time.
+					{t("connections.slack.page.connectNote")}
 				</p>
 			</div>
 			<section className="flex flex-col gap-3 px-(--spacing-block-inline)">
 				<div>
 					<h2 className="font-medium text-sm">
-						Afterwards, most teams start with one of these
+						{t("connections.slack.page.suggestionsTitle")}
 					</h2>
 					<p className="text-muted-foreground text-xs">
-						Suggestions, not settings. None of them exist until you pick one and
-						switch it on.
+						{t("connections.slack.page.suggestionsDescription")}
 					</p>
 				</div>
 				<div className="grid gap-3 md:grid-cols-3">
-					{suggestions.map(([name, description]) => (
-						<div className="rounded-lg border p-4" key={name}>
-							<h3 className="font-medium text-sm">{name}</h3>
+					{suggestions.map((suggestion) => (
+						<div className="rounded-lg border p-4" key={suggestion.title}>
+							<h3 className="font-medium text-sm">{suggestion.title}</h3>
 							<p className="mt-2 text-muted-foreground text-xs leading-relaxed">
-								{description}
+								{suggestion.description}
 							</p>
 						</div>
 					))}
@@ -160,6 +161,7 @@ function groupScopes(scopes: string[]) {
 function ConnectedSlack({
 	slug,
 	status,
+	t,
 }: {
 	slug: string;
 	status: {
@@ -175,6 +177,7 @@ function ConnectedSlack({
 		canManage: boolean;
 		people: { matched: number; reviewed: number };
 	};
+	t: SettingsTranslator;
 }) {
 	const agents = status.agents;
 	const drift = slackScopeDrift(status.scopes);
@@ -188,7 +191,7 @@ function ConnectedSlack({
 					<SlackLogo className="size-6" />
 					<h1 className="font-medium text-xl">Slack</h1>
 					<span className="ml-auto text-muted-foreground text-sm">
-						{status.workspace ?? "Connected"}
+						{status.workspace ?? t("connections.slack.page.connectedFallback")}
 					</span>
 					<SlackDisconnectButton
 						canManage={status.canManage}
@@ -197,33 +200,35 @@ function ConnectedSlack({
 				</div>
 				<p className="text-muted-foreground text-sm">
 					{status.canManage
-						? "Here is what Slack gave us. Agents only post where their automation says."
-						: "Here is what Slack gave us. Only an owner or an admin can disconnect it."}
+						? t("connections.slack.page.canManageDescription")
+						: t("connections.slack.page.cannotManageDescription")}
 				</p>
 			</header>
-			<MissingGrant missing={missing} slug={slug} />
+			<MissingGrant missing={missing} slug={slug} t={t} />
 			<SlackScopeGroups
 				groups={groupScopes(status.scopes)}
-				title="What this workspace granted"
+				title={t("connections.slack.page.grantedTitle")}
 				withheld={missing.map(toLine)}
 			/>
 			<SlackChannels />
 			<section className="flex flex-col gap-3 border-y px-(--spacing-block-inline) py-5">
 				<div className="flex items-end justify-between gap-4">
 					<div>
-						<h2 className="font-medium text-sm">Agents that use Slack</h2>
+						<h2 className="font-medium text-sm">
+							{t("connections.slack.page.agentsTitle")}
+						</h2>
 						<p className="text-muted-foreground text-xs">
-							Built in chat, not here. Open one to change it.
+							{t("connections.slack.page.agentsDescription")}
 						</p>
 					</div>
 					<NewAgentDialog>
-						<Button size="sm">New agent</Button>
+						<Button size="sm">{t("connections.slack.page.newAgent")}</Button>
 					</NewAgentDialog>
 				</div>
 				<div className="flex flex-col divide-y rounded-lg border">
 					{agents.length === 0 ? (
 						<p className="px-(--spacing-block-inline) py-4 text-muted-foreground text-sm">
-							No deployed agents use Slack yet.
+							{t("connections.slack.page.noAgents")}
 						</p>
 					) : null}
 					{agents.map(
@@ -248,7 +253,9 @@ function ConnectedSlack({
 									<span
 										className={`size-2 rounded-full ${agent.status === "LIVE" ? "bg-success" : "bg-muted-foreground"}`}
 									/>
-									{agent.status === "LIVE" ? "Running" : "Paused"}
+									{agent.status === "LIVE"
+										? t("connections.slack.page.agentRunning")
+										: t("connections.slack.page.agentPaused")}
 								</span>
 							</Link>
 						),
@@ -257,19 +264,22 @@ function ConnectedSlack({
 						className="px-(--spacing-block-inline) py-4 font-medium text-sm hover:bg-muted/50"
 						href={`/${slug}/chat`}
 					>
-						Describe another agent in chat
+						{t("connections.slack.page.describeInChat")}
 					</Link>
 				</div>
 			</section>
 			<div className="flex items-center justify-between gap-4 px-(--spacing-block-inline)">
 				<p className="text-sm">
 					{status.people.reviewed === 0
-						? "No workspace people have been reviewed yet."
-						: `${status.people.matched} of ${status.people.reviewed} reviewed people are matched.`}
+						? t("connections.slack.page.peopleNoneReviewed")
+						: t("connections.slack.page.peopleReviewedSummary", {
+								matched: status.people.matched,
+								reviewed: status.people.reviewed,
+							})}
 				</p>
 				<Button asChild variant="outline" size="sm">
 					<Link href={`/${slug}/settings/connections/slack/people`}>
-						Review
+						{t("connections.slack.page.review")}
 					</Link>
 				</Button>
 			</div>
@@ -280,9 +290,11 @@ function ConnectedSlack({
 function MissingGrant({
 	slug,
 	missing,
+	t,
 }: {
 	slug: string;
 	missing: SlackScope[];
+	t: SettingsTranslator;
 }) {
 	if (missing.length === 0) return null;
 
@@ -296,11 +308,13 @@ function MissingGrant({
 				<Icon icon={Warning} />
 				<AlertTitle>
 					{privateChannels
-						? "Comp AI cannot reach private channels"
-						: `Slack held back ${missing.length} permission${missing.length === 1 ? "" : "s"}`}
+						? t("connections.slack.page.cannotReachPrivate")
+						: t("connections.slack.page.heldBackPermissions", {
+								count: missing.length,
+							})}
 				</AlertTitle>
 				<AlertDescription>
-					<span>Reconnect to ask again. You lose nothing.</span>
+					<span>{t("connections.slack.page.reconnectPrompt")}</span>
 					<ul className="mt-2 flex flex-col gap-1.5">
 						{missing.map((entry) => (
 							<li className="flex items-start gap-2" key={entry.scope}>

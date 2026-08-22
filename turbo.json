@@ -53,6 +53,7 @@
 		"REDIS_URL",
 		"CACHE_TTL_MS",
 		"PORT",
+		"LOCALE",
 		"PRISMA_LOG_QUERIES",
 		"PERPLEXITY_API_KEY",
 		"GITHUB_TOKEN",
@@ -79,7 +80,7 @@
 			 * different `API_URL` is a different artefact, and reusing a cached
 			 * one would ship the wrong origin.
 			 */
-			"env": ["API_URL", "APP_URL", "NEXT_PUBLIC_API_URL"],
+			"env": ["API_URL", "APP_URL", "NEXT_PUBLIC_API_URL", "LOCALE"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": [
 				".next/**",

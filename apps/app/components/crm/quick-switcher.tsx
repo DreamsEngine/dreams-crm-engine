@@ -15,22 +15,24 @@ import {
 } from "@crm/ui/components/entity-logo";
 import { PersonAvatar } from "@crm/ui/components/person-avatar";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { useOpenRecord } from "@/components/crm/record-sheet/record-stack";
 import { useTRPC } from "@/lib/trpc/client";
 
-const GROUP_LABEL = {
-	company: "Companies",
-	contact: "Contacts",
-	deal: "Deals",
-} as const;
-
 const KINDS = ["company", "contact", "deal"] as const;
 
 export function QuickSwitcher() {
+	const t = useTranslations("record");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
+
+	const GROUP_LABEL = {
+		company: t("quickSwitcher.companies"),
+		contact: t("quickSwitcher.contacts"),
+		deal: t("quickSwitcher.deals"),
+	} as const;
 
 	const [open, setOpen] = useQueryState("k", parseAsBoolean.withDefault(false));
 	const [query, setQuery] = useState("");
@@ -65,20 +67,20 @@ export function QuickSwitcher() {
 		<CommandDialog
 			open={open}
 			onOpenChange={(next) => setOpen(next || null)}
-			title="Search"
-			description="Jump to a company, contact or deal"
+			title={t("quickSwitcher.dialogTitle")}
+			description={t("quickSwitcher.dialogDescription")}
 		>
 			<Command shouldFilter={false}>
 				<CommandInput
-					placeholder="Search companies, contacts and deals…"
+					placeholder={t("quickSwitcher.searchPlaceholder")}
 					value={query}
 					onValueChange={setQuery}
 				/>
 				<CommandList>
 					<CommandEmpty>
 						{query.trim().length < 2
-							? "Type at least two characters."
-							: "Nothing matches."}
+							? t("quickSwitcher.typeAtLeastTwo")
+							: t("quickSwitcher.nothingMatches")}
 					</CommandEmpty>
 
 					{KINDS.map((kind) => {

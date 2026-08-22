@@ -1,0 +1,28 @@
+{
+	"page": {
+		"metaTitle": "Set up",
+		"title": "Tell us about your company",
+		"description": "Two things, once. The name is what the CRM calls you; the website is how the agent learns what you sell."
+	},
+	"form": {
+		"companyNameLabel": "Company name",
+		"workspaceUrlLabel": "Workspace URL",
+		"workspaceUrlDescription": "Your team will use this address to open the CRM.",
+		"websiteLabel": "Website",
+		"websitePlaceholder": "acme.com",
+		"websiteDescription": "Read once, so every answer afterwards knows what you sell.",
+		"continue": "Continue"
+	},
+	"researchPage": {
+		"metaTitle": "Research key",
+		"title": "Level up your CRM data",
+		"description": "Power your research agent with Context to research every company added to your CRM."
+	},
+	"researchForm": {
+		"apiKeyLabel": "Context API key",
+		"apiKeyPlaceholder": "Paste the key",
+		"noKeyPrompt": "Don't have a Context API key?",
+		"signUpLink": "Sign up here",
+		"continue": "Continue"
+	}
+}

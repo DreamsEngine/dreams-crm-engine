@@ -1,0 +1,185 @@
+{
+	"nav": {
+		"primary": "Primary",
+		"overview": "Overview",
+		"chat": "Chat",
+		"companies": "Companies",
+		"contacts": "Contacts",
+		"deals": "Deals",
+		"settings": "Settings",
+		"navAndChats": "Navigation and agent chats",
+		"closeNavigation": "Close navigation",
+		"navigation": "Navigation"
+	},
+	"detailSheet": {
+		"back": "Back",
+		"close": "Close",
+		"agentResearching": "Agent is researching",
+		"notKnownYet": "Not known yet"
+	},
+	"enrichment": {
+		"enrichingCount": "Enriching {count}",
+		"enriching": "Enriching",
+		"enrichingNow": "Enriching now",
+		"nothingRightNow": "Nothing right now",
+		"nothingDescription": "New companies and contacts show up here while your agents look them up.",
+		"moreQueued": "{count} more queued",
+		"showAll": "Show all",
+		"loadMore": "Load more",
+		"scheduledCount": "{count, plural, one {1 record is booked for a later look} other {# records are booked for a later look}}",
+		"hide": "Hide",
+		"show": "Show",
+		"moreScheduled": "{count} more are booked but not listed here"
+	},
+	"slack": {
+		"choose": "Choose #{name}",
+		"askAgain": "Ask again",
+		"request": "Request",
+		"add": "Add",
+		"peopleCount": "{count, plural, one {1 person} other {# people}}",
+		"statusMember": "Comp AI is in{people}",
+		"statusUnclassified": "Not read from Slack yet{people}",
+		"statusCanJoin": "Comp AI can join this one{people}",
+		"statusCanInviteItself": "Private. Comp AI joins as you{people}",
+		"statusRequested": "Private. Waiting on an invite{people}",
+		"statusNeedsInvite": "Private. Someone inside has to invite Comp AI{people}"
+	},
+	"pageShell": {
+		"loadingPage": "Loading page…"
+	},
+	"landing": {
+		"metaTitle": "The CRM for agents",
+		"metaDescription": "The first agentic CRM experience — durable research agents that read your inbox, keep every record current and book their own follow-ups.",
+		"nav": {
+			"homepage": "Homepage"
+		},
+		"hero": {
+			"title": "The CRM built for Agents",
+			"description": "Humans shouldn't be manually moving pipeline. The first agentic CRM experience — durable research agents that read your team's inbox, enrich companies and contacts, and create agentic workflows."
+		},
+		"agentSection": {
+			"title": "Agents that automate your CRM.",
+			"lede": "Describe how your CRM should act. Create agents to automate every process.",
+			"prompt": "What should we get done, Lewis?",
+			"createAgentCommand": "/Create agent",
+			"composerBody": "Send a new message to <slack>Slack</slack> and ping <person>Dan</person> when a company misses their invoice deadline",
+			"suggestedActionsLabel": "Suggested actions",
+			"actions": {
+				"slackChannel": "Create a <slack>Slack</slack> channel and invite the owner when a deal hits <stage>Closed won</stage>",
+				"contractUnsigned": "Ping <person>Dan</person> when a contract has been out five days unsigned",
+				"reEnrich": "Every Monday, <action>re-enrich contacts</action> that haven't been contacted in <weeks>4 weeks</weeks>"
+			}
+		},
+		"askCard": {
+			"title": "Ask any record a question",
+			"body": "It reads their site and our own history with them, and shows its working.",
+			"suggested": "SUGGESTED",
+			"placeholder": "What do they sell?",
+			"questions": {
+				"what": "What do they do?",
+				"who": "Who do we know here?",
+				"changed": "What has changed recently?"
+			}
+		},
+		"builtWith": {
+			"label": "BUILT WITH"
+		},
+		"capabilities": {
+			"title": "What it actually does",
+			"enrichment": {
+				"title": "Records fill themselves in",
+				"body": "A new person on a thread becomes a contact, and their company arrives with its logo, industry and last activity already on it.",
+				"researching": "Researching",
+				"enriched": "Enriched"
+			},
+			"agentBuilder": {
+				"title": "Agents that build agents",
+				"body": "Describe a process in a sentence and the agent writes another agent to run it — on its own queue, on its own schedule.",
+				"suggestedLabel": "SUGGESTED AGENTS",
+				"agents": {
+					"renewalBrief": "Brief every deal owner before a renewal call",
+					"flagInactive": "Flag deals with no activity for 14 days",
+					"handOff": "Hand new customers from Sales to Onboarding"
+				}
+			},
+			"followUps": {
+				"title": "It books its own follow-ups",
+				"whyLabel": "WHY",
+				"whyBody": "An agent that cannot say why it will be back in fourteen days does not have a reason, it has a default.",
+				"items": {
+					"recheck": "Recheck Paula Marchetti",
+					"brief": "Brief owner before renewal",
+					"reEnrich": "Re-enrich Northwind"
+				}
+			}
+		},
+		"closingCta": {
+			"title": "Fork it. It's yours."
+		},
+		"githubStar": {
+			"starOnGithub": "Star on GitHub"
+		},
+		"setupPrompt": {
+			"copyLabel": "Copy the setup prompt",
+			"copiedLabel": "Copied to clipboard"
+		},
+		"footer": {
+			"tagline": "The open source agentic CRM.",
+			"projectLabel": "PROJECT",
+			"builtWithLoveBy": "Built with love by",
+			"allSystemsNormal": "All systems normal",
+			"links": {
+				"github": "GitHub",
+				"issues": "Issues",
+				"pullRequests": "Pull requests",
+				"contributing": "Contributing",
+				"license": "License"
+			}
+		},
+		"productShot": {
+			"screenshotLabel": "The companies list with an account open on its Agent tab",
+			"labels": {
+				"owner": "Owner",
+				"industry": "Industry",
+				"enrichment": "Enrichment",
+				"company": "Company",
+				"domain": "Domain",
+				"contacts": "Contacts",
+				"deals": "Deals",
+				"lastActivity": "Last activity"
+			},
+			"companiesPage": {
+				"title": "Companies",
+				"description": "Every account in the pipeline.",
+				"newCompany": "New company",
+				"searchMobile": "Search companies…",
+				"searchDesktop": "Search companies by name or domain…",
+				"sort": "Sort",
+				"columns": "Columns",
+				"pagination": {
+					"showing": "Showing 1–25 of 48",
+					"previous": "Previous",
+					"pageOf": "1 / 2",
+					"next": "Next"
+				}
+			},
+			"companySheet": {
+				"reEnrich": "Re-enrich",
+				"research": "Research",
+				"askTitle": "Ask about this company",
+				"tabs": {
+					"overview": "Overview",
+					"contacts": "Contacts",
+					"deals": "Deals",
+					"activity": "Activity",
+					"agent": "Agent"
+				},
+				"stats": {
+					"openPipeline": "Open pipeline",
+					"openDeals": "Open deals",
+					"nextClose": "Next close"
+				}
+			}
+		}
+	}
+}

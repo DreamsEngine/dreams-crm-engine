@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { InlineScript } from "./inline-script";
 
 const DAY_MS = 86_400_000;
@@ -14,7 +15,19 @@ const LOCAL_DAY_OPTIONS = {
 	day: "numeric",
 	year: "numeric",
 } as const;
-const LOCAL_DATE_TIME_SCRIPT = `{var s="time[data-local-date-kind]",f=function(n){try{var k=n.dataset.localDateKind,v=n.dataset.localDateValue,e=n.dataset.localDateEnd,o=JSON.parse(n.dataset.localDateOptions||"{}"),d=new Date(v),t=d.getTime(),x=Date.now()-t,a=Math.abs(x),r;if(k==="date-time")r=new Intl.DateTimeFormat(void 0,o).format(d);else if(k==="date-range")r=new Intl.DateTimeFormat(void 0,o).formatRange(d,new Date(e));else if(k==="day")r=new Intl.DateTimeFormat(void 0,o).format(new Date(v+"T00:00:00"));else if(k==="relative-date"){var z=new Date(),q=(Date.UTC(z.getFullYear(),z.getMonth(),z.getDate())-Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/${DAY_MS};r=new Intl.RelativeTimeFormat(void 0,{numeric:"auto"}).format(-q,"day")}else if(!Number.isFinite(t))r="—";else if(a<${MINUTE_MS})r="just now";else if(a>=${30 * DAY_MS})r=new Intl.DateTimeFormat(void 0,{month:"short",day:"numeric"}).format(d);else{var u=a<${HOUR_MS}?Math.floor(a/${MINUTE_MS})+"m":a<${DAY_MS}?Math.floor(a/${HOUR_MS})+"h":Math.floor(a/${DAY_MS})+"d";r=x<0?"in "+u:u+" ago"}n.textContent=r}catch{}};var c=function(r){if(r.nodeType===1&&r.matches&&r.matches(s))f(r);if(r.querySelectorAll)r.querySelectorAll(s).forEach(f)};c(document);new MutationObserver(function(m){m.forEach(function(r){r.addedNodes.forEach(c)})}).observe(document.documentElement,{childList:true,subtree:true})}`;
+
+export type RelativeTimeStrings = {
+	justNow: string;
+	ago: string;
+	in: string;
+};
+
+function localDateTimeScript(relativeTime: RelativeTimeStrings): string {
+	const justNow = JSON.stringify(relativeTime.justNow);
+	const ago = JSON.stringify(relativeTime.ago);
+	const inTemplate = JSON.stringify(relativeTime.in);
+	return `{var s="time[data-local-date-kind]",f=function(n){try{var k=n.dataset.localDateKind,v=n.dataset.localDateValue,e=n.dataset.localDateEnd,o=JSON.parse(n.dataset.localDateOptions||"{}"),d=new Date(v),t=d.getTime(),x=Date.now()-t,a=Math.abs(x),r;if(k==="date-time")r=new Intl.DateTimeFormat(void 0,o).format(d);else if(k==="date-range")r=new Intl.DateTimeFormat(void 0,o).formatRange(d,new Date(e));else if(k==="day")r=new Intl.DateTimeFormat(void 0,o).format(new Date(v+"T00:00:00"));else if(k==="relative-date"){var z=new Date(),q=(Date.UTC(z.getFullYear(),z.getMonth(),z.getDate())-Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/${DAY_MS};r=new Intl.RelativeTimeFormat(void 0,{numeric:"auto"}).format(-q,"day")}else if(!Number.isFinite(t))r="—";else if(a<${MINUTE_MS})r=${justNow};else if(a>=${30 * DAY_MS})r=new Intl.DateTimeFormat(void 0,{month:"short",day:"numeric"}).format(d);else{var u=a<${HOUR_MS}?Math.floor(a/${MINUTE_MS})+"m":a<${DAY_MS}?Math.floor(a/${HOUR_MS})+"h":Math.floor(a/${DAY_MS})+"d";r=x<0?${inTemplate}.replace("{time}",u):${ago}.replace("{time}",u)}n.textContent=r}catch{}};var c=function(r){if(r.nodeType===1&&r.matches&&r.matches(s))f(r);if(r.querySelectorAll)r.querySelectorAll(s).forEach(f)};c(document);new MutationObserver(function(m){m.forEach(function(r){r.addedNodes.forEach(c)})}).observe(document.documentElement,{childList:true,subtree:true})}`;
+}
 
 export function LocalDateTime({
 	date,
@@ -67,11 +80,12 @@ export function LocalRelativeDate({ date }: { date: string }) {
 }
 
 export function LocalRelativeTime({ date }: { date: string }) {
+	const t = useTranslations("common");
 	return (
 		<LocalTime
 			kind="relative-time"
 			date={date}
-			fallback={formatRelativeTime(date)}
+			fallback={formatRelativeTime(date, t)}
 		/>
 	);
 }
@@ -88,8 +102,12 @@ export function LocalDay({ date }: { date: string }) {
 	);
 }
 
-export function LocalDateTimeHydrator() {
-	return <InlineScript html={LOCAL_DATE_TIME_SCRIPT} />;
+export function LocalDateTimeHydrator({
+	relativeTime,
+}: {
+	relativeTime: RelativeTimeStrings;
+}) {
+	return <InlineScript html={localDateTimeScript(relativeTime)} />;
 }
 
 function LocalTime({
@@ -126,12 +144,15 @@ function formatRelativeDate(date: string): string {
 	return relativeDateFormatter.format(-days, "day");
 }
 
-function formatRelativeTime(date: string): string {
+function formatRelativeTime(
+	date: string,
+	t: ReturnType<typeof useTranslations>,
+): string {
 	const then = new Date(date).getTime();
 	if (!Number.isFinite(then)) return "—";
 	const difference = Date.now() - then;
 	const absolute = Math.abs(difference);
-	if (absolute < MINUTE_MS) return "just now";
+	if (absolute < MINUTE_MS) return t("relativeTime.justNow");
 	if (absolute >= 30 * DAY_MS) {
 		return getDateTimeFormatter({ month: "short", day: "numeric" }).format(
 			new Date(then),
@@ -144,7 +165,9 @@ function formatRelativeTime(date: string): string {
 			: absolute < DAY_MS
 				? `${Math.floor(absolute / HOUR_MS)}h`
 				: `${Math.floor(absolute / DAY_MS)}d`;
-	return difference < 0 ? `in ${distance}` : `${distance} ago`;
+	return difference < 0
+		? t("relativeTime.in", { time: distance })
+		: t("relativeTime.ago", { time: distance });
 }
 
 function calendarDay(date: Date): number {

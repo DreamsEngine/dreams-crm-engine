@@ -16,7 +16,8 @@ RUN bun install --frozen-lockfile
 # must be build args, not runtime env.
 ARG API_URL
 ARG APP_URL
-ENV API_URL=$API_URL APP_URL=$APP_URL NODE_ENV=production
+ARG LOCALE=en
+ENV API_URL=$API_URL APP_URL=$APP_URL LOCALE=$LOCALE NODE_ENV=production
 
 RUN cd apps/app && node node_modules/next/dist/bin/next build
 

@@ -11,12 +11,14 @@ import {
 import { Input } from "@crm/ui/components/input";
 import { Spinner } from "@crm/ui/components/spinner";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useId } from "react";
 import { toast } from "sonner";
 import { useTRPC } from "@/lib/trpc/client";
 
 export function ResearchForm() {
+	const t = useTranslations("onboarding");
 	const trpc = useTRPC();
 	const router = useRouter();
 
@@ -43,12 +45,14 @@ export function ResearchForm() {
 		>
 			<FieldGroup>
 				<Field>
-					<FieldLabel htmlFor={keyId}>Context API key</FieldLabel>
+					<FieldLabel htmlFor={keyId}>
+						{t("researchForm.apiKeyLabel")}
+					</FieldLabel>
 					<Input
 						id={keyId}
 						name="apiKey"
 						type="password"
-						placeholder="Paste the key"
+						placeholder={t("researchForm.apiKeyPlaceholder")}
 						autoComplete="off"
 						autoCapitalize="off"
 						autoCorrect="off"
@@ -57,14 +61,14 @@ export function ResearchForm() {
 						required
 					/>
 					<FieldDescription>
-						Don't have a Context API key?{" "}
+						{t("researchForm.noKeyPrompt")}{" "}
 						<a
 							href={CONTEXT_DEV_SIGNUP_URL}
 							target="_blank"
 							rel="noreferrer"
 							className="underline underline-offset-4 hover:text-foreground"
 						>
-							Sign up here
+							{t("researchForm.signUpLink")}
 						</a>
 					</FieldDescription>
 				</Field>
@@ -72,7 +76,7 @@ export function ResearchForm() {
 
 			<Button type="submit" disabled={save.isPending}>
 				{save.isPending ? <Spinner data-icon="inline-start" /> : null}
-				Continue
+				{t("researchForm.continue")}
 			</Button>
 		</form>
 	);

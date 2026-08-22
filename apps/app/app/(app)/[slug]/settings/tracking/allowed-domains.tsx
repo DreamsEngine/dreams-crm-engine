@@ -33,6 +33,7 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { TableCell } from "@crm/ui/components/table";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { LocalRelativeTime } from "@/components/local-date-time";
@@ -41,22 +42,45 @@ import { useTRPC } from "@/lib/trpc/client";
 
 const CELL = "px-3 py-2.5 align-middle";
 
-const COLUMNS: SimpleTableColumn[] = [
-	{ id: "domain", header: "Domain" },
-	{ id: "scope", header: "Scope", width: "w-40" },
-	{ id: "pageViews", header: "Page views", width: "w-28", align: "right" },
-	{ id: "lastSeen", header: "Last seen", width: "w-28", align: "right" },
-	{ id: "actions", srLabel: "Actions", width: "w-24" },
-];
+type SettingsTranslator = ReturnType<typeof useTranslations<"settings">>;
 
-const SCOPES = {
-	SITE_AND_SUBDOMAINS: "Site + subdomains",
-	EXACT_HOST: "Exact host",
-} as const;
+type Scope = "SITE_AND_SUBDOMAINS" | "EXACT_HOST";
+
+function scopeLabels(t: SettingsTranslator): Record<Scope, string> {
+	return {
+		SITE_AND_SUBDOMAINS: t("tracking.domains.scopeSiteAndSubdomains"),
+		EXACT_HOST: t("tracking.domains.scopeExactHost"),
+	};
+}
 
 export function AllowedDomains() {
+	const t = useTranslations("settings");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
+
+	const scopeLabel = scopeLabels(t);
+
+	const COLUMNS: SimpleTableColumn[] = [
+		{ id: "domain", header: t("tracking.domains.columns.domain") },
+		{ id: "scope", header: t("tracking.domains.columns.scope"), width: "w-40" },
+		{
+			id: "pageViews",
+			header: t("tracking.domains.columns.pageViews"),
+			width: "w-28",
+			align: "right",
+		},
+		{
+			id: "lastSeen",
+			header: t("tracking.domains.columns.lastSeen"),
+			width: "w-28",
+			align: "right",
+		},
+		{
+			id: "actions",
+			srLabel: t("tracking.domains.columns.actions"),
+			width: "w-24",
+		},
+	];
 
 	const tracking = useQuery(trpc.tracking.settings.queryOptions());
 
@@ -64,7 +88,7 @@ export function AllowedDomains() {
 		trpc.tracking.removeDomain.mutationOptions({
 			onSuccess: async () => {
 				await cache.tracking();
-				toast.success("Domain removed.");
+				toast.success(t("tracking.domains.removed"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -77,10 +101,8 @@ export function AllowedDomains() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Allowed domains</CardTitle>
-				<CardDescription>
-					The script records page views on these hosts only.
-				</CardDescription>
+				<CardTitle>{t("tracking.domains.title")}</CardTitle>
+				<CardDescription>{t("tracking.domains.description")}</CardDescription>
 
 				<CardAction>
 					<AddDomain disabled={!canManage} />
@@ -88,9 +110,7 @@ export function AllowedDomains() {
 			</CardHeader>
 
 			{domains.length === 0 ? (
-				<CardTableEmpty>
-					Add the domain your website runs on to get your tracking script.
-				</CardTableEmpty>
+				<CardTableEmpty>{t("tracking.domains.empty")}</CardTableEmpty>
 			) : (
 				<SimpleTable columns={COLUMNS}>
 					{domains.map((domain) => (
@@ -99,7 +119,7 @@ export function AllowedDomains() {
 								<span className="font-mono">{domain.host}</span>
 							</TableCell>
 							<TableCell className={`${CELL} text-muted-foreground`}>
-								{SCOPES[domain.scope]}
+								{scopeLabel[domain.scope]}
 							</TableCell>
 							<TableCell className={`${CELL} text-right tabular-nums`}>
 								{domain.pageViews.toLocaleString()}
@@ -119,7 +139,7 @@ export function AllowedDomains() {
 										disabled={remove.isPending}
 										onClick={() => remove.mutate({ id: domain.id })}
 									>
-										Remove
+										{t("common.remove")}
 									</Button>
 								) : null}
 							</TableCell>
@@ -132,17 +152,18 @@ export function AllowedDomains() {
 }
 
 function AddDomain({ disabled }: { disabled: boolean }) {
+	const t = useTranslations("settings");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
+
+	const scopeLabel = scopeLabels(t);
 
 	const hostId = useId();
 	const scopeId = useId();
 
 	const [open, setOpen] = useState(false);
 	const [host, setHost] = useState("");
-	const [scope, setScope] = useState<keyof typeof SCOPES>(
-		"SITE_AND_SUBDOMAINS",
-	);
+	const [scope, setScope] = useState<Scope>("SITE_AND_SUBDOMAINS");
 
 	const add = useMutation(
 		trpc.tracking.addDomain.mutationOptions({
@@ -150,7 +171,7 @@ function AddDomain({ disabled }: { disabled: boolean }) {
 				await cache.tracking();
 				setOpen(false);
 				setHost("");
-				toast.success("Domain added.");
+				toast.success(t("tracking.domains.added"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -161,7 +182,7 @@ function AddDomain({ disabled }: { disabled: boolean }) {
 			<PopoverTrigger asChild>
 				<Button size="sm" disabled={disabled}>
 					<Icon icon={Add} data-icon="inline-start" />
-					Add domain
+					{t("tracking.domains.addButton")}
 				</Button>
 			</PopoverTrigger>
 
@@ -174,12 +195,14 @@ function AddDomain({ disabled }: { disabled: boolean }) {
 					}}
 				>
 					<Field>
-						<FieldLabel htmlFor={hostId}>Domain</FieldLabel>
+						<FieldLabel htmlFor={hostId}>
+							{t("tracking.domains.hostLabel")}
+						</FieldLabel>
 						<Input
 							id={hostId}
 							value={host}
 							onChange={(event) => setHost(event.target.value)}
-							placeholder="acme.com"
+							placeholder={t("tracking.domains.hostPlaceholder")}
 							autoComplete="off"
 							autoCapitalize="off"
 							autoCorrect="off"
@@ -188,18 +211,20 @@ function AddDomain({ disabled }: { disabled: boolean }) {
 					</Field>
 
 					<Field>
-						<FieldLabel htmlFor={scopeId}>Scope</FieldLabel>
+						<FieldLabel htmlFor={scopeId}>
+							{t("tracking.domains.scopeLabel")}
+						</FieldLabel>
 						<Select
 							value={scope}
-							onValueChange={(next) => setScope(next as keyof typeof SCOPES)}
+							onValueChange={(next) => setScope(next as Scope)}
 						>
 							<SelectTrigger id={scopeId} className="w-full">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
-								{Object.entries(SCOPES).map(([value, label]) => (
+								{(Object.keys(scopeLabel) as Scope[]).map((value) => (
 									<SelectItem key={value} value={value}>
-										{label}
+										{scopeLabel[value]}
 									</SelectItem>
 								))}
 							</SelectContent>
@@ -208,7 +233,7 @@ function AddDomain({ disabled }: { disabled: boolean }) {
 
 					<Button type="submit" disabled={add.isPending || host.trim() === ""}>
 						{add.isPending ? <Spinner data-icon="inline-start" /> : null}
-						Add domain
+						{t("tracking.domains.addButton")}
 					</Button>
 				</form>
 			</PopoverContent>

@@ -12,6 +12,7 @@ import {
 } from "@crm/ui/components/entity-logo";
 import { useTableSelection } from "@crm/ui/hooks/use-table-selection";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { EnrichmentIndicator } from "@/components/crm/enrichment-status";
 import { useFieldColumns } from "@/components/crm/fields/field-columns";
@@ -33,121 +34,129 @@ import { companiesSearchParams } from "./companies-search-params";
 
 type CompanyRow = RouterOutputs["companies"]["list"]["rows"][number];
 
-const COLUMNS: DataTableColumn<CompanyRow>[] = [
-	{
-		id: "name",
-		header: "Company",
-		sortable: true,
-		hideable: false,
-		width: "w-[26%]",
-		cell: (row) => (
-			<span className="flex min-w-0 items-center gap-2.5">
-				<EntityLogo
-					src={row.iconUrl ?? row.logoUrl}
-					darkSrc={row.iconDarkUrl}
-					tone={row.iconTone as EntityLogoTone | null | undefined}
-					name={row.name}
-					size="sm"
-				/>
-				<span className="truncate font-medium">{row.name}</span>
-			</span>
-		),
-	},
-	{
-		id: "domain",
-		header: "Domain",
-		sortable: true,
-		width: "w-[16%]",
-		hideBelow: "md",
-		cell: (row) =>
-			row.domain ? (
-				<span className="truncate text-muted-foreground">{row.domain}</span>
-			) : (
-				<EmptyCellValue />
+function columns(
+	t: ReturnType<typeof useTranslations>,
+): DataTableColumn<CompanyRow>[] {
+	return [
+		{
+			id: "name",
+			header: t("table.columns.company"),
+			sortable: true,
+			hideable: false,
+			width: "w-[26%]",
+			cell: (row) => (
+				<span className="flex min-w-0 items-center gap-2.5">
+					<EntityLogo
+						src={row.iconUrl ?? row.logoUrl}
+						darkSrc={row.iconDarkUrl}
+						tone={row.iconTone as EntityLogoTone | null | undefined}
+						name={row.name}
+						size="sm"
+					/>
+					<span className="truncate font-medium">{row.name}</span>
+				</span>
 			),
-	},
-	{
-		id: "industry",
-		header: "Industry",
-		sortable: true,
-		width: "w-[16%]",
-		hideBelow: "lg",
-		cell: (row) =>
-			row.industry ? (
-				<span className="truncate">{row.industry}</span>
-			) : (
-				<EmptyCellValue />
-			),
-	},
-	{
-		id: "owner",
-		header: "Owner",
-		sortable: true,
-		width: "w-[16%]",
-		hideBelow: "md",
-		cell: (row) => <OwnerCell owner={row.owner} />,
-	},
-	{
-		id: "contacts",
-		header: "Contacts",
-		sortable: true,
-		align: "right",
-		width: "w-[9%]",
-		hideBelow: "lg",
-		cell: (row) => <span className="tabular-nums">{row.contactCount}</span>,
-	},
-	{
-		id: "deals",
-		header: "Open deals",
-		sortable: true,
-		align: "right",
-		width: "w-[9%]",
-		cell: (row) => <span className="tabular-nums">{row.openDealCount}</span>,
-	},
-	{
-		id: "createdAt",
-		header: "Created",
-		label: "Created date",
-		sortable: true,
-		align: "right",
-		width: "w-[10%]",
-		defaultHidden: true,
-		cell: (row) => (
-			<span className="text-muted-foreground">
-				<LocalRelativeTime date={row.createdAt} />
-			</span>
-		),
-	},
-	{
-		id: "lastActivity",
-		header: "Last activity",
-		sortable: true,
-		align: "right",
-		width: "w-[12%]",
-		hideBelow: "sm",
-		cell: (row) => (
-			<span className="text-muted-foreground">
-				{row.lastActivityAt ? (
-					<LocalRelativeTime date={row.lastActivityAt} />
+		},
+		{
+			id: "domain",
+			header: t("table.columns.domain"),
+			sortable: true,
+			width: "w-[16%]",
+			hideBelow: "md",
+			cell: (row) =>
+				row.domain ? (
+					<span className="truncate text-muted-foreground">{row.domain}</span>
 				) : (
 					<EmptyCellValue />
-				)}
-			</span>
-		),
-	},
-	{
-		id: "enrichment",
-		header: "Enrichment",
-		label: "Enrichment status",
-		defaultHidden: true,
-		width: "w-[14%]",
-		cell: (row) => (
-			<EnrichmentIndicator status={row.enrichmentStatus} queued={row.queued} />
-		),
-	},
-];
+				),
+		},
+		{
+			id: "industry",
+			header: t("table.columns.industry"),
+			sortable: true,
+			width: "w-[16%]",
+			hideBelow: "lg",
+			cell: (row) =>
+				row.industry ? (
+					<span className="truncate">{row.industry}</span>
+				) : (
+					<EmptyCellValue />
+				),
+		},
+		{
+			id: "owner",
+			header: t("table.columns.owner"),
+			sortable: true,
+			width: "w-[16%]",
+			hideBelow: "md",
+			cell: (row) => <OwnerCell owner={row.owner} />,
+		},
+		{
+			id: "contacts",
+			header: t("table.columns.contacts"),
+			sortable: true,
+			align: "right",
+			width: "w-[9%]",
+			hideBelow: "lg",
+			cell: (row) => <span className="tabular-nums">{row.contactCount}</span>,
+		},
+		{
+			id: "deals",
+			header: t("table.columns.openDeals"),
+			sortable: true,
+			align: "right",
+			width: "w-[9%]",
+			cell: (row) => <span className="tabular-nums">{row.openDealCount}</span>,
+		},
+		{
+			id: "createdAt",
+			header: t("table.columns.created"),
+			label: t("table.columns.createdLabel"),
+			sortable: true,
+			align: "right",
+			width: "w-[10%]",
+			defaultHidden: true,
+			cell: (row) => (
+				<span className="text-muted-foreground">
+					<LocalRelativeTime date={row.createdAt} />
+				</span>
+			),
+		},
+		{
+			id: "lastActivity",
+			header: t("table.columns.lastActivity"),
+			sortable: true,
+			align: "right",
+			width: "w-[12%]",
+			hideBelow: "sm",
+			cell: (row) => (
+				<span className="text-muted-foreground">
+					{row.lastActivityAt ? (
+						<LocalRelativeTime date={row.lastActivityAt} />
+					) : (
+						<EmptyCellValue />
+					)}
+				</span>
+			),
+		},
+		{
+			id: "enrichment",
+			header: t("table.columns.enrichment"),
+			label: t("table.columns.enrichmentLabel"),
+			defaultHidden: true,
+			width: "w-[14%]",
+			cell: (row) => (
+				<EnrichmentIndicator
+					status={row.enrichmentStatus}
+					queued={row.queued}
+				/>
+			),
+		},
+	];
+}
 
 export function CompaniesTable() {
+	const t = useTranslations("companies");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
 	const prefetchRecord = usePrefetchRecord();
@@ -175,9 +184,9 @@ export function CompaniesTable() {
 	const facets: DataTableFacet[] = [
 		{
 			id: "owner",
-			label: "Owner",
+			label: t("table.facets.owner"),
 			options: [
-				{ value: "unassigned", label: "Unassigned" },
+				{ value: "unassigned", label: t("table.facets.unassigned") },
 				...(users.data ?? []).map((user) => ({
 					value: user.id,
 					label: user.name,
@@ -186,14 +195,14 @@ export function CompaniesTable() {
 		},
 		{
 			id: "industry",
-			label: "Industry",
+			label: t("table.facets.industry"),
 			options: Object.keys(facetCounts?.industry ?? {})
 				.sort()
 				.map((value) => ({ value, label: value })),
 		},
 		{
 			id: "enrichment",
-			label: "Enrichment",
+			label: t("table.facets.enrichment"),
 			options: ENRICHMENT_FACET_OPTIONS.filter(
 				(option) => (facetCounts?.enrichment?.[option.value] ?? 0) > 0,
 			),
@@ -201,13 +210,16 @@ export function CompaniesTable() {
 	];
 
 	const fieldColumns = useFieldColumns<CompanyRow>("COMPANY");
-	const columns = useMemo(() => [...COLUMNS, ...fieldColumns], [fieldColumns]);
+	const tableColumns = useMemo(
+		() => [...columns(t), ...fieldColumns],
+		[t, fieldColumns],
+	);
 
 	return (
 		<DataTable
 			query={query}
-			search={<ListSearch placeholder="Search companies by name or domain…" />}
-			columns={columns}
+			search={<ListSearch placeholder={t("table.searchPlaceholder")} />}
+			columns={tableColumns}
 			rows={rows}
 			total={companies.data?.total ?? 0}
 			facetCounts={facetCounts}
@@ -223,7 +235,7 @@ export function CompaniesTable() {
 			loading={companies.isFetching}
 			onRowHover={(row) => prefetchRecord({ kind: "company", id: row.id })}
 			onRowClick={(row) => openRecord({ kind: "company", id: row.id })}
-			empty="No companies match this view."
+			empty={t("table.empty")}
 		/>
 	);
 }

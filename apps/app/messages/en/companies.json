@@ -1,0 +1,53 @@
+{
+	"page": {
+		"title": "Companies",
+		"description": "Every account in the pipeline."
+	},
+	"table": {
+		"columns": {
+			"company": "Company",
+			"domain": "Domain",
+			"industry": "Industry",
+			"owner": "Owner",
+			"contacts": "Contacts",
+			"openDeals": "Open deals",
+			"created": "Created",
+			"createdLabel": "Created date",
+			"lastActivity": "Last activity",
+			"enrichment": "Enrichment",
+			"enrichmentLabel": "Enrichment status"
+		},
+		"searchPlaceholder": "Search companies by name or domain…",
+		"facets": {
+			"owner": "Owner",
+			"unassigned": "Unassigned",
+			"industry": "Industry",
+			"enrichment": "Enrichment"
+		},
+		"empty": "No companies match this view."
+	},
+	"bulkActions": {
+		"unassignedLabel": "Nobody",
+		"reEnrich": "Re-enrich",
+		"delete": "Delete",
+		"reassigned": "{count, plural, one {# company} other {# companies}} reassigned.",
+		"enriching": "Looking up {count, plural, one {# company} other {# companies}} — the table will update.",
+		"deleted": "{count, plural, one {# company} other {# companies}} deleted.",
+		"deleteTitle": "Delete {count, plural, one {# company} other {# companies}}?",
+		"deleteDescription": "Their contacts stay, with no company. Deals on these companies go with them, and none of it can be undone."
+	},
+	"createSheet": {
+		"newCompany": "New company",
+		"description": "Give it a name and a domain. The agent fills in the logo, description, industry, address and socials.",
+		"nameLabel": "Name",
+		"namePlaceholder": "Stripe",
+		"domainLabel": "Domain",
+		"domainPlaceholder": "stripe.com",
+		"domainDescription": "A full URL is fine — it is reduced to the bare host, which has to be unique.",
+		"ownerLabel": "Owner",
+		"unassigned": "Unassigned",
+		"submit": "Add company",
+		"cancel": "Cancel",
+		"added": "{name} added."
+	}
+}

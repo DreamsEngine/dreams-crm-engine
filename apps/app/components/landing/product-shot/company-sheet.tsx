@@ -6,28 +6,29 @@ import Send from "@carbon/icons-react/es/Send";
 import Logo from "@crm/ui/components/logo";
 import { cn } from "@crm/ui/lib/utils";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { OWNER } from "./companies";
 import { CompanyMark } from "./company-mark";
 
-const TABS = [
-	{ label: "Overview" },
-	{ label: "Contacts", count: "1" },
-	{ label: "Deals" },
-	{ label: "Activity" },
-	{ label: "Agent", active: true },
+type SheetTab = { id: string; count?: string; active?: boolean };
+
+const TABS: SheetTab[] = [
+	{ id: "overview" },
+	{ id: "contacts", count: "1" },
+	{ id: "deals" },
+	{ id: "activity" },
+	{ id: "agent", active: true },
 ];
 
-const STATS = [
-	{ label: "Open pipeline", value: "$0" },
-	{ label: "Open deals", value: "0" },
-	{ label: "Next close", value: "—", muted: true },
+type SheetStat = { id: string; value: string; muted?: boolean };
+
+const STATS: SheetStat[] = [
+	{ id: "openPipeline", value: "$0" },
+	{ id: "openDeals", value: "0" },
+	{ id: "nextClose", value: "—", muted: true },
 ];
 
-const QUESTIONS = [
-	"What do they do?",
-	"Who do we know here?",
-	"What has changed recently?",
-];
+const QUESTION_IDS = ["what", "who", "changed"] as const;
 
 /**
  * The record panel, as the app draws it on a wide screen: a sheet pinned to the
@@ -46,6 +47,8 @@ export function CompanySheet() {
 }
 
 function SheetHeader({ compact }: { compact?: boolean }) {
+	const t = useTranslations("shared");
+
 	return (
 		<div
 			className={cn(
@@ -69,12 +72,12 @@ function SheetHeader({ compact }: { compact?: boolean }) {
 					{compact ? null : (
 						<span className="flex h-7 items-center gap-1 rounded-md border border-border bg-muted pr-2.5 pl-1.5 font-medium text-xs/[133%] shadow-2xs">
 							<Renew size={14} className="shrink-0" />
-							Re-enrich
+							{t("landing.productShot.companySheet.reEnrich")}
 						</span>
 					)}
 					<span className="flex h-7 items-center gap-1 rounded-md bg-primary pr-2.5 pl-1.5 font-medium text-primary-foreground text-xs/[133%] shadow-2xs">
 						<MagicWand size={14} className="shrink-0" />
-						Research
+						{t("landing.productShot.companySheet.research")}
 					</span>
 					{compact ? null : (
 						<>
@@ -94,11 +97,20 @@ function SheetHeader({ compact }: { compact?: boolean }) {
 }
 
 function SheetStats({ compact }: { compact?: boolean }) {
+	const t = useTranslations("shared");
+
 	if (compact) {
 		return (
 			<div className="grid shrink-0 grid-cols-2 border-border border-b bg-muted/40">
-				<Stat label="Open pipeline" value="$0" className="border-r" />
-				<Stat label="Open deals" value="0" />
+				<Stat
+					label={t("landing.productShot.companySheet.stats.openPipeline")}
+					value="$0"
+					className="border-r"
+				/>
+				<Stat
+					label={t("landing.productShot.companySheet.stats.openDeals")}
+					value="0"
+				/>
 			</div>
 		);
 	}
@@ -107,8 +119,8 @@ function SheetStats({ compact }: { compact?: boolean }) {
 		<div className="flex shrink-0 border-border border-b bg-muted/40">
 			{STATS.map((stat) => (
 				<Stat
-					key={stat.label}
-					label={stat.label}
+					key={stat.id}
+					label={t(`landing.productShot.companySheet.stats.${stat.id}`)}
 					value={stat.value}
 					muted={stat.muted}
 					className="grow basis-0 border-r px-5"
@@ -116,7 +128,9 @@ function SheetStats({ compact }: { compact?: boolean }) {
 			))}
 
 			<div className="flex min-w-0 grow basis-0 flex-col gap-1 px-5 py-2.5">
-				<p className="line-clamp-1 text-muted-foreground text-xs/5">Owner</p>
+				<p className="line-clamp-1 text-muted-foreground text-xs/5">
+					{t("landing.productShot.labels.owner")}
+				</p>
 				<div className="flex min-w-0 items-center gap-2">
 					<Image
 						src={OWNER.avatar}
@@ -166,6 +180,8 @@ function Stat({
 }
 
 function SheetTabs({ compact }: { compact?: boolean }) {
+	const t = useTranslations("shared");
+
 	return (
 		<div
 			className={cn(
@@ -175,13 +191,13 @@ function SheetTabs({ compact }: { compact?: boolean }) {
 		>
 			{TABS.map((tab) => (
 				<span
-					key={tab.label}
+					key={tab.id}
 					className={cn(
 						"relative flex h-[calc(100%-1px)] shrink-0 items-center gap-1.5 rounded-sm py-0.5 font-medium text-xs/[133%]",
 						tab.active ? "text-foreground" : "text-muted-foreground",
 					)}
 				>
-					{tab.label}
+					{t(`landing.productShot.companySheet.tabs.${tab.id}`)}
 					{tab.count ? <span className="tabular-nums">{tab.count}</span> : null}
 					{tab.active ? (
 						<span className="-bottom-[5px] absolute inset-x-0 h-0.5 bg-foreground" />
@@ -193,6 +209,8 @@ function SheetTabs({ compact }: { compact?: boolean }) {
 }
 
 function AgentEmptyState({ compact }: { compact?: boolean }) {
+	const t = useTranslations("shared");
+
 	return (
 		<div
 			className={cn(
@@ -207,23 +225,22 @@ function AgentEmptyState({ compact }: { compact?: boolean }) {
 					</span>
 				</span>
 				<p className="text-center font-medium text-sm/5">
-					Ask about this company
+					{t("landing.productShot.companySheet.askTitle")}
 				</p>
 				{compact ? null : (
 					<p className="text-center text-muted-foreground text-xs/[19px]">
-						It reads their site and our own history with them, and shows its
-						working.
+						{t("landing.askCard.body")}
 					</p>
 				)}
 			</div>
 
 			<div className="flex max-w-2xl flex-wrap items-center justify-center gap-2.5">
-				{QUESTIONS.map((question) => (
+				{QUESTION_IDS.map((id) => (
 					<span
-						key={question}
+						key={id}
 						className="flex h-7 shrink-0 items-center rounded-md border border-border bg-muted px-2.5 font-medium text-xs"
 					>
-						{question}
+						{t(`landing.askCard.questions.${id}`)}
 					</span>
 				))}
 			</div>
@@ -232,6 +249,8 @@ function AgentEmptyState({ compact }: { compact?: boolean }) {
 }
 
 function SheetComposer({ compact }: { compact?: boolean }) {
+	const t = useTranslations("shared");
+
 	return (
 		<div
 			className={cn(
@@ -241,7 +260,7 @@ function SheetComposer({ compact }: { compact?: boolean }) {
 		>
 			<div className="flex h-8 min-w-0 grow items-center rounded-md border border-border px-3">
 				<span className="text-muted-foreground text-xs">
-					What do they sell?
+					{t("landing.askCard.placeholder")}
 				</span>
 			</div>
 			<span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border bg-muted">

@@ -9,6 +9,7 @@ import { Spinner } from "@crm/ui/components/spinner";
 import { TableCell } from "@crm/ui/components/table";
 import { formatMoney } from "@crm/ui/lib/format";
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import {
 	DetailSheetHeader,
 	type DetailSheetTab,
@@ -41,6 +42,7 @@ export function RecordSheetFrame({
 	tab: string;
 	onTabChange: (tab: string) => void;
 }) {
+	const t = useTranslations("record");
 	const { stack, close, closeAll } = useRecordStack();
 
 	return (
@@ -61,7 +63,7 @@ export function RecordSheetFrame({
 				</div>
 			) : error ? (
 				<div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-1 p-6 text-center">
-					<p className="font-medium text-sm">This record could not be loaded</p>
+					<p className="font-medium text-sm">{t("sheet.loadErrorTitle")}</p>
 					<p className="text-muted-foreground text-xs">{error}</p>
 				</div>
 			) : (

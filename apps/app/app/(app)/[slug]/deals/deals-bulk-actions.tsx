@@ -22,8 +22,8 @@ import {
 import { Field, FieldLabel } from "@crm/ui/components/field";
 import { Spinner } from "@crm/ui/components/spinner";
 import { Textarea } from "@crm/ui/components/textarea";
-import { formatCount } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -36,10 +36,6 @@ import { DEAL_STAGE_OPTIONS, LOSING_STAGES } from "@/lib/deal-stage";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 
-function deals(count: number): string {
-	return formatCount(count, "deal");
-}
-
 export function DealsBulkActions({
 	ids,
 	onDone,
@@ -47,6 +43,8 @@ export function DealsBulkActions({
 	ids: string[];
 	onDone: () => void;
 }) {
+	const t = useTranslations("deals");
+	const tRecord = useTranslations("record");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const users = useQuery(trpc.users.list.queryOptions());
@@ -61,7 +59,11 @@ export function DealsBulkActions({
 		trpc.deals.bulkAssignOwner.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal();
-				reportBulk(result, (count) => `${deals(count)} reassigned.`);
+				reportBulk(
+					result,
+					(count) => t("bulkActions.reassigned", { count }),
+					tRecord,
+				);
 				onDone();
 			},
 			onError,
@@ -72,7 +74,11 @@ export function DealsBulkActions({
 		trpc.deals.bulkSetStage.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal();
-				reportBulk(result, (count) => `${deals(count)} moved.`);
+				reportBulk(
+					result,
+					(count) => t("bulkActions.moved", { count }),
+					tRecord,
+				);
 				setClosing(null);
 				setReason("");
 				onDone();
@@ -85,7 +91,11 @@ export function DealsBulkActions({
 		trpc.deals.bulkDelete.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "deal", ids: variables.ids });
-				reportBulk(result, (count) => `${deals(count)} deleted.`);
+				reportBulk(
+					result,
+					(count) => t("bulkActions.deleted", { count }),
+					tRecord,
+				);
 				setConfirming(false);
 				onDone();
 			},
@@ -106,7 +116,9 @@ export function DealsBulkActions({
 					}
 				/>
 				<DropdownMenuSub>
-					<DropdownMenuSubTrigger>Change stage</DropdownMenuSubTrigger>
+					<DropdownMenuSubTrigger>
+						{t("bulkActions.changeStage")}
+					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent className="max-h-72 overflow-y-auto">
 						<DropdownMenuGroup>
 							{DEAL_STAGE_OPTIONS.map((option) => (
@@ -120,7 +132,7 @@ export function DealsBulkActions({
 										setStage.mutate({ ids, stage: option.value });
 									}}
 								>
-									{option.label}
+									{t(`stages.${option.value}`)}
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuGroup>
@@ -133,7 +145,7 @@ export function DealsBulkActions({
 						onSelect={() => setConfirming(true)}
 					>
 						<TrashCan />
-						Delete
+						{t("bulkActions.delete")}
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</BulkActionsMenu>
@@ -150,12 +162,11 @@ export function DealsBulkActions({
 					<DialogHeader>
 						<DialogTitle>
 							{closing === "CLOSED_LOST"
-								? `Close ${deals(ids.length)} as lost`
-								: `Mark ${deals(ids.length)} as unqualified`}
+								? t("bulkActions.closeAsLost", { count: ids.length })
+								: t("bulkActions.markUnqualified", { count: ids.length })}
 						</DialogTitle>
 						<DialogDescription>
-							The same reason goes on every one of them, so keep it to what they
-							have in common.
+							{t("bulkActions.closeReasonDescription")}
 						</DialogDescription>
 					</DialogHeader>
 
@@ -169,12 +180,14 @@ export function DealsBulkActions({
 						}}
 					>
 						<Field>
-							<FieldLabel htmlFor={reasonId}>Reason</FieldLabel>
+							<FieldLabel htmlFor={reasonId}>
+								{t("bulkActions.reasonLabel")}
+							</FieldLabel>
 							<Textarea
 								id={reasonId}
 								value={reason}
 								onChange={(event) => setReason(event.target.value)}
-								placeholder="Budget pulled for the quarter"
+								placeholder={t("bulkActions.reasonPlaceholder")}
 								rows={3}
 							/>
 						</Field>
@@ -187,7 +200,7 @@ export function DealsBulkActions({
 							disabled={setStage.isPending || reason.trim() === ""}
 						>
 							{setStage.isPending ? <Spinner /> : null}
-							Save
+							{t("bulkActions.save")}
 						</Button>
 						<Button
 							variant="outline"
@@ -196,7 +209,7 @@ export function DealsBulkActions({
 								setReason("");
 							}}
 						>
-							Cancel
+							{t("bulkActions.cancel")}
 						</Button>
 					</DialogFooter>
 				</DialogContent>
@@ -205,8 +218,8 @@ export function DealsBulkActions({
 			<BulkDeleteDialog
 				open={confirming}
 				onOpenChange={setConfirming}
-				title={`Delete ${deals(ids.length)}?`}
-				description="Everything filed against them — activity, notes, the amounts in your pipeline — goes too. This cannot be undone."
+				title={t("bulkActions.deleteTitle", { count: ids.length })}
+				description={t("bulkActions.deleteDescription")}
 				onConfirm={() => remove.mutate({ ids })}
 			/>
 		</>

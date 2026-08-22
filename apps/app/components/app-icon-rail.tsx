@@ -24,6 +24,7 @@ import {
 import { cn } from "@crm/ui/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { AgentBuilderSidebar } from "@/components/agent-builder/agent-builder-sidebar";
 import { usePrefetchSection } from "@/components/crm/section-prefetch";
@@ -31,7 +32,7 @@ import { useMobileNav } from "@/components/mobile-nav";
 import { useWorkspaceUrl } from "@/lib/use-workspace-url";
 
 type RailItem = {
-	title: string;
+	id: "overview" | "chat" | "companies" | "contacts" | "deals" | "settings";
 	href: string;
 	icon: CarbonIconType;
 	match: "exact" | "prefix";
@@ -39,23 +40,23 @@ type RailItem = {
 };
 
 const ITEMS: RailItem[] = [
-	{ title: "Overview", href: "/", icon: Dashboard, match: "exact" },
+	{ id: "overview", href: "/", icon: Dashboard, match: "exact" },
 	{
-		title: "Chat",
+		id: "chat",
 		href: "/chat",
 		icon: Chat,
 		match: "prefix",
 		related: ["/agents"],
 	},
-	{ title: "Companies", href: "/companies", icon: Building, match: "prefix" },
+	{ id: "companies", href: "/companies", icon: Building, match: "prefix" },
 	{
-		title: "Contacts",
+		id: "contacts",
 		href: "/contacts",
 		icon: UserMultiple,
 		match: "prefix",
 	},
-	{ title: "Deals", href: "/deals", icon: Partnership, match: "prefix" },
-	{ title: "Settings", href: "/settings", icon: Settings, match: "prefix" },
+	{ id: "deals", href: "/deals", icon: Partnership, match: "prefix" },
+	{ id: "settings", href: "/settings", icon: Settings, match: "prefix" },
 ];
 
 function isActive(item: RailItem, pathname: string): boolean {
@@ -68,10 +69,12 @@ function isActive(item: RailItem, pathname: string): boolean {
 
 function RailLink({
 	item,
+	label,
 	active,
 	onPrefetch,
 }: {
 	item: RailItem;
+	label: string;
 	active: boolean;
 	onPrefetch: () => void;
 }) {
@@ -97,22 +100,24 @@ function RailLink({
 						transitionTypes={["nav-lateral"]}
 					>
 						<Icon icon={item.icon} />
-						<span className="sr-only">{item.title}</span>
+						<span className="sr-only">{label}</span>
 					</Link>
 				</Button>
 			</TooltipTrigger>
-			<TooltipContent side="right">{item.title}</TooltipContent>
+			<TooltipContent side="right">{label}</TooltipContent>
 		</Tooltip>
 	);
 }
 
 function MobileRailLink({
 	item,
+	label,
 	active,
 	onNavigate,
 	onPrefetch,
 }: {
 	item: RailItem;
+	label: string;
 	active: boolean;
 	onNavigate: () => void;
 	onPrefetch: () => void;
@@ -134,12 +139,10 @@ function MobileRailLink({
 				onFocus={onPrefetch}
 				aria-current={active ? "page" : undefined}
 				onClick={onNavigate}
-				transitionTypes={[
-					item.title === "Chat" ? "nav-forward" : "nav-lateral",
-				]}
+				transitionTypes={[item.id === "chat" ? "nav-forward" : "nav-lateral"]}
 			>
 				<Icon icon={item.icon} />
-				<span>{item.title}</span>
+				<span>{label}</span>
 			</Link>
 		</Button>
 	);
@@ -147,11 +150,13 @@ function MobileRailLink({
 
 function MobileRailIconLink({
 	item,
+	label,
 	active,
 	onNavigate,
 	onPrefetch,
 }: {
 	item: RailItem;
+	label: string;
 	active: boolean;
 	onNavigate: () => void;
 	onPrefetch: () => void;
@@ -176,16 +181,18 @@ function MobileRailIconLink({
 				onClick={onNavigate}
 			>
 				<Icon icon={item.icon} />
-				<span className="sr-only">{item.title}</span>
+				<span className="sr-only">{label}</span>
 			</Link>
 		</Button>
 	);
 }
 
 export function AppIconRailFallback() {
+	const t = useTranslations("shared");
+
 	return (
 		<nav
-			aria-label="Primary"
+			aria-label={t("nav.primary")}
 			aria-busy="true"
 			className="hidden w-14 shrink-0 flex-col items-center gap-1 border-r py-3 md:flex [view-transition-name:app-rail]"
 		>
@@ -198,7 +205,7 @@ export function AppIconRailFallback() {
 					className="text-muted-foreground"
 				>
 					<Icon icon={item.icon} />
-					<span className="sr-only">{item.title}</span>
+					<span className="sr-only">{t(`nav.${item.id}`)}</span>
 				</Button>
 			))}
 		</nav>
@@ -206,6 +213,7 @@ export function AppIconRailFallback() {
 }
 
 export function AppIconRail() {
+	const t = useTranslations("shared");
 	const pathname = usePathname();
 	const workspaceUrl = useWorkspaceUrl();
 	const { open, setOpen } = useMobileNav();
@@ -222,19 +230,20 @@ export function AppIconRail() {
 		[workspaceUrl],
 	);
 	const inChat = items.some(
-		(item) => item.title === "Chat" && isActive(item, pathname),
+		(item) => item.id === "chat" && isActive(item, pathname),
 	);
 
 	return (
 		<>
 			<nav
-				aria-label="Primary"
+				aria-label={t("nav.primary")}
 				className="hidden w-14 shrink-0 flex-col items-center gap-1 border-r py-3 md:flex [view-transition-name:app-rail]"
 			>
 				{items.map((item) => (
 					<RailLink
 						key={item.href}
 						item={item}
+						label={t(`nav.${item.id}`)}
 						active={isActive(item, pathname)}
 						onPrefetch={() => prefetchSection(item.section)}
 					/>
@@ -249,16 +258,16 @@ export function AppIconRail() {
 						className="w-5/6 max-w-sm flex-row gap-0 p-0"
 					>
 						<SheetHeader className="sr-only">
-							<SheetTitle>Navigation and agent chats</SheetTitle>
+							<SheetTitle>{t("nav.navAndChats")}</SheetTitle>
 						</SheetHeader>
 						<nav
-							aria-label="Primary"
+							aria-label={t("nav.primary")}
 							className="flex w-14 shrink-0 flex-col items-center gap-1 border-r py-3"
 						>
 							<Button
 								variant="ghost"
 								size="icon"
-								aria-label="Close navigation"
+								aria-label={t("nav.closeNavigation")}
 								onClick={() => setOpen(false)}
 							>
 								<Icon icon={Close} />
@@ -268,6 +277,7 @@ export function AppIconRail() {
 								<MobileRailIconLink
 									key={item.href}
 									item={item}
+									label={t(`nav.${item.id}`)}
 									active={isActive(item, pathname)}
 									onNavigate={() => setOpen(false)}
 									onPrefetch={() => prefetchSection(item.section)}
@@ -282,16 +292,17 @@ export function AppIconRail() {
 				) : (
 					<SheetContent side="left" className="w-64 gap-0 p-0">
 						<SheetHeader>
-							<SheetTitle>Navigation</SheetTitle>
+							<SheetTitle>{t("nav.navigation")}</SheetTitle>
 						</SheetHeader>
 						<nav
-							aria-label="Primary"
+							aria-label={t("nav.primary")}
 							className="flex flex-1 flex-col gap-1 p-2"
 						>
 							{items.map((item) => (
 								<MobileRailLink
 									key={item.href}
 									item={item}
+									label={t(`nav.${item.id}`)}
 									active={isActive(item, pathname)}
 									onNavigate={() => setOpen(false)}
 									onPrefetch={() => prefetchSection(item.section)}

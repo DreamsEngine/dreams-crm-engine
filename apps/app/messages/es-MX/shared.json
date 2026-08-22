@@ -17,16 +17,6 @@
 		"agentResearching": "El agente está investigando",
 		"notKnownYet": "Aún no se sabe"
 	},
-	"agentComposer": {
-		"chooseAnswer": "Elija una respuesta y envíela.",
-		"addDetail": "Agregue el detalle que el agente necesita para continuar.",
-		"anotherAnswer": "Otra respuesta",
-		"yourAnswer": "Su respuesta",
-		"answerPlaceholder": "Agregue el detalle que el agente necesita",
-		"genericError": "No se pudo enviar. Revise su conexión e intente de nuevo.",
-		"submitting": "Enviando",
-		"submitAnswer": "Enviar respuesta"
-	},
 	"enrichment": {
 		"enrichingCount": "Enriqueciendo {count}",
 		"enriching": "Enriqueciendo",

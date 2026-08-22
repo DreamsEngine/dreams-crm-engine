@@ -17,16 +17,6 @@
 		"agentResearching": "Agent is researching",
 		"notKnownYet": "Not known yet"
 	},
-	"agentComposer": {
-		"chooseAnswer": "Choose an answer, then submit.",
-		"addDetail": "Add the detail the agent needs to continue.",
-		"anotherAnswer": "Another answer",
-		"yourAnswer": "Your answer",
-		"answerPlaceholder": "Add the detail the agent needs",
-		"genericError": "Unable to submit. Check your connection and try again.",
-		"submitting": "Submitting",
-		"submitAnswer": "Submit answer"
-	},
 	"enrichment": {
 		"enrichingCount": "Enriching {count}",
 		"enriching": "Enriching",

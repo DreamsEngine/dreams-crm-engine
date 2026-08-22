@@ -1,0 +1,77 @@
+# Coolify deployment with the research agent: app + api + agent + postgres.
+# The agent has no public domain — the app proxies /eve/v1/* to it and the API
+# pokes it over the compose network.
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: crm
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm -d crm"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://crm:${POSTGRES_PASSWORD}@postgres:5432/crm?schema=public
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      ALLOWED_SIGN_IN: ${ALLOWED_SIGN_IN}
+      DEMO_OPEN_SIGN_IN: ${DEMO_OPEN_SIGN_IN}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      API_URL: ${API_URL}
+      APP_URL: ${APP_URL}
+      AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN}
+      CRON_SECRET: ${CRON_SECRET}
+      AGENT_URL: http://agent:2000
+      AGENT_BRIDGE_SECRET: ${AGENT_BRIDGE_SECRET}
+      CRM_TELEMETRY_DISABLED: "1"
+      PORT: "3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+      args:
+        API_URL: ${API_URL}
+        APP_URL: ${APP_URL}
+    environment:
+      API_URL: ${API_URL}
+      APP_URL: ${APP_URL}
+      DATABASE_URL: postgresql://crm:${POSTGRES_PASSWORD}@postgres:5432/crm?schema=public
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      AGENT_URL: http://agent:2000
+      AGENT_BRIDGE_SECRET: ${AGENT_BRIDGE_SECRET}
+      CRM_TELEMETRY_DISABLED: "1"
+    depends_on:
+      - api
+
+  agent:
+    build:
+      context: .
+      dockerfile: docker/agent.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://crm:${POSTGRES_PASSWORD}@postgres:5432/crm?schema=public
+      AI_GATEWAY_API_KEY: ${AI_GATEWAY_API_KEY}
+      AGENT_BRIDGE_SECRET: ${AGENT_BRIDGE_SECRET}
+      AGENT_PORT: "2000"
+      API_URL: ${API_URL}
+      APP_URL: ${APP_URL}
+      CRM_TELEMETRY_DISABLED: "1"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

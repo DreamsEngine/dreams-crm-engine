@@ -11,7 +11,8 @@
 		"./builder-question": "./src/builder-question.ts",
 		"./enrichment-queue": "./src/enrichment-queue.ts",
 		"./eve-stream": "./src/eve-stream.ts",
-		"./eve-tool": "./src/eve-tool.ts"
+		"./eve-tool": "./src/eve-tool.ts",
+		"./follow-up": "./src/follow-up.ts"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",

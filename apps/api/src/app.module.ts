@@ -18,6 +18,7 @@ import { DatabaseModule } from "./database/database.module";
 import { DealsModule } from "./deals/deals.module";
 import { EnrichmentModule } from "./enrichment/enrichment.module";
 import { FieldsModule } from "./fields/fields.module";
+import { FollowUpModule } from "./follow-up/follow-up.module";
 import { GoogleModule } from "./google/google.module";
 import { HealthModule } from "./health/health.module";
 import { LoggingModule } from "./logging/logging.module";
@@ -66,6 +67,7 @@ import { WorkspaceModule } from "./workspace/workspace.module";
 		GoogleModule,
 		MicrosoftModule,
 		SyncModule,
+		FollowUpModule,
 		SettingsModule,
 		WorkspaceModule,
 		SsoModule,

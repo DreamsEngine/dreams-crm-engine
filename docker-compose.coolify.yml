@@ -30,6 +30,7 @@ services:
       APP_URL: ${APP_URL}
       AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN}
       CRON_SECRET: ${CRON_SECRET}
+      FOLLOWUP: ${FOLLOWUP}
       CRM_TELEMETRY_DISABLED: "1"
       PORT: "3001"
     depends_on:
@@ -48,6 +49,7 @@ services:
       APP_URL: ${APP_URL}
       DATABASE_URL: postgresql://crm:${POSTGRES_PASSWORD}@postgres:5432/crm?schema=public
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      FOLLOWUP: ${FOLLOWUP}
       CRM_TELEMETRY_DISABLED: "1"
     depends_on:
       - api

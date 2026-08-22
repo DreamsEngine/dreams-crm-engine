@@ -33,6 +33,7 @@ services:
       CRON_SECRET: ${CRON_SECRET}
       AGENT_URL: http://agent:2000
       AGENT_BRIDGE_SECRET: ${AGENT_BRIDGE_SECRET}
+      FOLLOWUP: ${FOLLOWUP}
       CRM_TELEMETRY_DISABLED: "1"
       PORT: "3001"
     depends_on:
@@ -55,6 +56,7 @@ services:
       DEMO_OPEN_SIGN_IN: ${DEMO_OPEN_SIGN_IN}
       AGENT_URL: http://agent:2000
       AGENT_BRIDGE_SECRET: ${AGENT_BRIDGE_SECRET}
+      FOLLOWUP: ${FOLLOWUP}
       CRM_TELEMETRY_DISABLED: "1"
     depends_on:
       - api
